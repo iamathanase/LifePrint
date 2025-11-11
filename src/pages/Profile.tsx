@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { User, Mail, Lock } from "lucide-react";
 
 const Profile = () => {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
 
   return (
     <div className="min-h-screen">
@@ -33,7 +33,7 @@ const Profile = () => {
                   <Label htmlFor="name">Full Name</Label>
                   <Input
                     id="name"
-                    defaultValue={user?.name}
+                    defaultValue={profile?.full_name || ""}
                     className="mt-2"
                   />
                 </div>

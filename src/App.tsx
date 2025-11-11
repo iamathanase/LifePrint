@@ -13,6 +13,8 @@ import FoodPrint from "./pages/FoodPrint";
 import StoryWeaver from "./pages/StoryWeaver";
 import TimeCapsule from "./pages/TimeCapsule";
 import Profile from "./pages/Profile";
+import Admin from "./pages/Admin";
+import Analytics from "./pages/Analytics";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -33,6 +35,8 @@ const AppRoutes = () => (
     <Route path="/stories" element={<ProtectedRoute><StoryWeaver /></ProtectedRoute>} />
     <Route path="/capsule" element={<ProtectedRoute><TimeCapsule /></ProtectedRoute>} />
     <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+    <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
+    <Route path="/analytics" element={<ProtectedRoute><Analytics /></ProtectedRoute>} />
     {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
     <Route path="*" element={<NotFound />} />
   </Routes>

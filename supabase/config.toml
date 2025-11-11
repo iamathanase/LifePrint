@@ -1,1 +1,7 @@
 project_id = "exzaeaixbkxirfgqksgk"
+
+[functions.generate-personality-insights]
+verify_jwt = true
+
+[functions.generate-recommendations]
+verify_jwt = true

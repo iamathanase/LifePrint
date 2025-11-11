@@ -5,7 +5,7 @@ import { Footer } from "@/components/Footer";
 import { useAuth } from "@/contexts/AuthContext";
 
 const Dashboard = () => {
-  const { user } = useAuth();
+  const { profile } = useAuth();
   
   return (
     <div className="min-h-screen bg-background">
@@ -15,7 +15,7 @@ const Dashboard = () => {
         {/* Hero Section */}
         <div className="text-center space-y-6 mb-16 animate-float">
           <h1 className="text-5xl md:text-7xl font-bold">
-            <span className="text-gradient">Welcome back, {user?.name}</span>
+            <span className="text-gradient">Welcome back, {profile?.full_name || "Explorer"}</span>
           </h1>
           <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto">
             Continue your journey of self-discovery

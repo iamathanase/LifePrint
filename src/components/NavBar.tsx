@@ -1,8 +1,9 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Brain, Home, Utensils, BookOpen, Clock, User, LogOut } from "lucide-react";
+import { Brain, Home, Utensils, BookOpen, Clock, User, LogOut, Shield, BarChart3 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
+import { MobileNav } from "@/components/MobileNav";
 import logo from "@/assets/logo.png";
 
 const publicNavItems = [
@@ -23,7 +24,7 @@ const appNavItems = [
 export const NavBar = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, isAdmin, logout } = useAuth();
 
   const handleLogout = () => {
     logout();
@@ -34,12 +35,15 @@ export const NavBar = () => {
     <nav className="fixed top-0 left-0 right-0 z-50 glass-card border-b border-primary/20">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
-          <Link to="/" className="flex items-center space-x-3 group">
-            <div className="w-10 h-10 rounded-full overflow-hidden cosmic-glow flex items-center justify-center bg-card">
-              <img src={logo} alt="LifePrint Logo" className="w-full h-full object-contain" />
-            </div>
-            <span className="text-2xl font-bold text-gradient">LifePrint</span>
-          </Link>
+          <div className="flex items-center gap-4">
+            <MobileNav />
+            <Link to="/" className="flex items-center space-x-3 group">
+              <div className="w-10 h-10 rounded-full overflow-hidden cosmic-glow flex items-center justify-center bg-card">
+                <img src={logo} alt="LifePrint Logo" className="w-full h-full object-contain" />
+              </div>
+              <span className="text-2xl font-bold text-gradient">LifePrint</span>
+            </Link>
+          </div>
           
           <div className="hidden md:flex items-center space-x-1">
             {isAuthenticated ? (
@@ -62,6 +66,34 @@ export const NavBar = () => {
                     </Link>
                   );
                 })}
+                {isAdmin && (
+                  <>
+                    <Link
+                      to="/admin"
+                      className={cn(
+                        "flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-300",
+                        location.pathname === "/admin"
+                          ? "bg-primary/20 text-primary"
+                          : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
+                      )}
+                    >
+                      <Shield className="w-4 h-4" />
+                      <span className="text-sm font-medium">Admin</span>
+                    </Link>
+                    <Link
+                      to="/analytics"
+                      className={cn(
+                        "flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-300",
+                        location.pathname === "/analytics"
+                          ? "bg-primary/20 text-primary"
+                          : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
+                      )}
+                    >
+                      <BarChart3 className="w-4 h-4" />
+                      <span className="text-sm font-medium">Analytics</span>
+                    </Link>
+                  </>
+                )}
                 <Link
                   to="/profile"
                   className={cn(
