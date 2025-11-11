@@ -1,6 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { Brain, Home, Utensils, BookOpen, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
+import logo from "@/assets/logo.png";
 
 const navItems = [
   { icon: Home, label: "Dashboard", path: "/" },
@@ -18,8 +19,8 @@ export const NavBar = () => {
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           <Link to="/" className="flex items-center space-x-3 group">
-            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center cosmic-glow">
-              <span className="text-2xl">🧠</span>
+            <div className="w-10 h-10 rounded-full overflow-hidden cosmic-glow flex items-center justify-center bg-card">
+              <img src={logo} alt="LifePrint Logo" className="w-full h-full object-contain" />
             </div>
             <span className="text-2xl font-bold text-gradient">LifePrint</span>
           </Link>
