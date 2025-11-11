@@ -1,4 +1,5 @@
 import { NavBar } from "@/components/NavBar";
+import { Footer } from "@/components/Footer";
 import { BookOpen } from "lucide-react";
 import { StoryEditor } from "@/components/StoryEditor";
 
@@ -22,6 +23,7 @@ const StoryWeaver = () => {
           <StoryEditor />
         </div>
       </main>
+      <Footer />
     </div>
   );
 };

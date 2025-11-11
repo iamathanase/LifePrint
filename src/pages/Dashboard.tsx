@@ -1,8 +1,12 @@
 import { Brain, Utensils, BookOpen, Clock } from "lucide-react";
 import { ModuleCard } from "@/components/ModuleCard";
 import { NavBar } from "@/components/NavBar";
+import { Footer } from "@/components/Footer";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Dashboard = () => {
+  const { user } = useAuth();
+  
   return (
     <div className="min-h-screen bg-background">
       <NavBar />
@@ -11,13 +15,13 @@ const Dashboard = () => {
         {/* Hero Section */}
         <div className="text-center space-y-6 mb-16 animate-float">
           <h1 className="text-5xl md:text-7xl font-bold">
-            <span className="text-gradient">LifePrint</span>
+            <span className="text-gradient">Welcome back, {user?.name}</span>
           </h1>
           <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto">
-            The Digital Mirror of You
+            Continue your journey of self-discovery
           </p>
           <p className="text-foreground/80 max-w-xl mx-auto">
-            Discover who you are, improve how you live, and shape who you'll become — one digital reflection at a time.
+            Explore your modules and track your progress across all areas of your life.
           </p>
         </div>
 
@@ -65,6 +69,7 @@ const Dashboard = () => {
           </div>
         </div>
       </main>
+      <Footer />
     </div>
   );
 };

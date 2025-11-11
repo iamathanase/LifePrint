@@ -1,4 +1,5 @@
 import { NavBar } from "@/components/NavBar";
+import { Footer } from "@/components/Footer";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Brain, Smile, TrendingUp } from "lucide-react";
@@ -109,6 +110,7 @@ const PersonaPrint = () => {
           </Card>
         </div>
       </main>
+      <Footer />
     </div>
   );
 };

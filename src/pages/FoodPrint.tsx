@@ -1,4 +1,5 @@
 import { NavBar } from "@/components/NavBar";
+import { Footer } from "@/components/Footer";
 import { Card } from "@/components/ui/card";
 import { Utensils } from "lucide-react";
 import { FoodLogger } from "@/components/FoodLogger";
@@ -23,6 +24,7 @@ const FoodPrint = () => {
           <FoodLogger />
         </div>
       </main>
+      <Footer />
     </div>
   );
 };

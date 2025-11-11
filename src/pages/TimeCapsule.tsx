@@ -1,4 +1,5 @@
 import { NavBar } from "@/components/NavBar";
+import { Footer } from "@/components/Footer";
 import { Clock } from "lucide-react";
 import { TimeCapsuleGoals } from "@/components/TimeCapsuleGoals";
 
@@ -22,6 +23,7 @@ const TimeCapsule = () => {
           <TimeCapsuleGoals />
         </div>
       </main>
+      <Footer />
     </div>
   );
 };
