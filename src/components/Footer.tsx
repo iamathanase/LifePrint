@@ -4,22 +4,9 @@ import logo from "@/assets/logo.png";
 
 const handleSmoothScroll = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
   e.preventDefault();
-  
-  if (targetId === 'top' || !targetId) {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    return;
-  }
-  
   const element = document.getElementById(targetId);
   if (element) {
-    const offset = 80; // Account for fixed navbar
-    const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
-    const offsetPosition = elementPosition - offset;
-    
-    window.scrollTo({
-      top: offsetPosition,
-      behavior: 'smooth'
-    });
+    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 };
 

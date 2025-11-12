@@ -7,26 +7,14 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 const handleSmoothScroll = (targetId: string) => {
-  if (targetId === 'top' || !targetId) {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    return;
-  }
-  
   const element = document.getElementById(targetId);
   if (element) {
-    const offset = 80; // Account for fixed navbar
-    const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
-    const offsetPosition = elementPosition - offset;
-    
-    window.scrollTo({
-      top: offsetPosition,
-      behavior: 'smooth'
-    });
+    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 };
 
 const publicNavItems = [
-  { label: "Home", path: "/#top" },
+  { label: "Home", path: "/" },
   { label: "About", path: "/#about" },
   { label: "Features", path: "/#features" },
   { label: "Team", path: "/#team" },
