@@ -2,6 +2,14 @@ import { Link } from "react-router-dom";
 import { Mail, MapPin, Phone } from "lucide-react";
 import logo from "@/assets/logo.png";
 
+const handleSmoothScroll = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
+  e.preventDefault();
+  const element = document.getElementById(targetId);
+  if (element) {
+    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+};
+
 export const Footer = () => {
   return (
     <footer className="glass-card border-t border-primary/20 mt-20">
@@ -23,19 +31,31 @@ export const Footer = () => {
             <h3 className="text-foreground font-semibold mb-4">Quick Links</h3>
             <ul className="space-y-2">
               <li>
-                <Link to="/#about" className="text-muted-foreground hover:text-primary transition-colors">
+                <a 
+                  href="/#about" 
+                  onClick={(e) => handleSmoothScroll(e, 'about')}
+                  className="text-muted-foreground hover:text-primary transition-colors cursor-pointer"
+                >
                   About Us
-                </Link>
+                </a>
               </li>
               <li>
-                <Link to="/#features" className="text-muted-foreground hover:text-primary transition-colors">
+                <a 
+                  href="/#features" 
+                  onClick={(e) => handleSmoothScroll(e, 'features')}
+                  className="text-muted-foreground hover:text-primary transition-colors cursor-pointer"
+                >
                   Features
-                </Link>
+                </a>
               </li>
               <li>
-                <Link to="/#team" className="text-muted-foreground hover:text-primary transition-colors">
+                <a 
+                  href="/#team" 
+                  onClick={(e) => handleSmoothScroll(e, 'team')}
+                  className="text-muted-foreground hover:text-primary transition-colors cursor-pointer"
+                >
                   Our Team
-                </Link>
+                </a>
               </li>
               <li>
                 <Link to="/login" className="text-muted-foreground hover:text-primary transition-colors">
@@ -64,11 +84,13 @@ export const Footer = () => {
               </li>
               <li className="flex items-center space-x-2 text-muted-foreground">
                 <Phone className="w-4 h-4" />
-                <span className="text-sm">+1 (555) 123-4567</span>
+                <a href="tel:+233538198272" className="text-sm hover:text-primary transition-colors">
+                  +233 538 198 272
+                </a>
               </li>
-              <li className="flex items-center space-x-2 text-muted-foreground">
-                <MapPin className="w-4 h-4" />
-                <span className="text-sm">San Francisco, CA</span>
+              <li className="flex items-start space-x-2 text-muted-foreground">
+                <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0" />
+                <span className="text-sm">1 University Ave, Accra, Berekuso, Ghana</span>
               </li>
             </ul>
           </div>

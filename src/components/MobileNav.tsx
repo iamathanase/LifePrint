@@ -6,6 +6,20 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
+const handleSmoothScroll = (targetId: string) => {
+  const element = document.getElementById(targetId);
+  if (element) {
+    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+};
+
+const publicNavItems = [
+  { label: "Home", path: "/" },
+  { label: "About", path: "/#about" },
+  { label: "Features", path: "/#features" },
+  { label: "Team", path: "/#team" },
+];
+
 const appNavItems = [
   { icon: Home, label: "Dashboard", path: "/dashboard" },
   { icon: Brain, label: "PersonaPrint", path: "/persona" },
@@ -26,8 +40,6 @@ export const MobileNav = () => {
     navigate("/");
   };
 
-  if (!isAuthenticated) return null;
-
   return (
     <div className="md:hidden">
       <Sheet open={open} onOpenChange={setOpen}>
@@ -39,7 +51,9 @@ export const MobileNav = () => {
         <SheetContent side="left" className="w-[280px] bg-card/95 backdrop-blur-xl border-primary/20">
           <div className="flex flex-col h-full py-6">
             <div className="flex-1 space-y-2">
-              {appNavItems.map((item) => {
+              {isAuthenticated ? (
+                <>
+                  {appNavItems.map((item) => {
                 const isActive = location.pathname === item.path;
                 return (
                   <Link
@@ -57,63 +71,106 @@ export const MobileNav = () => {
                     <span className="font-medium">{item.label}</span>
                   </Link>
                 );
-              })}
+                  })}
 
-              {isAdmin && (
+                  {isAdmin && (
+                  <>
+                    <div className="h-px bg-border my-4" />
+                    <Link
+                      to="/admin"
+                      onClick={() => setOpen(false)}
+                      className={cn(
+                        "flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-300",
+                        location.pathname === "/admin"
+                          ? "bg-primary/20 text-primary"
+                          : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
+                      )}
+                    >
+                      <Shield className="w-5 h-5" />
+                      <span className="font-medium">Admin Panel</span>
+                    </Link>
+                    <Link
+                      to="/analytics"
+                      onClick={() => setOpen(false)}
+                      className={cn(
+                        "flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-300",
+                        location.pathname === "/analytics"
+                          ? "bg-primary/20 text-primary"
+                          : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
+                      )}
+                    >
+                      <BarChart3 className="w-5 h-5" />
+                      <span className="font-medium">Analytics</span>
+                    </Link>
+                  </>
+                  )}
+                </>
+              ) : (
                 <>
+                  {publicNavItems.map((item) => {
+                    const isHash = item.path.includes('#');
+                    const sectionId = isHash ? item.path.split('#')[1] : '';
+                    
+                    return (
+                      <a
+                        key={item.path}
+                        href={item.path}
+                        onClick={(e) => {
+                          if (isHash && sectionId) {
+                            e.preventDefault();
+                            handleSmoothScroll(sectionId);
+                            setOpen(false);
+                          }
+                        }}
+                        className="flex items-center px-4 py-3 rounded-lg transition-all duration-300 text-muted-foreground hover:text-foreground hover:bg-secondary/50"
+                      >
+                        <span className="font-medium">{item.label}</span>
+                      </a>
+                    );
+                  })}
                   <div className="h-px bg-border my-4" />
                   <Link
-                    to="/admin"
+                    to="/login"
                     onClick={() => setOpen(false)}
-                    className={cn(
-                      "flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-300",
-                      location.pathname === "/admin"
-                        ? "bg-primary/20 text-primary"
-                        : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
-                    )}
+                    className="flex items-center px-4 py-3 rounded-lg transition-all duration-300 text-muted-foreground hover:text-foreground hover:bg-secondary/50"
                   >
-                    <Shield className="w-5 h-5" />
-                    <span className="font-medium">Admin Panel</span>
+                    <span className="font-medium">Sign In</span>
                   </Link>
                   <Link
-                    to="/analytics"
+                    to="/signup"
                     onClick={() => setOpen(false)}
-                    className={cn(
-                      "flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-300",
-                      location.pathname === "/analytics"
-                        ? "bg-primary/20 text-primary"
-                        : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
-                    )}
+                    className="flex items-center px-4 py-3 rounded-lg transition-all duration-300 bg-primary text-primary-foreground hover:bg-primary/90"
                   >
-                    <BarChart3 className="w-5 h-5" />
-                    <span className="font-medium">Analytics</span>
+                    <span className="font-medium">Get Started</span>
                   </Link>
                 </>
               )}
             </div>
 
-            <div className="space-y-2 border-t border-border pt-4">
-              <Link
-                to="/profile"
-                onClick={() => setOpen(false)}
-                className={cn(
-                  "flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-300",
-                  location.pathname === "/profile"
-                    ? "bg-primary/20 text-primary"
-                    : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
-                )}
-              >
-                <User className="w-5 h-5" />
-                <span className="font-medium">Profile</span>
-              </Link>
-              <button
-                onClick={handleLogout}
-                className="flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-300 text-muted-foreground hover:text-foreground hover:bg-secondary/50 w-full"
-              >
-                <LogOut className="w-5 h-5" />
-                <span className="font-medium">Logout</span>
-              </button>
-            </div>
+            {isAuthenticated && (
+              <div className="space-y-2 border-t border-border pt-4">
+                <Link
+                  to="/profile"
+                  onClick={() => setOpen(false)}
+                  className={cn(
+                    "flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-300",
+                    location.pathname === "/profile"
+                      ? "bg-primary/20 text-primary"
+                      : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
+                  )}
+                >
+                  <User className="w-5 h-5" />
+                  <span className="font-medium">Profile</span>
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-300 text-muted-foreground hover:text-foreground hover:bg-secondary/50 w-full"
+                >
+                  <LogOut className="w-5 h-5" />
+                  <span className="font-medium">Logout</span>
+                </button>
+              </div>
+            )}
           </div>
         </SheetContent>
       </Sheet>

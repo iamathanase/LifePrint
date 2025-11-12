@@ -7,6 +7,14 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { MobileNav } from "@/components/MobileNav";
 import logo from "@/assets/logo.png";
 
+const handleSmoothScroll = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
+  e.preventDefault();
+  const element = document.getElementById(targetId);
+  if (element) {
+    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+};
+
 const publicNavItems = [
   { label: "Home", path: "/" },
   { label: "About", path: "/#about" },
@@ -123,15 +131,21 @@ export const NavBar = () => {
               </>
             ) : (
               <>
-                {publicNavItems.map((item) => (
-                  <Link
-                    key={item.path}
-                    to={item.path}
-                    className="px-4 py-2 text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    {item.label}
-                  </Link>
-                ))}
+                {publicNavItems.map((item) => {
+                  const isHash = item.path.includes('#');
+                  const sectionId = isHash ? item.path.split('#')[1] : '';
+                  
+                  return (
+                    <a
+                      key={item.path}
+                      href={item.path}
+                      onClick={(e) => isHash && sectionId ? handleSmoothScroll(e, sectionId) : undefined}
+                      className="px-4 py-2 text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+                    >
+                      {item.label}
+                    </a>
+                  );
+                })}
                 <Link to="/login">
                   <Button variant="ghost">Sign In</Button>
                 </Link>
