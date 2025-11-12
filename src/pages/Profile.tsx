@@ -7,179 +7,112 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { User, Mail, Lock, Camera } from "lucide-react";
-import { useState, useRef } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
+import { useState } from "react";
+
+const profileSchema = z.object({
+  full_name: z.string().min(1, "Name is required").max(100),
+});
+
+const passwordSchema = z.object({
+  currentPassword: z.string().min(6, "Password must be at least 6 characters"),
+  newPassword: z.string().min(6, "Password must be at least 6 characters"),
+  confirmPassword: z.string().min(6, "Password must be at least 6 characters"),
+}).refine((data) => data.newPassword === data.confirmPassword, {
+  message: "Passwords don't match",
+  path: ["confirmPassword"],
+});
+
+type ProfileFormData = z.infer<typeof profileSchema>;
+type PasswordFormData = z.infer<typeof passwordSchema>;
 
 const Profile = () => {
   const { user, profile } = useAuth();
-  const { toast } = useToast();
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  
-  const [fullName, setFullName] = useState(profile?.full_name || "");
-  const [bio, setBio] = useState(profile?.bio || "");
-  const [currentPassword, setCurrentPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [isUploading, setIsUploading] = useState(false);
-  const [isSaving, setIsSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState(profile?.avatar_url || "");
 
-  const handleAvatarClick = () => {
-    fileInputRef.current?.click();
-  };
+  const profileForm = useForm<ProfileFormData>({
+    resolver: zodResolver(profileSchema),
+    defaultValues: {
+      full_name: profile?.full_name || "",
+    },
+  });
 
-  const handleAvatarUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file || !user) return;
+  const passwordForm = useForm<PasswordFormData>({
+    resolver: zodResolver(passwordSchema),
+  });
 
-    // Validate file type
-    if (!file.type.startsWith('image/')) {
-      toast({
-        title: "Invalid file type",
-        description: "Please upload an image file",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    // Validate file size (max 2MB)
-    if (file.size > 2 * 1024 * 1024) {
-      toast({
-        title: "File too large",
-        description: "Please upload an image smaller than 2MB",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setIsUploading(true);
-
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     try {
-      const fileExt = file.name.split('.').pop();
-      const filePath = `${user.id}/avatar.${fileExt}`;
+      setUploading(true);
+      const file = e.target.files?.[0];
+      if (!file) return;
 
-      // Upload to Supabase Storage
+      if (file.size > 2 * 1024 * 1024) {
+        toast.error("Image must be less than 2MB");
+        return;
+      }
+
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${user?.id}/${Math.random()}.${fileExt}`;
+
       const { error: uploadError } = await supabase.storage
         .from('avatars')
-        .upload(filePath, file, { upsert: true });
+        .upload(fileName, file, { upsert: true });
 
       if (uploadError) throw uploadError;
 
-      // Get public URL
       const { data: { publicUrl } } = supabase.storage
         .from('avatars')
-        .getPublicUrl(filePath);
+        .getPublicUrl(fileName);
 
-      // Update profile with avatar URL
       const { error: updateError } = await supabase
         .from('profiles')
         .update({ avatar_url: publicUrl })
-        .eq('user_id', user.id);
+        .eq('user_id', user?.id);
 
       if (updateError) throw updateError;
 
-      toast({
-        title: "Avatar updated",
-        description: "Your profile picture has been updated successfully",
-      });
-
-      // Refresh the page to show new avatar
-      window.location.reload();
+      setAvatarUrl(publicUrl);
+      toast.success("Avatar updated successfully");
     } catch (error: any) {
-      toast({
-        title: "Upload failed",
-        description: error.message,
-        variant: "destructive",
-      });
+      toast.error(error.message || "Failed to upload avatar");
     } finally {
-      setIsUploading(false);
+      setUploading(false);
     }
   };
 
-  const handleProfileUpdate = async () => {
-    if (!user) return;
-    
-    setIsSaving(true);
-
+  const onProfileSubmit = async (data: ProfileFormData) => {
     try {
       const { error } = await supabase
         .from('profiles')
-        .update({ 
-          full_name: fullName,
-          bio: bio 
-        })
-        .eq('user_id', user.id);
+        .update({ full_name: data.full_name })
+        .eq('user_id', user?.id);
 
       if (error) throw error;
 
-      toast({
-        title: "Profile updated",
-        description: "Your profile has been updated successfully",
-      });
+      toast.success("Profile updated successfully");
     } catch (error: any) {
-      toast({
-        title: "Update failed",
-        description: error.message,
-        variant: "destructive",
-      });
-    } finally {
-      setIsSaving(false);
+      toast.error(error.message || "Failed to update profile");
     }
   };
 
-  const handlePasswordUpdate = async () => {
-    if (!newPassword || !confirmPassword) {
-      toast({
-        title: "Missing fields",
-        description: "Please fill in all password fields",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    if (newPassword !== confirmPassword) {
-      toast({
-        title: "Passwords don't match",
-        description: "New password and confirmation must match",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    if (newPassword.length < 6) {
-      toast({
-        title: "Password too short",
-        description: "Password must be at least 6 characters",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setIsSaving(true);
-
+  const onPasswordSubmit = async (data: PasswordFormData) => {
     try {
       const { error } = await supabase.auth.updateUser({
-        password: newPassword
+        password: data.newPassword
       });
 
       if (error) throw error;
 
-      toast({
-        title: "Password updated",
-        description: "Your password has been changed successfully",
-      });
-
-      setCurrentPassword("");
-      setNewPassword("");
-      setConfirmPassword("");
+      toast.success("Password updated successfully");
+      passwordForm.reset();
     } catch (error: any) {
-      toast({
-        title: "Update failed",
-        description: error.message,
-        variant: "destructive",
-      });
-    } finally {
-      setIsSaving(false);
+      toast.error(error.message || "Failed to update password");
     }
   };
 
@@ -193,89 +126,76 @@ const Profile = () => {
           </h1>
 
           <div className="grid gap-6">
-            {/* Avatar Upload Section */}
-            <Card className="glass-card border-primary/20">
-              <CardHeader>
-                <CardTitle>Profile Picture</CardTitle>
-                <CardDescription>Upload your avatar</CardDescription>
-              </CardHeader>
-              <CardContent className="flex flex-col items-center gap-4">
-                <div className="relative group">
-                  <Avatar className="w-32 h-32">
-                    <AvatarImage src={profile?.avatar_url || ""} alt={profile?.full_name || "User"} />
-                    <AvatarFallback className="text-2xl bg-primary/10 text-primary">
-                      {profile?.full_name?.[0]?.toUpperCase() || user?.email?.[0]?.toUpperCase() || "U"}
-                    </AvatarFallback>
-                  </Avatar>
-                  <button
-                    onClick={handleAvatarClick}
-                    disabled={isUploading}
-                    className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer disabled:cursor-not-allowed"
-                  >
-                    <Camera className="w-8 h-8 text-white" />
-                  </button>
-                </div>
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="image/*"
-                  onChange={handleAvatarUpload}
-                  className="hidden"
-                />
-                <p className="text-sm text-muted-foreground">
-                  {isUploading ? "Uploading..." : "Click on avatar to upload (max 2MB)"}
-                </p>
-              </CardContent>
-            </Card>
-
-            {/* Personal Information */}
             <Card className="glass-card border-primary/20">
               <CardHeader>
                 <CardTitle className="flex items-center">
                   <User className="w-5 h-5 mr-2 text-primary" />
                   Personal Information
                 </CardTitle>
-                <CardDescription>Manage your account details</CardDescription>
+                <CardDescription>Manage your account details and avatar</CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <Label htmlFor="name">Full Name</Label>
-                  <Input
-                    id="name"
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
-                    className="mt-2"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="bio">Bio</Label>
-                  <Input
-                    id="bio"
-                    value={bio}
-                    onChange={(e) => setBio(e.target.value)}
-                    placeholder="Tell us about yourself"
-                    className="mt-2"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="email">Email</Label>
-                  <div className="flex items-center mt-2">
-                    <Mail className="w-4 h-4 mr-2 text-muted-foreground" />
+              <CardContent className="space-y-6">
+                <div className="flex items-center gap-4">
+                  <Avatar className="w-24 h-24">
+                    <AvatarImage src={avatarUrl} alt={profile?.full_name || "User"} />
+                    <AvatarFallback className="text-2xl">
+                      {profile?.full_name?.[0]?.toUpperCase() || "U"}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <Label htmlFor="avatar" className="cursor-pointer">
+                      <div className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors">
+                        <Camera className="w-4 h-4" />
+                        {uploading ? "Uploading..." : "Change Avatar"}
+                      </div>
+                    </Label>
                     <Input
-                      id="email"
-                      type="email"
-                      defaultValue={user?.email}
-                      disabled
+                      id="avatar"
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={handleAvatarUpload}
+                      disabled={uploading}
                     />
+                    <p className="text-xs text-muted-foreground mt-2">
+                      Max size: 2MB
+                    </p>
                   </div>
                 </div>
-                <Button onClick={handleProfileUpdate} disabled={isSaving}>
-                  {isSaving ? "Saving..." : "Save Changes"}
-                </Button>
+
+                <form onSubmit={profileForm.handleSubmit(onProfileSubmit)} className="space-y-4">
+                  <div>
+                    <Label htmlFor="full_name">Full Name</Label>
+                    <Input
+                      id="full_name"
+                      {...profileForm.register("full_name")}
+                      className="mt-2"
+                    />
+                    {profileForm.formState.errors.full_name && (
+                      <p className="text-sm text-destructive mt-1">
+                        {profileForm.formState.errors.full_name.message}
+                      </p>
+                    )}
+                  </div>
+                  <div>
+                    <Label htmlFor="email">Email</Label>
+                    <div className="flex items-center mt-2">
+                      <Mail className="w-4 h-4 mr-2 text-muted-foreground" />
+                      <Input
+                        id="email"
+                        type="email"
+                        defaultValue={user?.email}
+                        disabled
+                      />
+                    </div>
+                  </div>
+                  <Button type="submit" disabled={profileForm.formState.isSubmitting}>
+                    {profileForm.formState.isSubmitting ? "Saving..." : "Save Changes"}
+                  </Button>
+                </form>
               </CardContent>
             </Card>
 
-            {/* Security Section */}
             <Card className="glass-card border-primary/20">
               <CardHeader>
                 <CardTitle className="flex items-center">
@@ -284,43 +204,57 @@ const Profile = () => {
                 </CardTitle>
                 <CardDescription>Update your password</CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <Label htmlFor="current">Current Password</Label>
-                  <Input
-                    id="current"
-                    type="password"
-                    value={currentPassword}
-                    onChange={(e) => setCurrentPassword(e.target.value)}
-                    placeholder="••••••••"
-                    className="mt-2"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="new">New Password</Label>
-                  <Input
-                    id="new"
-                    type="password"
-                    value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
-                    placeholder="••••••••"
-                    className="mt-2"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="confirm">Confirm New Password</Label>
-                  <Input
-                    id="confirm"
-                    type="password"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    placeholder="••••••••"
-                    className="mt-2"
-                  />
-                </div>
-                <Button onClick={handlePasswordUpdate} disabled={isSaving}>
-                  {isSaving ? "Updating..." : "Update Password"}
-                </Button>
+              <CardContent>
+                <form onSubmit={passwordForm.handleSubmit(onPasswordSubmit)} className="space-y-4">
+                  <div>
+                    <Label htmlFor="currentPassword">Current Password</Label>
+                    <Input
+                      id="currentPassword"
+                      type="password"
+                      placeholder="••••••••"
+                      {...passwordForm.register("currentPassword")}
+                      className="mt-2"
+                    />
+                    {passwordForm.formState.errors.currentPassword && (
+                      <p className="text-sm text-destructive mt-1">
+                        {passwordForm.formState.errors.currentPassword.message}
+                      </p>
+                    )}
+                  </div>
+                  <div>
+                    <Label htmlFor="newPassword">New Password</Label>
+                    <Input
+                      id="newPassword"
+                      type="password"
+                      placeholder="••••••••"
+                      {...passwordForm.register("newPassword")}
+                      className="mt-2"
+                    />
+                    {passwordForm.formState.errors.newPassword && (
+                      <p className="text-sm text-destructive mt-1">
+                        {passwordForm.formState.errors.newPassword.message}
+                      </p>
+                    )}
+                  </div>
+                  <div>
+                    <Label htmlFor="confirmPassword">Confirm New Password</Label>
+                    <Input
+                      id="confirmPassword"
+                      type="password"
+                      placeholder="••••••••"
+                      {...passwordForm.register("confirmPassword")}
+                      className="mt-2"
+                    />
+                    {passwordForm.formState.errors.confirmPassword && (
+                      <p className="text-sm text-destructive mt-1">
+                        {passwordForm.formState.errors.confirmPassword.message}
+                      </p>
+                    )}
+                  </div>
+                  <Button type="submit" disabled={passwordForm.formState.isSubmitting}>
+                    {passwordForm.formState.isSubmitting ? "Updating..." : "Update Password"}
+                  </Button>
+                </form>
               </CardContent>
             </Card>
           </div>
