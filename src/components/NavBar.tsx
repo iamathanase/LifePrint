@@ -3,6 +3,7 @@ import { Brain, Home, Utensils, BookOpen, Clock, User, LogOut, Shield, BarChart3
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { MobileNav } from "@/components/MobileNav";
 import logo from "@/assets/logo.png";
 
@@ -24,7 +25,7 @@ const appNavItems = [
 export const NavBar = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { isAuthenticated, isAdmin, logout } = useAuth();
+  const { isAuthenticated, isAdmin, logout, profile, user } = useAuth();
 
   const handleLogout = () => {
     logout();
@@ -103,7 +104,12 @@ export const NavBar = () => {
                       : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
                   )}
                 >
-                  <User className="w-4 h-4" />
+                  <Avatar className="w-6 h-6">
+                    <AvatarImage src={profile?.avatar_url || ""} alt={profile?.full_name || "User"} />
+                    <AvatarFallback className="text-xs bg-primary/10 text-primary">
+                      {profile?.full_name?.[0]?.toUpperCase() || user?.email?.[0]?.toUpperCase() || "U"}
+                    </AvatarFallback>
+                  </Avatar>
                   <span className="text-sm font-medium">Profile</span>
                 </Link>
                 <Button
