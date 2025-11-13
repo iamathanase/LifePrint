@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Brain, Home, Utensils, BookOpen, Clock, User, LogOut, Shield, BarChart3 } from "lucide-react";
+import { Brain, Home, Utensils, BookOpen, Clock, User, LogOut, Shield, BarChart3, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
@@ -28,6 +28,7 @@ const appNavItems = [
   { icon: Utensils, label: "FoodPrint", path: "/food" },
   { icon: BookOpen, label: "StoryWeaver", path: "/stories" },
   { icon: Clock, label: "Time Capsule", path: "/capsule" },
+  { icon: Users, label: "Friends", path: "/friends" },
 ];
 
 export const NavBar = () => {
