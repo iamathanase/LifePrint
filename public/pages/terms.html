@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="../assets/images/logo-circle.png">
+    <title>LifePrint - Terms of Service</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            background: #f7fafc;
+            color: #2d3748;
+            line-height: 1.6;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: #667eea;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .logo img {
+            height: 50px;
+            border-radius: 50%;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #4a5568;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #667eea;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 6rem 2rem 4rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before,
+        .hero::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .hero::before {
+            width: 500px;
+            height: 500px;
+            top: -200px;
+            right: -100px;
+        }
+
+        .hero::after {
+            width: 400px;
+            height: 400px;
+            bottom: -150px;
+            left: -100px;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        /* Content Container */
+        .content-container {
+            max-width: 900px;
+            margin: -3rem auto 4rem;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .terms-card {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+        }
+
+        .terms-summary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 3rem;
+            color: white;
+        }
+
+        .terms-summary h3 {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+
+        .terms-summary p {
+            font-size: 1.05rem;
+            line-height: 1.8;
+        }
+
+        .term-section {
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .term-section:last-child {
+            border-bottom: none;
+        }
+
+        .term-section h3 {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: #667eea;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+        }
+
+        .term-section p {
+            color: #4a5568;
+            margin-bottom: 1rem;
+            font-size: 1.05rem;
+        }
+
+        .term-section ul {
+            margin-left: 2rem;
+            color: #4a5568;
+            font-size: 1.05rem;
+        }
+
+        .term-section li {
+            margin-bottom: 0.75rem;
+            line-height: 1.8;
+        }
+
+        .term-section strong {
+            color: #2d3748;
+        }
+
+        .highlight-box {
+            background: rgba(102, 126, 234, 0.1);
+            border-left: 4px solid #667eea;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 1.5rem 0;
+        }
+
+        .warning-box {
+            background: rgba(239, 68, 68, 0.1);
+            border-left: 4px solid #ef4444;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 1.5rem 0;
+        }
+
+        .warning-box p {
+            color: #991b1b;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .info-box {
+            background: rgba(102, 126, 234, 0.05);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 1.5rem 0;
+        }
+
+        .info-box p {
+            margin: 0.5rem 0;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 2.5rem;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            border-radius: 15px;
+        }
+
+        .cta-section h3 {
+            color: #667eea;
+            font-size: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .cta-section p {
+            color: #718096;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .help-text {
+            margin-top: 1.5rem;
+            font-size: 0.95rem;
+            color: #718096;
+        }
+
+        .help-text a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        /* Footer */
+        .footer {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 4rem 2rem 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .footer-section h4 {
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .footer-section p {
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .footer-links a:hover {
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .social-links a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .terms-card {
+                padding: 2rem 1.5rem;
+            }
+
+            .term-section h3 {
+                font-size: 1.2rem;
+            }
+
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="home.html">
+                <img src="../assets/images/logo.png" alt="LifePrint Logo" style="height: 50px; border-radius: 50%;" onerror="this.style.display='none'">
+            </a>
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu" style="display: none; background: none; border: none; cursor: pointer; width: 30px; height: 25px; position: relative;">
+                <span style="display: block; width: 100%; height: 3px; background: #667eea; margin: 5px 0; transition: 0.3s;"></span>
+                <span style="display: block; width: 100%; height: 3px; background: #667eea; margin: 5px 0; transition: 0.3s;"></span>
+                <span style="display: block; width: 100%; height: 3px; background: #667eea; margin: 5px 0; transition: 0.3s;"></span>
+            </button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="home.html">Home</a></li>
+                <li><a href="home.html#about">About</a></li>
+                <li><a href="home.html#contact">Contact</a></li>
+                <li><a href="home.html#faq">FAQ</a></li>
+                <li><a href="login.html">Login</a></li>
+                <li><a href="signup.html" style="color: white; background: #667eea; padding: 0.5rem 1.5rem; border-radius: 25px;">Sign Up</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Terms of Service</h1>
+            <p>Effective Date: November 16, 2025 | Last Updated: November 16, 2025</p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="content-container">
+        <div class="terms-card">
+            <div class="terms-summary">
+                <h3><i class="fas fa-heart"></i> Welcome to LifePrint - Your Wellness Journey</h3>
+                <p>We're committed to helping you build healthier habits and track your personal growth. These terms are designed to protect both you and our community while keeping things simple and fair.</p>
+            </div>
+
+            <div class="terms-sections">
+                <div class="term-section">
+                    <h3><i class="fas fa-handshake"></i> 1. Our Agreement</h3>
+                    <p>By using LifePrint, you're agreeing to these terms. We've kept them straightforward because we believe transparency builds trust. If you don't agree with any part, please don't use our service.</p>
+                </div>
+
+                <div class="term-section">
+                    <h3><i class="fas fa-shield-alt"></i> 2. Your Privacy & Data</h3>
+                    <p><strong>Your wellness data belongs to you.</strong> We collect information to provide personalized insights and improve your experience. This includes:</p>
+                    <ul>
+                        <li>Health and wellness tracking data you choose to log</li>
+                        <li>Personality assessment responses</li>
+                        <li>Goal progress and achievement data</li>
+                        <li>Stories and journal entries (always private unless you choose to share)</li>
+                    </ul>
+                    <div class="highlight-box">
+                        <p style="margin:0; font-style: italic;"><strong>We never sell your personal data. Period.</strong></p>
+                    </div>
+                </div>
+
+                <div class="term-section">
+                    <h3><i class="fas fa-user-shield"></i> 3. Your Account & Responsibilities</h3>
+                    <p>To keep your account secure:</p>
+                    <ul>
+                        <li>Keep your password strong and private</li>
+                        <li>Don't share your account with others</li>
+                        <li>Let us know immediately if you suspect unauthorized access</li>
+                        <li>Be honest in your health tracking (it's for your benefit!)</li>
+                    </ul>
+                </div>
+
+                <div class="term-section">
+                    <h3><i class="fas fa-medical-alt"></i> 4. Health & Wellness Disclaimer</h3>
+                    <div class="warning-box">
+                        <p><i class="fas fa-exclamation-triangle"></i> Important: LifePrint is a wellness tracking tool, not medical advice.</p>
+                    </div>
+                    <p>Our platform provides insights and tracking capabilities, but:</p>
+                    <ul>
+                        <li>Always consult healthcare professionals for medical decisions</li>
+                        <li>Don't use our assessments to self-diagnose conditions</li>
+                        <li>Emergency situations require immediate professional help</li>
+                    </ul>
+                </div>
+
+                <div class="term-section">
+                    <h3><i class="fas fa-users"></i> 5. Community Guidelines</h3>
+                    <p>LifePrint is a supportive community. Please:</p>
+                    <ul>
+                        <li><strong>Be kind and respectful</strong> in all interactions</li>
+                        <li><strong>Keep content appropriate</strong> - no harassment, hate speech, or harmful content</li>
+                        <li><strong>Respect privacy</strong> - don't share others' personal information</li>
+                        <li><strong>Report concerns</strong> - help us maintain a safe space</li>
+                    </ul>
+                </div>
+
+                <div class="term-section">
+                    <h3><i class="fas fa-cog"></i> 6. Service & Features</h3>
+                    <p>We're constantly improving LifePrint. This means:</p>
+                    <ul>
+                        <li>Features may be added, updated, or occasionally removed</li>
+                        <li>We'll do our best to keep services running smoothly (99.9% uptime goal)</li>
+                        <li>Scheduled maintenance will be announced in advance when possible</li>
+                        <li>Your data remains yours, even if you stop using our service</li>
+                    </ul>
+                </div>
+
+                <div class="term-section">
+                    <h3><i class="fas fa-credit-card"></i> 7. Subscriptions & Payments</h3>
+                    <p>We offer both free and premium features:</p>
+                    <ul>
+                        <li><strong>Free tier:</strong> Core wellness tracking and basic insights</li>
+                        <li><strong>Premium:</strong> Advanced analytics, unlimited storage, and premium features</li>
+                        <li>Cancel anytime - no long-term commitments</li>
+                        <li>Refunds available within 30 days for premium subscriptions</li>
+                    </ul>
+                </div>
+
+                <div class="term-section">
+                    <h3><i class="fas fa-edit"></i> 8. Changes to These Terms</h3>
+                    <p>We may update these terms occasionally to reflect new features or legal requirements. When we do:</p>
+                    <ul>
+                        <li>We'll notify you at least 30 days before major changes</li>
+                        <li>Minor clarifications take effect immediately</li>
+                        <li>You can always find the latest version here</li>
+                    </ul>
+                </div>
+
+                <div class="term-section">
+                    <h3><i class="fas fa-phone"></i> 9. Contact & Support</h3>
+                    <p>Questions about these terms or need help?</p>
+                    <div class="info-box">
+                        <p><strong>Email:</strong> support@lifeprint.com</p>
+                        <p><strong>Response time:</strong> Within 24 hours</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cta-section">
+                <h3>Ready to start your wellness journey?</h3>
+                <p>By clicking "I Accept", you agree to these terms and our Privacy Policy.</p>
+                <a href="signup.html" class="cta-btn">
+                    <i class="fas fa-check-circle"></i> I Accept & Continue
+                </a>
+                <p class="help-text">
+                    Have questions? <a href="mailto:support@lifeprint.com">Contact us</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3><i class="fas fa-fingerprint"></i> LifePrint</h3>
+                <p>Your digital wellness companion for holistic self-improvement and personal growth.</p>
+                <div class="social-links">
+                    <a href="https://www.linkedin.com/in/lifeprint"><i class="fab fa-linkedin"></i></a>
+                    <a href="https://twitter.com/lifeprint"><i class="fab fa-twitter"></i></a>
+                    <a href="https://www.instagram.com/lifeprint"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.facebook.com/lifeprint"><i class="fab fa-facebook"></i></a>
+                    <a href="https://www.youtube.com/lifeprint"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul class="footer-links">
+                    <li><a href="home.html">Home</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="stories.html">Success Stories</a></li>
+                    <li><a href="news.html">News & Updates</a></li>
+                    <li><a href="faq.html">FAQ</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Features</h4>
+                <ul class="footer-links">
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="#">PersonaPrint</a></li>
+                    <li><a href="#">FoodPrint</a></li>
+                    <li><a href="#">Goal Tracking</a></li>
+                    <li><a href="#">Analytics</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Legal</h4>
+                <ul class="footer-links">
+                    <li><a href="terms.html">Terms of Service</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Cookie Policy</a></li>
+                    <li><a href="#">Data Security</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 LifePrint. All rights reserved. Built with <i class="fas fa-heart" style="color: rgba(255,255,255,0.8);"></i> in Rwanda</p>
+        </div>
+    </footer>
+    <script src="../assets/js/mobile-menu.js"></script>
+</body>
+</html>

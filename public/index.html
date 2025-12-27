@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="assets/images/logo-circle.png">
+    <title>Redirecting to LifePrint...</title>
+    <script src="assets/js/config.js"></script>
+</head>
+<body>
+    <div style="font-family: Inter, sans-serif; text-align: center; padding: 50px; color: #2d3142;">
+        <h2>Welcome to LifePrint</h2>
+        <p>Redirecting you to the right place...</p>
+        <div style="margin-top: 20px;">
+            <div style="display: inline-block; width: 20px; height: 20px; background: #D4B896; border-radius: 50%; animation: pulse 1.5s infinite;"></div>
+        </div>
+    </div>
+
+    <script>
+        // Check if user is logged in and redirect accordingly
+        function redirectUser() {
+            const userData = localStorage.getItem('user_data');
+            const token = localStorage.getItem('auth_token');
+            
+            console.log('Checking auth status:', {userData: !!userData, token: !!token});
+            
+            if (userData && token) {
+                // User is logged in, go to dashboard
+                console.log('User authenticated, redirecting to dashboard');
+                window.location.href = 'pages/dashboard.html';
+            } else {
+                // User is not logged in, go to public home
+                console.log('User not authenticated, redirecting to public home');
+                window.location.href = 'pages/home.html';
+            }
+        }
+
+        // Redirect immediately
+        redirectUser();
+    </script>
+
+    <style>
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+    </style>
+</body>
+</html>

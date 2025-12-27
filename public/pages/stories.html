@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Success Stories - LifePrint</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/premium-design.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="../assets/css/enhanced-animations.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            padding: 1rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .navbar.scrolled {
+            padding: 0.5rem 0;
+            box-shadow: 0 2px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            height: 50px;
+            width: auto;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            list-style: none;
+        }
+
+        .nav-link {
+            color: #333;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .nav-link.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 150px 2rem 100px;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.9), rgba(118, 75, 162, 0.9));
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+            animation: fadeInUp 1s ease;
+        }
+
+        .stats-bar {
+            display: flex;
+            gap: 3rem;
+            justify-content: center;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            display: block;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        /* Featured Story */
+        .featured-story {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 4rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+        }
+
+        .story-image {
+            position: relative;
+            height: 600px;
+        }
+
+        .story-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .featured-badge {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
+            font-weight: 600;
+        }
+
+        .story-content {
+            padding: 3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .person-info h2 {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .person-title {
+            color: #667eea;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+
+        .person-location {
+            color: #999;
+            margin-bottom: 1.5rem;
+        }
+
+        .story-quote {
+            font-size: 1.1rem;
+            color: #666;
+            line-height: 1.8;
+            font-style: italic;
+            margin: 2rem 0;
+            padding-left: 1.5rem;
+            border-left: 4px solid #667eea;
+        }
+
+        .impact-metrics {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .metric {
+            text-align: center;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            border-radius: 15px;
+        }
+
+        .metric-value {
+            display: block;
+            font-size: 2rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        /* Stories Grid */
+        .section-title {
+            font-size: 2.5rem;
+            text-align: center;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 3rem;
+        }
+
+        .stories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .story-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .story-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .story-header {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #667eea;
+        }
+
+        .person-details h4 {
+            font-size: 1.2rem;
+            color: #333;
+            margin-bottom: 0.3rem;
+        }
+
+        .story-rating {
+            margin-top: 0.5rem;
+        }
+
+        .stars {
+            color: #ffc107;
+            font-size: 1.1rem;
+        }
+
+        .rating-text {
+            margin-left: 0.5rem;
+            color: #999;
+            font-size: 0.9rem;
+        }
+
+        .story-text {
+            color: #666;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+            font-style: italic;
+        }
+
+        .story-tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .tag {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            color: #667eea;
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .story-footer {
+            display: flex;
+            justify-content: space-between;
+            padding-top: 1rem;
+            border-top: 1px solid #eee;
+            color: #999;
+            font-size: 0.9rem;
+        }
+
+        .verified {
+            color: #667eea;
+        }
+
+        /* Footer */
+        .footer {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 4rem 2rem 2rem;
+            margin-top: 6rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .footer-section h4 {
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .footer-section p {
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .footer-links a:hover {
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .social-links a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .featured-story {
+                grid-template-columns: 1fr;
+            }
+
+            .story-image {
+                height: 400px;
+            }
+
+            .impact-metrics {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .story-content {
+                padding: 2rem;
+            }
+
+            .stories-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-bar {
+                gap: 1.5rem;
+            }
+
+            .impact-metrics {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Scroll Progress Bar -->
+    <div class="scroll-progress" id="scrollProgress"></div>
+
+    <!-- Scroll Indicator -->
+    <div class="scroll-indicator" id="scrollIndicator">
+        <i class="fas fa-chevron-down"></i>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="home.html">
+                <img src="../assets/images/logo.png" alt="LifePrint Logo" class="logo" onerror="this.style.display='none'">
+            </a>
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="home.html" class="nav-link">Home</a></li>
+                <li><a href="about.html" class="nav-link">About</a></li>
+                <li><a href="faq.html" class="nav-link">FAQ</a></li>
+                <li><a href="news.html" class="nav-link">News</a></li>
+                <li><a href="stories.html" class="nav-link active">Stories</a></li>
+                <li><a href="contact.html" class="nav-link">Contact</a></li>
+                <li><a href="login.html" class="nav-link">Login</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1><i class="fas fa-heart"></i> Transforming Lives Across Rwanda</h1>
+        <p>Real stories from real people who have transformed their wellness journey with LifePrint</p>
+        <div class="stats-bar">
+            <div class="stat-item">
+                <span class="stat-number">15,000+</span>
+                <span class="stat-label">Active Users</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">89%</span>
+                <span class="stat-label">Report Improved Wellness</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">73%</span>
+                <span class="stat-label">Better Mental Health</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Featured Story -->
+        <article class="featured-story">
+            <div class="story-image">
+                <img src="https://images.unsplash.com/photo-1494790108755-2616c125b341?auto=format&fit=crop&w=800&q=80" alt="Dr. Aline Uwimana" onerror="this.style.backgroundColor='#667eea'">
+                <div class="featured-badge">FEATURED STORY</div>
+            </div>
+            <div class="story-content">
+                <div class="person-info">
+                    <h2>Dr. Aline Uwimana</h2>
+                    <p class="person-title">Pediatrician, University Teaching Hospital of Kigali (CHUK)</p>
+                    <p class="person-location"><i class="fas fa-map-marker-alt"></i> Kigali, Rwanda</p>
+                </div>
+                <blockquote class="story-quote">
+                    "Working 12-hour shifts at CHUK, I was neglecting my own health while caring for others. LifePrint's PersonaPrint assessment revealed I was a 'Caregiver' personality type - always putting others first. The FoodPrint module helped me track my irregular eating patterns, and StoryWeaver became my therapeutic outlet after difficult days with young patients. In 8 months, I've lost 15kg, improved my sleep quality by 40%, and feel more emotionally resilient."
+                </blockquote>
+                <div class="impact-metrics">
+                    <div class="metric">
+                        <span class="metric-value">15kg</span>
+                        <span class="metric-label">Weight Loss</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-value">40%</span>
+                        <span class="metric-label">Better Sleep</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-value">8</span>
+                        <span class="metric-label">Months Journey</span>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <!-- More Stories -->
+        <h2 class="section-title">More Success Stories</h2>
+
+        <div class="stories-grid">
+            <!-- Story 1 -->
+            <article class="story-card">
+                <div class="story-header">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80" alt="Jean Baptiste" class="avatar" onerror="this.style.backgroundColor='#667eea'">
+                    <div class="person-details">
+                        <h4>Jean Baptiste Nzeyimana</h4>
+                        <p class="person-title">Software Developer at Andela Rwanda</p>
+                        <p class="person-location"><i class="fas fa-map-marker-alt"></i> Kigali, Gasabo</p>
+                        <div class="story-rating">
+                            <span class="stars">★★★★★</span>
+                            <span class="rating-text">5.0/5</span>
+                        </div>
+                    </div>
+                </div>
+                <blockquote class="story-text">
+                    "As a developer, I spent 14+ hours daily coding, surviving on energy drinks and fast food. LifePrint's analytics showed my productivity actually decreased after 10pm. The Time Capsule feature motivated me to set a goal: 'Future JB will thank Present JB for prioritizing health.' I now meal prep using FoodPrint's nutrition tracking, exercise 4x/week, and my GitHub commits are more focused. I got promoted to Senior Developer at Andela!"
+                </blockquote>
+                <div class="story-tags">
+                    <span class="tag">Career Growth</span>
+                    <span class="tag">Better Coding</span>
+                    <span class="tag">Healthier Habits</span>
+                </div>
+                <div class="story-footer">
+                    <span><i class="fas fa-clock"></i> 6 months with LifePrint</span>
+                    <span class="verified"><i class="fas fa-check-circle"></i> Verified User</span>
+                </div>
+            </article>
+
+            <!-- Story 2 -->
+            <article class="story-card">
+                <div class="story-header">
+                    <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=200&q=80" alt="Grace Uwera" class="avatar" onerror="this.style.backgroundColor='#764ba2'">
+                    <div class="person-details">
+                        <h4>Grace Uwera</h4>
+                        <p class="person-title">Business Administration Student, UR</p>
+                        <p class="person-location"><i class="fas fa-map-marker-alt"></i> Huye, Southern Province</p>
+                        <div class="story-rating">
+                            <span class="stars">★★★★★</span>
+                            <span class="rating-text">5.0/5</span>
+                        </div>
+                    </div>
+                </div>
+                <blockquote class="story-text">
+                    "Balancing academics, part-time work at a local cooperative, and family expectations was overwhelming. LifePrint's PersonaPrint revealed I'm an 'Achiever' with perfectionist tendencies causing anxiety. StoryWeaver helped me journal my daily struggles and victories. The community feature connected me with other UR students facing similar challenges. My GPA increased from 3.2 to 3.8, and I was elected as Students' Union Treasurer!"
+                </blockquote>
+                <div class="story-tags">
+                    <span class="tag">Academic Excellence</span>
+                    <span class="tag">Leadership Role</span>
+                    <span class="tag">Reduced Anxiety</span>
+                </div>
+                <div class="story-footer">
+                    <span><i class="fas fa-clock"></i> 1 year with LifePrint</span>
+                    <span class="verified"><i class="fas fa-check-circle"></i> Verified Student</span>
+                </div>
+            </article>
+
+            <!-- Story 3 -->
+            <article class="story-card">
+                <div class="story-header">
+                    <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80" alt="Patrick Mugabo" class="avatar" onerror="this.style.backgroundColor='#667eea'">
+                    <div class="person-details">
+                        <h4>Patrick Mugabo</h4>
+                        <p class="person-title">Entrepreneur & Coffee Farmer</p>
+                        <p class="person-location"><i class="fas fa-map-marker-alt"></i> Musanze, Northern Province</p>
+                        <div class="story-rating">
+                            <span class="stars">★★★★★</span>
+                            <span class="rating-text">5.0/5</span>
+                        </div>
+                    </div>
+                </div>
+                <blockquote class="story-text">
+                    "Running a coffee cooperative with 50 farmers while managing my own plantation left no time for myself. High blood pressure at 42 was my wake-up call. LifePrint's FoodPrint helped me discover local foods that naturally lower BP. The Time Capsule let me write messages to my children about building healthy habits. After 10 months, my blood pressure normalized, and I've inspired 30 farmers in my cooperative to join LifePrint!"
+                </blockquote>
+                <div class="story-tags">
+                    <span class="tag">Health Recovery</span>
+                    <span class="tag">Community Impact</span>
+                    <span class="tag">Family Legacy</span>
+                </div>
+                <div class="story-footer">
+                    <span><i class="fas fa-clock"></i> 10 months with LifePrint</span>
+                    <span class="verified"><i class="fas fa-check-circle"></i> Verified User</span>
+                </div>
+            </article>
+
+            <!-- Story 4 -->
+            <article class="story-card">
+                <div class="story-header">
+                    <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=200&q=80" alt="Marie Claire" class="avatar" onerror="this.style.backgroundColor='#764ba2'">
+                    <div class="person-details">
+                        <h4>Marie Claire Mukamana</h4>
+                        <p class="person-title">Teacher & Single Mother</p>
+                        <p class="person-location"><i class="fas fa-map-marker-alt"></i> Rubavu, Western Province</p>
+                        <div class="story-rating">
+                            <span class="stars">★★★★★</span>
+                            <span class="rating-text">5.0/5</span>
+                        </div>
+                    </div>
+                </div>
+                <blockquote class="story-text">
+                    "Teaching 200+ students while raising three children alone, I felt constantly exhausted and guilty. LifePrint's assessment showed my stress levels were critical. The StoryWeaver module became my safe space to express feelings I couldn't share elsewhere. The app's reminder system helped me establish self-care routines. My students noticed I'm more patient now. My eldest daughter said, 'Mama smiles more.' That's everything to me."
+                </blockquote>
+                <div class="story-tags">
+                    <span class="tag">Stress Management</span>
+                    <span class="tag">Better Parenting</span>
+                    <span class="tag">Self-Care</span>
+                </div>
+                <div class="story-footer">
+                    <span><i class="fas fa-clock"></i> 9 months with LifePrint</span>
+                    <span class="verified"><i class="fas fa-check-circle"></i> Verified User</span>
+                </div>
+            </article>
+
+            <!-- Story 5 -->
+            <article class="story-card">
+                <div class="story-header">
+                    <img src="https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?auto=format&fit=crop&w=200&q=80" alt="Eric Habimana" class="avatar" onerror="this.style.backgroundColor='#667eea'">
+                    <div class="person-details">
+                        <h4>Eric Habimana</h4>
+                        <p class="person-title">Motorcycle Taxi Operator</p>
+                        <p class="person-location"><i class="fas fa-map-marker-alt"></i> Kigali, Nyarugenge</p>
+                        <div class="story-rating">
+                            <span class="stars">★★★★★</span>
+                            <span class="rating-text">5.0/5</span>
+                        </div>
+                    </div>
+                </div>
+                <blockquote class="story-text">
+                    "Working 12-16 hours daily as a moto taxi driver, eating irregularly, I developed severe back pain and gained 20kg. A customer who's a doctor recommended LifePrint. The simple nutrition tracking and exercise reminders fit my unpredictable schedule. The app works even with my basic smartphone! I've lost 12kg, my back pain is gone, and I inspire other drivers at our moto stand. We even created a WhatsApp group to share progress!"
+                </blockquote>
+                <div class="story-tags">
+                    <span class="tag">Weight Loss</span>
+                    <span class="tag">Pain Relief</span>
+                    <span class="tag">Community Leader</span>
+                </div>
+                <div class="story-footer">
+                    <span><i class="fas fa-clock"></i> 7 months with LifePrint</span>
+                    <span class="verified"><i class="fas fa-check-circle"></i> Verified User</span>
+                </div>
+            </article>
+
+            <!-- Story 6 -->
+            <article class="story-card">
+                <div class="story-header">
+                    <img src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=200&q=80" alt="Divine Umutoni" class="avatar" onerror="this.style.backgroundColor='#764ba2'">
+                    <div class="person-details">
+                        <h4>Divine Umutoni</h4>
+                        <p class="person-title">Fashion Designer & Boutique Owner</p>
+                        <p class="person-location"><i class="fas fa-map-marker-alt"></i> Kigali, Kimihurura</p>
+                        <div class="story-rating">
+                            <span class="stars">★★★★★</span>
+                            <span class="rating-text">5.0/5</span>
+                        </div>
+                    </div>
+                </div>
+                <blockquote class="story-text">
+                    "The fashion industry's pressure to look perfect while running a business led to an eating disorder I hid for years. LifePrint's compassionate approach - no judgment, just data and support - helped me understand my patterns. StoryWeaver became my healing journal. The community connected me with others who understood. I'm now designing a wellness-focused fashion line and using my story to help other young women in Rwanda's fashion scene."
+                </blockquote>
+                <div class="story-tags">
+                    <span class="tag">Recovery Journey</span>
+                    <span class="tag">Mental Wellness</span>
+                    <span class="tag">Inspiring Others</span>
+                </div>
+                <div class="story-footer">
+                    <span><i class="fas fa-clock"></i> 1 year with LifePrint</span>
+                    <span class="verified"><i class="fas fa-check-circle"></i> Verified User</span>
+                </div>
+            </article>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3><i class="fas fa-fingerprint"></i> LifePrint</h3>
+                <p>Your digital wellness companion for holistic self-improvement and personal growth.</p>
+                <div class="social-links">
+                    <a href="https://www.linkedin.com/in/lifeprint"><i class="fab fa-linkedin"></i></a>
+                    <a href="https://twitter.com/lifeprint"><i class="fab fa-twitter"></i></a>
+                    <a href="https://www.instagram.com/lifeprint"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.facebook.com/lifeprint"><i class="fab fa-facebook"></i></a>
+                    <a href="https://www.youtube.com/lifeprint"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul class="footer-links">
+                    <li><a href="home.html">Home</a></li>
+                    <li><a href="stories.html">Success Stories</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="news.html">News & Updates</a></li>
+                    <li><a href="faq.html">FAQ</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Get Started</h4>
+                <ul class="footer-links">
+                    <li><a href="signup.html">Sign Up</a></li>
+                    <li><a href="login.html">Log In</a></li>
+                    <li><a href="about.html">Learn More</a></li>
+                    <li><a href="contact.html">Get Support</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Legal</h4>
+                <ul class="footer-links">
+                    <li><a href="terms.html">Terms of Service</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Cookie Policy</a></li>
+                    <li><a href="#">Data Security</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 LifePrint. All rights reserved. Built with <i class="fas fa-heart" style="color: #667eea;"></i> in Rwanda</p>
+        </div>
+    </footer>
+
+    <script>
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+    </script>
+
+    <!-- Notifications and Smooth Scroll Libraries -->
+    <script src="../assets/js/notifications.js"></script>
+    <script src="../assets/js/smooth-scroll.js"></script>
+    <script src="../assets/js/mobile-menu.js"></script>
+</body>
+</html>

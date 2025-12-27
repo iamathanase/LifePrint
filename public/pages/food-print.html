@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodPrint - LifePrint</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/premium-design.css">
+    <link rel="stylesheet" href="../assets/css/enhanced-animations.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="../assets/js/modules-api.js"></script>
+    <style>
+        :root {
+            --primary: #667eea;
+            --secondary: #764ba2;
+            --text-dark: #1a202c;
+            --text-light: #718096;
+            --bg-white: #ffffff;
+            --transition-speed: 0.3s;
+            --transition-curve: cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            padding-top: 70px;
+        }
+
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            z-index: 1000;
+            padding: 1rem 0;
+            transition: all var(--transition-speed) var(--transition-curve);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 clamp(1rem, 5vw, 2rem);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            height: 50px;
+            width: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            transition: transform var(--transition-speed) var(--transition-curve);
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+        }
+
+        .logo:hover {
+            transform: scale(1.08) rotate(-2deg);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-links li {
+            list-style: none;
+        }
+
+        .nav-link {
+            color: var(--text-dark);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all var(--transition-speed) ease;
+            font-weight: 500;
+            position: relative;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transition: all var(--transition-speed) ease;
+            transform: translateX(-50%);
+        }
+
+        .nav-link:hover {
+            color: var(--primary);
+        }
+
+        .nav-link:hover::after {
+            width: 80%;
+        }
+
+        /* Footer */
+        .footer {
+            background: rgba(255, 255, 255, 0.98);
+            padding: clamp(2.5rem, 5vh, 3.5rem) clamp(1rem, 5vw, 2rem) clamp(2rem, 4vh, 2.5rem);
+            color: var(--text-light);
+            backdrop-filter: blur(10px);
+            margin-top: 3rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+            gap: clamp(2rem, 4vw, 3rem);
+            margin-bottom: clamp(1.5rem, 3vh, 2rem);
+        }
+
+        .footer-section h3,
+        .footer-section h4 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+        }
+
+        .footer-section p {
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+
+        .footer-links {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.65rem;
+        }
+
+        .footer-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            transition: all var(--transition-speed) ease;
+            position: relative;
+        }
+
+        .footer-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width var(--transition-speed) ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+            padding-left: 8px;
+        }
+
+        .footer-links a:hover::after {
+            width: 100%;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.25rem;
+            flex-wrap: wrap;
+        }
+
+        .social-links a {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: all var(--transition-speed) var(--transition-curve);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.25);
+        }
+
+        .social-links a:hover {
+            transform: translateY(-8px) rotate(10deg);
+            box-shadow: 0 12px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            font-size: 0.9rem;
+        }
+
+        @media (min-width: 769px) {
+            .mobile-menu-btn {
+                display: none !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                position: absolute;
+                top: 70px;
+                left: 0;
+                right: 0;
+                background: rgba(255, 255, 255, 0.98);
+                flex-direction: column;
+                gap: 0;
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.3s ease;
+                backdrop-filter: blur(20px);
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            }
+
+            .nav-links.active {
+                max-height: 500px;
+            }
+
+            .nav-links li {
+                border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            }
+
+            .nav-link {
+                display: block;
+                padding: 1rem;
+                border-radius: 0;
+            }
+        }
+
+        .foodprint-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .foodprint-hero {
+            background: linear-gradient(135deg, #FBBF24 0%, #F59E0B 100%);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 2rem;
+            align-items: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .foodprint-hero-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+        }
+
+        .foodprint-hero-content h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 0.5rem 0;
+            color: white;
+        }
+
+        .foodprint-hero-content p {
+            color: rgba(255, 255, 255, 0.9);
+            margin: 0.5rem 0;
+            line-height: 1.6;
+        }
+
+        .foodprint-hero-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.8);
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+
+        .streak-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: white;
+            font-weight: 600;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+            animation: slideInUp 0.5s ease-out forwards;
+            opacity: 0;
+        }
+
+        .stat-card:nth-child(1) { animation-delay: 0s; }
+        .stat-card:nth-child(2) { animation-delay: 0.1s; }
+        .stat-card:nth-child(3) { animation-delay: 0.2s; }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .stat-label-group {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .stat-icon.sage { background: #e8f5e9; }
+        .stat-icon.lavender { background: #f3e5f5; }
+        .stat-icon.coral { background: #ffebee; }
+
+        .stat-label {
+            font-weight: 600;
+            color: #1a202c;
+        }
+
+        .stat-progress {
+            font-size: 0.875rem;
+            color: #718096;
+        }
+
+        .stat-bar {
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .stat-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .fill-sage { background: #10b981; }
+        .fill-lavender { background: #a78bfa; }
+        .fill-coral { background: #ef4444; }
+
+        .meals-section {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+            margin-bottom: 2rem;
+        }
+
+        .meals-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .meals-header h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1a202c;
+            margin: 0;
+        }
+
+        .calorie-display {
+            font-size: 0.875rem;
+            color: #718096;
+        }
+
+        .meal-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .meal-item {
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 1rem;
+            align-items: center;
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            animation: slideInLeft 0.5s ease-out forwards;
+            opacity: 0;
+        }
+
+        .meal-item:hover {
+            border-color: #fbbf24;
+            background: #fffaf0;
+        }
+
+        .meal-item.logged { background: white; }
+        .meal-item.unlogged { background: #f9fafb; border-style: dashed; }
+
+        .meal-item:nth-child(1) { animation-delay: 0s; }
+        .meal-item:nth-child(2) { animation-delay: 0.1s; }
+        .meal-item:nth-child(3) { animation-delay: 0.2s; }
+        .meal-item:nth-child(4) { animation-delay: 0.3s; }
+
+        .meal-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .meal-item.logged .meal-icon { background: #e8f5e9; }
+        .meal-item.unlogged .meal-icon { background: #f3f4f6; }
+
+        .meal-info h3 {
+            font-weight: 600;
+            color: #1a202c;
+            margin: 0 0 0.25rem 0;
+        }
+
+        .meal-info p {
+            font-size: 0.875rem;
+            color: #718096;
+            margin: 0;
+        }
+
+        .meal-action {
+            font-weight: 600;
+            color: #1a202c;
+        }
+
+        .log-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #fbbf24;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .log-btn:hover {
+            background: #f59e0b;
+            transform: translateY(-2px);
+        }
+
+        .weekly-overview {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+        }
+
+        .weekly-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .weekly-header h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1a202c;
+            margin: 0;
+        }
+
+        .calendar-emoji {
+            font-size: 20px;
+        }
+
+        .weekly-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .day-column {
+            text-align: center;
+        }
+
+        .day-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #718096;
+            margin-bottom: 0.5rem;
+        }
+
+        .day-bar {
+            min-height: 80px;
+            background: #e2e8f0;
+            border-radius: 8px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding: 0.25rem;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .day-bar.active {
+            ring: 2px solid #fbbf24;
+            border: 2px solid #fbbf24;
+        }
+
+        .day-bar-fill {
+            width: 60%;
+            background: linear-gradient(180deg, #10b981 0%, #059669 100%);
+            border-radius: 4px;
+        }
+
+        .day-bar.empty {
+            background: #f3f4f6;
+        }
+
+        .weekly-summary {
+            padding-top: 1rem;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .summary-label {
+            color: #718096;
+            font-size: 0.875rem;
+        }
+
+        .summary-value {
+            font-weight: 600;
+            color: #1a202c;
+        }
+
+        .insight-banner {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 16px;
+            padding: 1.5rem;
+            color: white;
+            margin-top: 2rem;
+            animation: slideInUp 0.6s ease-out forwards;
+        }
+
+        .insight-banner h3 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1rem;
+        }
+
+        .insight-banner p {
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 1024px) {
+            .foodprint-hero {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .foodprint-hero-icon {
+                margin: 0 auto;
+            }
+
+            .weekly-grid {
+                grid-template-columns: repeat(7, 1fr);
+                gap: 0.5rem;
+            }
+
+            .day-bar {
+                min-height: 60px;
+            }
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 999;
+            width: 40px;
+            height: 40px;
+            padding: 0;
+        }
+
+        .mobile-menu-btn span {
+            display: block;
+            width: 25px;
+            height: 3px;
+            background: #f59e0b;
+            margin: 5px auto;
+            border-radius: 2px;
+            transition: 0.3s;
+        }
+
+        .mobile-menu-btn.active span:nth-child(1) {
+            transform: rotate(45deg) translate(8px, 8px);
+        }
+
+        .mobile-menu-btn.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-btn.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(8px, -8px);
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .foodprint-container {
+                padding: 1rem;
+                padding-top: 70px;
+            }
+
+            .foodprint-hero {
+                padding: 1.5rem;
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .meal-item {
+                grid-template-columns: auto 1fr;
+                gap: 1rem;
+            }
+
+            .meal-action {
+                grid-column: 1 / -1;
+                text-align: right;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="home.html">
+                <img src="../assets/images/logo.png" alt="LifePrint Logo" class="logo" onerror="this.style.display='none'">
+            </a>
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="home.html" class="nav-link">Home</a></li>
+                <li><a href="about.html" class="nav-link">About</a></li>
+                <li><a href="dashboard-new.html" class="nav-link" style="color: #f59e0b; font-weight: 600;">Dashboard</a></li>
+                <li><a href="stories.html" class="nav-link">Stories</a></li>
+                <li><a href="contact.html" class="nav-link">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <button class="mobile-menu-btn" id="mobileMenuBtn2" aria-label="Toggle menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+    
+    <div class="foodprint-container">
+        <!-- Header with Dashboard Link -->
+        <div style="margin-bottom: 2rem;">
+            <a href="dashboard-new.html" style="color: #667eea; text-decoration: none; font-weight: 500; display: inline-flex; align-items: center; gap: 0.5rem;">
+                ← Back to Dashboard
+            </a>
+        </div>
+
+        <!-- Hero Section -->
+        <div class="foodprint-hero">
+            <div class="foodprint-hero-icon">🍽️</div>
+            <div class="foodprint-hero-content">
+                <div class="foodprint-hero-label">Habit & Health Engine</div>
+                <h1>Your FoodPrint</h1>
+                <p>Your daily habits shape who you become. Track meals, hydration, sleep, and routines to understand the patterns that influence your energy and well-being.</p>
+            </div>
+            <div class="streak-badge">
+                <span>📈</span>
+                <span>12 day streak</span>
+            </div>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid" id="statsContainer"></div>
+
+        <!-- Main Content Grid -->
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+            <!-- Today's Meals -->
+            <div class="meals-section">
+                <div class="meals-header">
+                    <h2>Today's Meals</h2>
+                    <span class="calorie-display">1,250 / 2,000 cal</span>
+                </div>
+                <div class="meal-list" id="mealsContainer"></div>
+            </div>
+
+            <!-- Weekly Overview -->
+            <div class="weekly-overview">
+                <div class="weekly-header">
+                    <span class="calendar-emoji">📅</span>
+                    <h2>This Week</h2>
+                </div>
+                <div class="weekly-grid" id="weeklyContainer"></div>
+                <div class="weekly-summary">
+                    <span class="summary-label">Weekly average</span>
+                    <span class="summary-value">1,850 cal/day</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Insight Banner -->
+        <div class="insight-banner">
+            <h3>💡 Pattern Insight</h3>
+            <p>You tend to eat lighter breakfasts on weekdays. Consider a more substantial morning meal to maintain energy levels throughout the day — your afternoon productivity dips may be related.</p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3><i class="fas fa-fingerprint"></i> LifePrint</h3>
+                <p>Your digital wellness companion for holistic self-improvement and personal growth.</p>
+                <div class="social-links">
+                    <a href="https://www.linkedin.com/in/lifeprint"><i class="fab fa-linkedin"></i></a>
+                    <a href="https://twitter.com/lifeprint"><i class="fab fa-twitter"></i></a>
+                    <a href="https://www.instagram.com/lifeprint"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.facebook.com/lifeprint"><i class="fab fa-facebook"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul class="footer-links">
+                    <li><a href="home.html">Home</a></li>
+                    <li><a href="dashboard-new.html">Dashboard</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Modules</h4>
+                <ul class="footer-links">
+                    <li><a href="persona-print.html">PersonaPrint</a></li>
+                    <li><a href="food-print.html">FoodPrint</a></li>
+                    <li><a href="story-weaver.html">StoryWeaver</a></li>
+                    <li><a href="time-capsule.html">Time Capsule</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Legal</h4>
+                <ul class="footer-links">
+                    <li><a href="terms.html">Terms</a></li>
+                    <li><a href="#">Privacy</a></li>
+                    <li><a href="#">Security</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 LifePrint. All rights reserved. Built with <i class="fas fa-heart" style="color: #667eea;"></i> in Rwanda</p>
+        </div>
+    </footer>
+
+    <script src="../assets/js/mobile-menu.js"></script>
+    <script>
+        const stats = [
+            { icon: "💧", label: "Water", current: 6, goal: 8, unit: "glasses", color: "sage", fillClass: "fill-sage" },
+            { icon: "🌙", label: "Sleep", current: 7.5, goal: 8, unit: "hours", color: "lavender", fillClass: "fill-lavender" },
+            { icon: "⚡", label: "Steps", current: 8420, goal: 10000, unit: "steps", color: "coral", fillClass: "fill-coral" }
+        ];
+
+        const meals = [
+            { name: "Breakfast", time: "8:00 AM", calories: 420, logged: true },
+            { name: "Lunch", time: "12:30 PM", calories: 650, logged: true },
+            { name: "Dinner", time: "7:00 PM", calories: 0, logged: false },
+            { name: "Snacks", time: "Various", calories: 180, logged: true }
+        ];
+
+        const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
+        function renderStats() {
+            const container = document.getElementById('statsContainer');
+            container.innerHTML = stats.map((stat, index) => {
+                const percentage = (stat.current / stat.goal) * 100;
+                return `
+                    <div class="stat-card" style="animation-delay: ${index * 0.1}s">
+                        <div class="stat-header">
+                            <div class="stat-label-group">
+                                <div class="stat-icon ${stat.color}">${stat.icon}</div>
+                                <div>
+                                    <div class="stat-label">${stat.label}</div>
+                                    <div class="stat-progress">${stat.current}/${stat.goal} ${stat.unit}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="stat-bar">
+                            <div class="stat-bar-fill ${stat.fillClass}" style="width: ${Math.min(percentage, 100)}%"></div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderMeals() {
+            const container = document.getElementById('mealsContainer');
+            container.innerHTML = meals.map((meal, index) => `
+                <div class="meal-item ${meal.logged ? 'logged' : 'unlogged'}" style="animation-delay: ${index * 0.1}s">
+                    <div class="meal-icon">🍽️</div>
+                    <div class="meal-info">
+                        <h3>${meal.name}</h3>
+                        <p>${meal.time}</p>
+                    </div>
+                    <div class="meal-action">
+                        ${meal.logged 
+                            ? `<span>${meal.calories} cal</span>` 
+                            : `<button class="log-btn"><span>+</span> Log</button>`
+                        }
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderWeekly() {
+            const container = document.getElementById('weeklyContainer');
+            container.innerHTML = weekDays.map((day, index) => {
+                const isToday = index === 3;
+                const hasData = index <= 3;
+                const height = hasData ? (40 + Math.random() * 40) : 0;
+                return `
+                    <div class="day-column">
+                        <div class="day-label">${day}</div>
+                        <div class="day-bar ${isToday ? 'active' : ''} ${!hasData ? 'empty' : ''}">
+                            ${hasData ? `<div class="day-bar-fill" style="height: ${height}%"></div>` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            renderStats();
+            renderMeals();
+            renderWeekly();
+        });
+
+        // Navbar functionality
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const navLinks = document.getElementById('navLinks');
+        const navbar = document.getElementById('navbar');
+
+        if (mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileMenuBtn.classList.toggle('active');
+                navLinks.classList.toggle('active');
+            });
+
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenuBtn.classList.remove('active');
+                    navLinks.classList.remove('active');
+                });
+            });
+        }
+
+        window.addEventListener('scroll', () => {
+            if (mobileMenuBtn && mobileMenuBtn.classList.contains('active')) {
+                mobileMenuBtn.classList.remove('active');
+                navLinks.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>

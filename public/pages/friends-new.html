@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#667eea">
+    <link rel="icon" type="image/png" href="../assets/images/logo.png">
+    <title>Friends - LifePrint</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+            --text-dark: #2d3748;
+            --text-light: #718096;
+            --bg-light: #f7fafc;
+            --white: #ffffff;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.12);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Navigation - Same as Dashboard */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            background: var(--white);
+            box-shadow: var(--shadow-sm);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .navbar.scrolled {
+            box-shadow: var(--shadow-md);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: none;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        @media (min-width: 768px) {
+            .nav-links {
+                display: flex;
+            }
+            .mobile-menu-btn {
+                display: none !important;
+            }
+        }
+
+        .nav-links a {
+            color: var(--text-dark);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-gradient);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .mobile-menu-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            cursor: pointer;
+            display: block;
+        }
+
+        .mobile-menu {
+            position: fixed;
+            top: 70px;
+            left: 0;
+            right: 0;
+            background: var(--white);
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+            z-index: 999;
+        }
+
+        .mobile-menu.active {
+            max-height: calc(100vh - 70px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .mobile-menu ul {
+            list-style: none;
+            padding: 1rem 0;
+        }
+
+        .mobile-menu li {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .mobile-menu a {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.2rem 2rem;
+            color: var(--text-dark);
+            text-decoration: none;
+            font-weight: 500;
+            transition: background 0.3s ease;
+        }
+
+        .mobile-menu a:active {
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .mobile-menu i {
+            color: var(--primary-color);
+            width: 24px;
+        }
+
+        /* Hero Section */
+        .hero {
+            margin-top: 70px;
+            background: var(--primary-gradient);
+            color: white;
+            padding: 4rem 2rem 3rem;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            opacity: 0.95;
+        }
+
+        @media (min-width: 768px) {
+            .hero h1 {
+                font-size: 3rem;
+            }
+        }
+
+        /* Main Content */
+        .content-section {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .section-block {
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid rgba(102, 126, 234, 0.1);
+        }
+
+        .section-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            background: var(--primary-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.8rem;
+        }
+
+        .section-header h2 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        /* Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .cards-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .cards-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .card {
+            background: var(--bg-light);
+            border-radius: 16px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--primary-color);
+        }
+
+        .user-avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin: 0 auto 1rem;
+        }
+
+        .user-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            text-align: center;
+            margin-bottom: 0.25rem;
+        }
+
+        .user-email {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #43e97b, #38f9d7);
+            color: white;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #f5576c, #f093fb);
+            color: white;
+        }
+
+        .btn-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .btn-actions .btn {
+            flex: 1;
+        }
+
+        /* Search Bar */
+        .search-container {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 0.75rem 1.5rem;
+            border: 2px solid rgba(102, 126, 234, 0.2);
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--text-light);
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            font-size: 1.5rem;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--text-dark);
+            color: white;
+            padding: 3rem 2rem 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .footer-content {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .footer h4 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="dashboard-new.html" class="logo">
+                <div class="logo-icon">L</div>
+                <span>LifePrint</span>
+            </a>
+            
+            <ul class="nav-links">
+                <li><a href="dashboard-new.html">Home</a></li>
+                <li><a href="analytics.html">Analytics</a></li>
+                <li><a href="personaprint.html">PersonaPrint</a></li>
+                <li><a href="foodprint.html">FoodPrint</a></li>
+                <li><a href="friends-new.html">Friends</a></li>
+                <li><a href="goals.html">Goals</a></li>
+                <li><a href="help.html">Get Help</a></li>
+                <li><a href="profile.html">Profile</a></li>
+                <li><a href="#" id="logoutLink">Logout</a></li>
+            </ul>
+
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu nav-links" id="mobileMenu">
+        <ul id="navLinks">
+            <li><a href="dashboard-new.html"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="analytics.html"><i class="fas fa-chart-line"></i> Analytics</a></li>
+            <li><a href="personaprint.html"><i class="fas fa-fingerprint"></i> PersonaPrint</a></li>
+            <li><a href="foodprint.html"><i class="fas fa-utensils"></i> FoodPrint</a></li>
+            <li><a href="friends-new.html"><i class="fas fa-user-friends"></i> Friends</a></li>
+            <li><a href="goals.html"><i class="fas fa-bullseye"></i> Goals</a></li>
+            <li><a href="help.html"><i class="fas fa-hands-helping"></i> Get Help</a></li>
+            <li><a href="profile.html"><i class="fas fa-user-circle"></i> Profile</a></li>
+            <li><a href="#" id="mobileLogout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>👥 Friends & Community</h1>
+        <p>Connect, share, and grow together on your wellness journey</p>
+    </section>
+
+    <!-- Main Content -->
+    <section class="content-section">
+        <!-- Friend Requests Block -->
+        <div class="section-block">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-user-plus"></i>
+                </div>
+                <h2>Friend Requests</h2>
+            </div>
+            <div id="requestsContainer" class="cards-grid"></div>
+        </div>
+
+        <!-- My Friends Block -->
+        <div class="section-block">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h2>My Friends</h2>
+            </div>
+            <div id="friendsContainer" class="cards-grid"></div>
+        </div>
+
+        <!-- Find Friends Block -->
+        <div class="section-block">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-search"></i>
+                </div>
+                <h2>Find Friends</h2>
+            </div>
+            <div class="search-container">
+                <input type="text" class="search-input" id="searchInput" placeholder="Search by name or email...">
+                <button class="btn btn-primary" id="searchBtn">
+                    <i class="fas fa-search"></i> Search
+                </button>
+            </div>
+            <div id="suggestionsContainer" class="cards-grid"></div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div>
+                <h4>LifePrint</h4>
+                <p style="color: rgba(255, 255, 255, 0.8); line-height: 1.8;">
+                    Your comprehensive digital wellness companion.
+                </p>
+            </div>
+            <div>
+                <h4>Quick Links</h4>
+                <ul class="footer-links">
+                    <li><a href="dashboard-new.html">Home</a></li>
+                    <li><a href="analytics.html">Analytics</a></li>
+                    <li><a href="personaprint.html">PersonaPrint</a></li>
+                    <li><a href="help.html">Get Help</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4>Contact</h4>
+                <ul class="footer-links">
+                    <li><a href="mailto:support@lifeprint.com">support@lifeprint.com</a></li>
+                    <li><a href="profile.html">My Profile</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 LifePrint. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        // Mobile menu now handled by mobile-menu.js
+        const navbar = document.getElementById('navbar');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Authentication
+        const currentUser = JSON.parse(localStorage.getItem('lifeprint_user') || '{}');
+        if (!currentUser.email) {
+            window.location.href = 'login.html';
+        }
+
+        // Initialize data
+        let allUsers = JSON.parse(localStorage.getItem('allUsers') || '[]');
+        let friendRequests = JSON.parse(localStorage.getItem(`friendRequests_${currentUser.email}`) || '[]');
+        let myFriends = JSON.parse(localStorage.getItem(`myFriends_${currentUser.email}`) || '[]');
+
+        // Load friend requests
+        function loadRequests() {
+            const container = document.getElementById('requestsContainer');
+            if (friendRequests.length === 0) {
+                container.innerHTML = '<div class="empty-state"><i class="fas fa-inbox"></i><h3>No friend requests</h3><p>You don\'t have any pending requests.</p></div>';
+                return;
+            }
+            container.innerHTML = friendRequests.map(req => `
+                <div class="card">
+                    <div class="user-avatar">${req.fullName?.charAt(0).toUpperCase() || req.email?.charAt(0).toUpperCase()}</div>
+                    <div class="user-name">${req.fullName || req.email?.split('@')[0]}</div>
+                    <div class="user-email">${req.email}</div>
+                    <div class="btn-actions">
+                        <button class="btn btn-success" onclick="acceptRequest('${req.email}')">
+                            <i class="fas fa-check"></i> Accept
+                        </button>
+                        <button class="btn btn-danger" onclick="declineRequest('${req.email}')">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Load my friends
+        function loadFriends() {
+            const container = document.getElementById('friendsContainer');
+            if (myFriends.length === 0) {
+                container.innerHTML = '<div class="empty-state"><i class="fas fa-user-friends"></i><h3>No friends yet</h3><p>Start building your wellness community!</p></div>';
+                return;
+            }
+            container.innerHTML = myFriends.map(friend => `
+                <div class="card">
+                    <div class="user-avatar">${friend.fullName?.charAt(0).toUpperCase() || friend.email?.charAt(0).toUpperCase()}</div>
+                    <div class="user-name">${friend.fullName || friend.email?.split('@')[0]}</div>
+                    <div class="user-email">${friend.email}</div>
+                    <div class="btn-actions">
+                        <button class="btn btn-primary" onclick="messageFriend('${friend.email}')">
+                            <i class="fas fa-comment"></i> Message
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Load suggestions
+        function loadSuggestions(query = '') {
+            const container = document.getElementById('suggestionsContainer');
+            let suggestions = allUsers.filter(user => 
+                user.email !== currentUser.email &&
+                !myFriends.some(f => f.email === user.email) &&
+                !friendRequests.some(r => r.email === user.email)
+            );
+            if (query) {
+                suggestions = suggestions.filter(user =>
+                    (user.fullName?.toLowerCase().includes(query.toLowerCase())) ||
+                    user.email.toLowerCase().includes(query.toLowerCase())
+                );
+            }
+            if (suggestions.length === 0) {
+                container.innerHTML = '<div class="empty-state"><i class="fas fa-search"></i><h3>No users found</h3><p>Try a different search.</p></div>';
+                return;
+            }
+            container.innerHTML = suggestions.slice(0, 9).map(user => `
+                <div class="card">
+                    <div class="user-avatar">${user.fullName?.charAt(0).toUpperCase() || user.email?.charAt(0).toUpperCase()}</div>
+                    <div class="user-name">${user.fullName || user.email?.split('@')[0]}</div>
+                    <div class="user-email">${user.email}</div>
+                    <button class="btn btn-success" onclick="sendRequest('${user.email}', '${user.fullName || user.email}')">
+                        <i class="fas fa-user-plus"></i> Add Friend
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        // Actions
+        window.acceptRequest = function(email) {
+            const request = friendRequests.find(r => r.email === email);
+            if (request) {
+                myFriends.push(request);
+                friendRequests = friendRequests.filter(r => r.email !== email);
+                localStorage.setItem(`myFriends_${currentUser.email}`, JSON.stringify(myFriends));
+                localStorage.setItem(`friendRequests_${currentUser.email}`, JSON.stringify(friendRequests));
+                loadRequests();
+                loadFriends();
+                Swal.fire({ icon: 'success', title: 'Friend Added!', showConfirmButton: false, timer: 1500 });
+            }
+        };
+
+        window.declineRequest = function(email) {
+            friendRequests = friendRequests.filter(r => r.email !== email);
+            localStorage.setItem(`friendRequests_${currentUser.email}`, JSON.stringify(friendRequests));
+            loadRequests();
+            Swal.fire({ icon: 'info', title: 'Request Declined', showConfirmButton: false, timer: 1500 });
+        };
+
+        window.sendRequest = function(email, name) {
+            Swal.fire({ icon: 'success', title: 'Request Sent!', text: `Friend request sent to ${name}`, showConfirmButton: false, timer: 2000 });
+        };
+
+        window.messageFriend = function(email) {
+            Swal.fire({ icon: 'info', title: 'Coming Soon!', text: 'Messaging feature will be available soon.' });
+        };
+
+        // Search
+        document.getElementById('searchBtn').addEventListener('click', () => {
+            loadSuggestions(document.getElementById('searchInput').value);
+        });
+
+        document.getElementById('searchInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') loadSuggestions(e.target.value);
+        });
+
+        // Initialize
+        loadRequests();
+        loadFriends();
+        loadSuggestions();
+
+        // Logout
+        function handleLogout(e) {
+            e.preventDefault();
+            Swal.fire({
+                title: 'Logout?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#667eea',
+                confirmButtonText: 'Yes, logout'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    localStorage.removeItem('lifeprint_user');
+                    localStorage.removeItem('lifeprint_token');
+                    window.location.href = 'login.html';
+                }
+            });
+        }
+
+        document.getElementById('logoutLink').addEventListener('click', handleLogout);
+        document.getElementById('mobileLogout').addEventListener('click', handleLogout);
+    </script>
+    <script src="../assets/js/mobile-menu.js"></script>
+</body>
+</html>

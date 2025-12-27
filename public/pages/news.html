@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News & Updates - LifePrint</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="../assets/css/enhanced-animations.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            padding: 1rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .navbar.scrolled {
+            padding: 0.5rem 0;
+            box-shadow: 0 2px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            height: 50px;
+            width: auto;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            list-style: none;
+        }
+
+        .nav-link {
+            color: #333;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .nav-link.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 150px 2rem 100px;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.9), rgba(118, 75, 162, 0.9));
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+            animation: fadeInUp 1s ease;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 3rem;
+            justify-content: center;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            display: block;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        /* Featured Article */
+        .featured-article {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 4rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .featured-article:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        .featured-image {
+            position: relative;
+            height: 500px;
+            overflow: hidden;
+        }
+
+        .featured-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .featured-badge {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .featured-content {
+            padding: 3rem;
+        }
+
+        .article-meta {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+            color: #666;
+            flex-wrap: wrap;
+        }
+
+        .article-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .article-title {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+
+        .article-excerpt {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 2rem;
+            line-height: 1.8;
+        }
+
+        .read-more-btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .read-more-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        /* News Grid */
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: white;
+            opacity: 0.9;
+        }
+
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .news-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .news-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .news-image {
+            position: relative;
+            height: 200px;
+            overflow: hidden;
+        }
+
+        .news-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .news-card:hover .news-image img {
+            transform: scale(1.1);
+        }
+
+        .news-category {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .news-content {
+            padding: 1.5rem;
+        }
+
+        .news-meta {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            color: #999;
+            font-size: 0.9rem;
+        }
+
+        .news-title {
+            font-size: 1.3rem;
+            color: #333;
+            margin-bottom: 1rem;
+            line-height: 1.4;
+        }
+
+        .news-excerpt {
+            color: #666;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .news-footer {
+            display: flex;
+            justify-content: space-between;
+            padding-top: 1rem;
+            border-top: 1px solid #eee;
+            color: #999;
+            font-size: 0.9rem;
+        }
+
+        /* Load More */
+        .load-more {
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .load-more-btn {
+            padding: 1rem 3rem;
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+            border-radius: 50px;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .load-more-btn:hover {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        /* Footer */
+        .footer {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 4rem 2rem 2rem;
+            margin-top: 6rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .footer-section h4 {
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .footer-section p {
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .footer-links a:hover {
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .social-links a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .featured-image {
+                height: 300px;
+            }
+
+            .featured-content {
+                padding: 2rem;
+            }
+
+            .article-title {
+                font-size: 1.8rem;
+            }
+
+            .news-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-stats {
+                gap: 1.5rem;
+            }
+
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .hero-stats {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Scroll Progress Bar -->
+    <div class="scroll-progress" id="scrollProgress"></div>
+
+    <!-- Scroll Indicator -->
+    <div class="scroll-indicator" id="scrollIndicator">
+        <i class="fas fa-chevron-down"></i>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="home.html">
+                <img src="../assets/images/logo.png" alt="LifePrint Logo" class="logo" onerror="this.style.display='none'">
+            </a>
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="home.html" class="nav-link">Home</a></li>
+                <li><a href="about.html" class="nav-link">About</a></li>
+                <li><a href="faq.html" class="nav-link">FAQ</a></li>
+                <li><a href="news.html" class="nav-link active">News</a></li>
+                <li><a href="stories.html" class="nav-link">Stories</a></li>
+                <li><a href="contact.html" class="nav-link">Contact</a></li>
+                <li><a href="login.html" class="nav-link">Login</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1><i class="fas fa-newspaper"></i> Latest News & Updates</h1>
+        <p>Stay informed about LifePrint's impact on health and wellness across Rwanda and beyond</p>
+        <div class="hero-stats">
+            <div class="stat-item">
+                <span class="stat-number">50+</span>
+                <span class="stat-label">Articles Published</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">15K+</span>
+                <span class="stat-label">Monthly Readers</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">Daily</span>
+                <span class="stat-label">Updates</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Featured Article -->
+        <article class="featured-article">
+            <div class="featured-image">
+                <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=2070&q=80" alt="Rwanda Health Innovation" onerror="this.style.backgroundColor='#667eea'">
+                <div class="featured-badge">FEATURED STORY</div>
+            </div>
+            <div class="featured-content">
+                <div class="article-meta">
+                    <span><i class="fas fa-calendar"></i> November 15, 2025</span>
+                    <span><i class="fas fa-user"></i> Rwanda Health Ministry</span>
+                    <span><i class="fas fa-eye"></i> 12,543 views</span>
+                    <span><i class="fas fa-comment"></i> 156 comments</span>
+                </div>
+                <h2 class="article-title">Rwanda Leads Africa in Digital Health Innovation with LifePrint Platform</h2>
+                <p class="article-excerpt">
+                    The Rwanda Ministry of Health has officially recognized LifePrint as a key digital health partner in the national wellness strategy. With over 15,000 active users across all 30 districts, LifePrint is transforming how Rwandans approach preventive health care. The platform's PersonaPrint assessment has helped identify early warning signs in 3,200 users, leading to timely medical interventions. Health Minister Dr. Sabin Nsanzimana praised the platform's integration of traditional Rwandan wellness practices with modern AI technology.
+                </p>
+                <a href="#" class="read-more-btn"><i class="fas fa-arrow-right"></i> Read Full Story</a>
+            </div>
+        </article>
+
+        <!-- Recent News -->
+        <div class="section-header">
+            <h2 class="section-title">Recent Updates</h2>
+            <p class="section-subtitle">Latest developments and community achievements</p>
+        </div>
+
+        <div class="news-grid">
+            <!-- News Item 1 -->
+            <article class="news-card">
+                <div class="news-image">
+                    <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=800&q=80" alt="Research Study" onerror="this.style.backgroundColor='#667eea'">
+                    <div class="news-category">RESEARCH</div>
+                </div>
+                <div class="news-content">
+                    <div class="news-meta">
+                        <span><i class="fas fa-calendar"></i> Nov 12, 2025</span>
+                        <span><i class="fas fa-building"></i> University of Rwanda</span>
+                    </div>
+                    <h3 class="news-title">Study Shows 67% Improvement in Mental Health Among LifePrint Users</h3>
+                    <p class="news-excerpt">University of Rwanda researchers publish groundbreaking study on digital wellness platforms' effectiveness in African contexts.</p>
+                    <div class="news-footer">
+                        <span><i class="fas fa-eye"></i> 8,234 views</span>
+                        <span><i class="fas fa-comment"></i> 89 comments</span>
+                    </div>
+                </div>
+            </article>
+
+            <!-- News Item 2 -->
+            <article class="news-card">
+                <div class="news-image">
+                    <img src="https://images.unsplash.com/photo-1505751172876-fa1923c5c528?auto=format&fit=crop&w=800&q=80" alt="Health Feature" onerror="this.style.backgroundColor='#764ba2'">
+                    <div class="news-category">HEALTH</div>
+                </div>
+                <div class="news-content">
+                    <div class="news-meta">
+                        <span><i class="fas fa-calendar"></i> Nov 10, 2025</span>
+                        <span><i class="fas fa-stethoscope"></i> LifePrint Team</span>
+                    </div>
+                    <h3 class="news-title">New AI-Powered Nutrition Recommendations Launch in FoodPrint Module</h3>
+                    <p class="news-excerpt">Enhanced FoodPrint feature now provides culturally relevant meal suggestions based on local Rwandan ingredients.</p>
+                    <div class="news-footer">
+                        <span><i class="fas fa-eye"></i> 5,678 views</span>
+                        <span><i class="fas fa-comment"></i> 45 comments</span>
+                    </div>
+                </div>
+            </article>
+
+            <!-- News Item 3 -->
+            <article class="news-card">
+                <div class="news-image">
+                    <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=800&q=80" alt="Community Event" onerror="this.style.backgroundColor='#667eea'">
+                    <div class="news-category">COMMUNITY</div>
+                </div>
+                <div class="news-content">
+                    <div class="news-meta">
+                        <span><i class="fas fa-calendar"></i> Nov 8, 2025</span>
+                        <span><i class="fas fa-users"></i> Community</span>
+                    </div>
+                    <h3 class="news-title">LifePrint Community Wellness Challenge Reaches 5,000 Participants</h3>
+                    <p class="news-excerpt">Monthly wellness challenge sees record participation across Rwanda's provinces with remarkable health improvements.</p>
+                    <div class="news-footer">
+                        <span><i class="fas fa-eye"></i> 6,892 views</span>
+                        <span><i class="fas fa-comment"></i> 123 comments</span>
+                    </div>
+                </div>
+            </article>
+
+            <!-- News Item 4 -->
+            <article class="news-card">
+                <div class="news-image">
+                    <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=800&q=80" alt="Awards" onerror="this.style.backgroundColor='#764ba2'">
+                    <div class="news-category">AWARDS</div>
+                </div>
+                <div class="news-content">
+                    <div class="news-meta">
+                        <span><i class="fas fa-calendar"></i> Nov 5, 2025</span>
+                        <span><i class="fas fa-trophy"></i> AfriTech Summit</span>
+                    </div>
+                    <h3 class="news-title">LifePrint Wins "Best Health Tech Innovation" at AfriTech Summit 2025</h3>
+                    <p class="news-excerpt">Platform recognized for outstanding contribution to digital health transformation in East Africa region.</p>
+                    <div class="news-footer">
+                        <span><i class="fas fa-eye"></i> 9,421 views</span>
+                        <span><i class="fas fa-comment"></i> 178 comments</span>
+                    </div>
+                </div>
+            </article>
+
+            <!-- News Item 5 -->
+            <article class="news-card">
+                <div class="news-image">
+                    <img src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=800&q=80" alt="Youth Program" onerror="this.style.backgroundColor='#667eea'">
+                    <div class="news-category">YOUTH</div>
+                </div>
+                <div class="news-content">
+                    <div class="news-meta">
+                        <span><i class="fas fa-calendar"></i> Nov 2, 2025</span>
+                        <span><i class="fas fa-graduation-cap"></i> YouthConnekt</span>
+                    </div>
+                    <h3 class="news-title">Young Rwandans Embrace Digital Self-Discovery Tools</h3>
+                    <p class="news-excerpt">Survey reveals 78% of youth aged 18-30 actively use LifePrint for mental health and career planning.</p>
+                    <div class="news-footer">
+                        <span><i class="fas fa-eye"></i> 4,567 views</span>
+                        <span><i class="fas fa-comment"></i> 67 comments</span>
+                    </div>
+                </div>
+            </article>
+
+            <!-- News Item 6 -->
+            <article class="news-card">
+                <div class="news-image">
+                    <img src="https://images.unsplash.com/photo-1559757175-0eb30cd8c063?auto=format&fit=crop&w=800&q=80" alt="Partnership" onerror="this.style.backgroundColor='#764ba2'">
+                    <div class="news-category">PARTNERSHIP</div>
+                </div>
+                <div class="news-content">
+                    <div class="news-meta">
+                        <span><i class="fas fa-calendar"></i> Oct 28, 2025</span>
+                        <span><i class="fas fa-globe"></i> WHO Africa</span>
+                    </div>
+                    <h3 class="news-title">WHO Africa Endorses Rwanda's Digital Health Approach</h3>
+                    <p class="news-excerpt">World Health Organization commends Rwanda's integration of digital wellness platforms in public health initiatives.</p>
+                    <div class="news-footer">
+                        <span><i class="fas fa-eye"></i> 7,321 views</span>
+                        <span><i class="fas fa-comment"></i> 92 comments</span>
+                    </div>
+                </div>
+            </article>
+        </div>
+
+        <!-- Load More -->
+        <div class="load-more">
+            <button class="load-more-btn"><i class="fas fa-plus-circle"></i> Load More Articles</button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3><i class="fas fa-fingerprint"></i> LifePrint</h3>
+                <p>Your digital wellness companion for holistic self-improvement and personal growth.</p>
+                <div class="social-links">
+                    <a href="https://www.linkedin.com/in/lifeprint"><i class="fab fa-linkedin"></i></a>
+                    <a href="https://twitter.com/lifeprint"><i class="fab fa-twitter"></i></a>
+                    <a href="https://www.instagram.com/lifeprint"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.facebook.com/lifeprint"><i class="fab fa-facebook"></i></a>
+                    <a href="https://www.youtube.com/lifeprint"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul class="footer-links">
+                    <li><a href="home.html">Home</a></li>
+                    <li><a href="stories.html">Success Stories</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="news.html">News & Updates</a></li>
+                    <li><a href="faq.html">FAQ</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Get Started</h4>
+                <ul class="footer-links">
+                    <li><a href="signup.html">Sign Up</a></li>
+                    <li><a href="login.html">Log In</a></li>
+                    <li><a href="about.html">Learn More</a></li>
+                    <li><a href="contact.html">Get Support</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Legal</h4>
+                <ul class="footer-links">
+                    <li><a href="terms.html">Terms of Service</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Cookie Policy</a></li>
+                    <li><a href="#">Data Security</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 LifePrint. All rights reserved. Built with <i class="fas fa-heart" style="color: #667eea;"></i> in Rwanda</p>
+        </div>
+    </footer>
+
+    <script>
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Load more functionality
+        document.querySelector('.load-more-btn').addEventListener('click', function() {
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
+            setTimeout(() => {
+                this.innerHTML = '<i class="fas fa-check"></i> All articles loaded';
+                this.disabled = true;
+            }, 1000);
+        });
+    </script>
+
+    <!-- Notifications and Smooth Scroll Libraries -->
+    <script src="../assets/js/notifications.js"></script>
+    <script src="../assets/js/smooth-scroll.js"></script>
+    <script src="../assets/js/mobile-menu.js"></script>
+</body>
+</html>

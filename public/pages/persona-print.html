@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>personaPrint - LifePrint</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/premium-design.css">
+    <link rel="stylesheet" href="../assets/css/enhanced-animations.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="../assets/js/modules-api.js"></script>
+    <style>
+        :root {
+            --primary: #667eea;
+            --secondary: #764ba2;
+            --text-dark: #1a202c;
+            --text-light: #718096;
+            --bg-white: #ffffff;
+            --transition-speed: 0.3s;
+            --transition-curve: cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            padding-top: 70px;
+        }
+
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            z-index: 1000;
+            padding: 1rem 0;
+            transition: all var(--transition-speed) var(--transition-curve);
+        }
+
+        .navbar.scrolled {
+            padding: 0.75rem 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 clamp(1rem, 5vw, 2rem);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            height: 50px;
+            width: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            transition: transform var(--transition-speed) var(--transition-curve);
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+        }
+
+        .logo:hover {
+            transform: scale(1.08) rotate(-2deg);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-links li {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-link {
+            color: var(--text-dark);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all var(--transition-speed) ease;
+            font-weight: 500;
+            position: relative;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transition: all var(--transition-speed) ease;
+            transform: translateX(-50%);
+        }
+
+        .nav-link:hover {
+            color: var(--primary);
+        }
+
+        .nav-link:hover::after {
+            width: 80%;
+        }
+
+        /* Footer */
+        .footer {
+            background: rgba(255, 255, 255, 0.98);
+            padding: clamp(2.5rem, 5vh, 3.5rem) clamp(1rem, 5vw, 2rem) clamp(2rem, 4vh, 2.5rem);
+            color: var(--text-light);
+            backdrop-filter: blur(10px);
+            margin-top: 3rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+            gap: clamp(2rem, 4vw, 3rem);
+            margin-bottom: clamp(1.5rem, 3vh, 2rem);
+        }
+
+        .footer-section h3 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            font-size: clamp(1.3rem, 3vw, 1.5rem);
+            font-weight: 700;
+        }
+
+        .footer-section p {
+            line-height: 1.8;
+            margin-bottom: 1rem;
+            font-size: clamp(0.95rem, 2vw, 1.05rem);
+        }
+
+        .footer-section h4 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: clamp(1.1rem, 2.5vw, 1.25rem);
+            font-weight: 700;
+        }
+
+        .footer-links {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.65rem;
+        }
+
+        .footer-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            transition: all var(--transition-speed) ease;
+            display: inline-block;
+            font-size: clamp(0.95rem, 2vw, 1.05rem);
+            position: relative;
+        }
+
+        .footer-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width var(--transition-speed) ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+            padding-left: 8px;
+        }
+
+        .footer-links a:hover::after {
+            width: 100%;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.25rem;
+            flex-wrap: wrap;
+        }
+
+        .social-links a {
+            width: clamp(38px, 8vw, 44px);
+            height: clamp(38px, 8vw, 44px);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: all var(--transition-speed) var(--transition-curve);
+            font-size: clamp(1rem, 2vw, 1.15rem);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.25);
+        }
+
+        .social-links a:hover {
+            transform: translateY(-8px) rotate(10deg);
+            box-shadow: 0 12px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: clamp(1.5rem, 3vh, 2rem);
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            font-size: clamp(0.9rem, 2vw, 1rem);
+        }
+
+        /* Desktop Navigation */
+        @media (min-width: 769px) {
+            .mobile-menu-btn {
+                display: none !important;
+            }
+        }
+
+        /* Mobile Navigation */
+        @media (max-width: 768px) {
+            .nav-links {
+                position: absolute;
+                top: 70px;
+                left: 0;
+                right: 0;
+                background: rgba(255, 255, 255, 0.98);
+                flex-direction: column;
+                gap: 0;
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.3s ease;
+                backdrop-filter: blur(20px);
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            }
+
+            .nav-links.active {
+                max-height: 500px;
+            }
+
+            .nav-links li {
+                border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            }
+
+            .nav-links li:last-child {
+                border-bottom: none;
+            }
+
+            .nav-link {
+                display: block;
+                padding: 1rem;
+                border-radius: 0;
+            }
+        }
+
+        .persona-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .persona-hero {
+            background: linear-gradient(135deg, #A8D8DA 0%, #AA96DA 100%);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 2rem;
+            align-items: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .persona-hero-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+        }
+
+        .persona-hero-content h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 0.5rem 0;
+            color: white;
+        }
+
+        .persona-hero-content p {
+            color: rgba(255, 255, 255, 0.9);
+            margin: 0.5rem 0;
+            line-height: 1.6;
+        }
+
+        .persona-hero-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.8);
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+
+        .persona-completion {
+            text-align: center;
+            color: white;
+        }
+
+        .persona-completion-percentage {
+            font-size: 2.5rem;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .persona-completion-text {
+            font-size: 0.875rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .persona-main-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 1024px) {
+            .persona-main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .persona-hero {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .persona-hero-icon {
+                margin: 0 auto;
+            }
+        }
+
+        .traits-section {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+        }
+
+        .traits-section h2 {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            color: #1a202c;
+            font-weight: 600;
+        }
+
+        .trait-item {
+            margin-bottom: 2rem;
+            animation: slideInUp 0.5s ease-out forwards;
+            opacity: 0;
+        }
+
+        .trait-item:nth-child(1) { animation-delay: 0.1s; }
+        .trait-item:nth-child(2) { animation-delay: 0.2s; }
+        .trait-item:nth-child(3) { animation-delay: 0.3s; }
+        .trait-item:nth-child(4) { animation-delay: 0.4s; }
+        .trait-item:nth-child(5) { animation-delay: 0.5s; }
+
+        .trait-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .trait-name {
+            font-weight: 600;
+            color: #1a202c;
+        }
+
+        .trait-description {
+            font-size: 0.875rem;
+            color: #718096;
+            margin-left: 0.5rem;
+        }
+
+        .trait-score {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .trait-bar {
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .trait-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 4px;
+            transition: width 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .personality-type-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+            animation: slideInUp 0.6s ease-out 0.2s forwards;
+            opacity: 0;
+        }
+
+        .personality-type-card h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: #1a202c;
+            font-weight: 600;
+        }
+
+        .type-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .type-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .type-info h3 {
+            font-weight: 600;
+            color: #1a202c;
+            margin: 0;
+        }
+
+        .type-info p {
+            font-size: 0.875rem;
+            color: #718096;
+            margin: 0;
+        }
+
+        .type-description {
+            font-size: 0.95rem;
+            color: #4a5568;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .explore-type-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .explore-type-btn:hover {
+            gap: 0.75rem;
+        }
+
+        .strengths-section {
+            margin-bottom: 2rem;
+        }
+
+        .strengths-section h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: #1a202c;
+            font-weight: 600;
+        }
+
+        .strengths-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1rem;
+        }
+
+        .strength-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            animation: slideInUp 0.5s ease-out forwards;
+            opacity: 0;
+        }
+
+        .strength-card:nth-child(1) { animation-delay: 0s; }
+        .strength-card:nth-child(2) { animation-delay: 0.1s; }
+        .strength-card:nth-child(3) { animation-delay: 0.2s; }
+        .strength-card:nth-child(4) { animation-delay: 0.3s; }
+
+        .strength-card:hover {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            transform: translateY(-4px);
+        }
+
+        .strength-icon {
+            width: 40px;
+            height: 40px;
+            background: #e8eef7;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            font-size: 20px;
+        }
+
+        .strength-card h3 {
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .strength-card p {
+            font-size: 0.875rem;
+            color: #718096;
+            line-height: 1.5;
+        }
+
+        .cta-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 16px;
+            padding: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 2rem;
+            margin-top: 2rem;
+            color: white;
+        }
+
+        .cta-section h3 {
+            font-size: 1.25rem;
+            margin: 0 0 0.5rem 0;
+        }
+
+        .cta-section p {
+            margin: 0;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .cta-section button {
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+        }
+
+        .cta-section button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 999;
+            width: 40px;
+            height: 40px;
+            padding: 0;
+        }
+
+        .mobile-menu-btn span {
+            display: block;
+            width: 25px;
+            height: 3px;
+            background: #667eea;
+            margin: 5px auto;
+            border-radius: 2px;
+            transition: 0.3s;
+        }
+
+        .mobile-menu-btn.active span:nth-child(1) {
+            transform: rotate(45deg) translate(8px, 8px);
+        }
+
+        .mobile-menu-btn.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-btn.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(8px, -8px);
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .persona-container {
+                padding: 1rem;
+                padding-top: 70px;
+            }
+
+            .persona-hero {
+                grid-template-columns: 1fr;
+                text-align: center;
+                padding: 1.5rem;
+            }
+
+            .cta-section {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .cta-section button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="home.html">
+                <img src="../assets/images/logo.png" alt="LifePrint Logo" class="logo" onerror="this.style.display='none'">
+            </a>
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="home.html" class="nav-link">Home</a></li>
+                <li><a href="about.html" class="nav-link">About</a></li>
+                <li><a href="dashboard-new.html" class="nav-link" style="color: #667eea; font-weight: 600;">Dashboard</a></li>
+                <li><a href="stories.html" class="nav-link">Stories</a></li>
+                <li><a href="contact.html" class="nav-link">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <button class="mobile-menu-btn" id="mobileMenuBtn2" aria-label="Toggle menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+    <div class="persona-container">
+        <!-- Header with Dashboard Link -->
+        <div style="margin-bottom: 2rem;">
+            <a href="dashboard-new.html" style="color: #667eea; text-decoration: none; font-weight: 500; display: inline-flex; align-items: center; gap: 0.5rem;">
+                ← Back to Dashboard
+            </a>
+        </div>
+
+        <!-- Hero Section -->
+        <div class="persona-hero">
+            <div class="persona-hero-icon">👤</div>
+            <div class="persona-hero-content">
+                <div class="persona-hero-label">Identity Engine</div>
+                <h1>Your personaPrint</h1>
+                <p>Understand who you are at your core. Your personality patterns, natural strengths, and areas for growth — all woven together to reveal your unique identity blueprint.</p>
+            </div>
+            <div class="persona-completion">
+                <div class="persona-completion-percentage">75%</div>
+                <div class="persona-completion-text">Profile Complete</div>
+            </div>
+        </div>
+
+        <!-- Main Grid -->
+        <div class="persona-main-grid">
+            <!-- Personality Traits -->
+            <div class="traits-section">
+                <h2>Personality Profile</h2>
+                <div id="traitsContainer"></div>
+            </div>
+
+            <!-- Personality Type -->
+            <div class="personality-type-card">
+                <h2>Your Type</h2>
+                <div class="type-header">
+                    <div class="type-icon">⭐</div>
+                    <div class="type-info">
+                        <h3>The Visionary</h3>
+                        <p>INTJ Architect</p>
+                    </div>
+                </div>
+                <p class="type-description">
+                    You see the world as a canvas of possibilities. Strategic and imaginative, you naturally envision how things could be better and create plans to make it happen.
+                </p>
+                <a href="#" class="explore-type-btn">
+                    Explore your type →
+                </a>
+            </div>
+        </div>
+
+        <!-- Strengths Section -->
+        <div class="strengths-section">
+            <h2>Your Core Strengths</h2>
+            <div class="strengths-grid" id="strengthsContainer"></div>
+        </div>
+
+        <!-- CTA Section -->
+        <div class="cta-section">
+            <div style="flex: 1;">
+                <h3>Continue Your Assessment</h3>
+                <p>Complete the remaining questions to unlock deeper insights about your values, motivations, and behavioral patterns.</p>
+            </div>
+            <button onclick="continueAssessment()">Continue →</button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3><i class="fas fa-fingerprint"></i> LifePrint</h3>
+                <p>Your digital wellness companion for holistic self-improvement and personal growth.</p>
+                <div class="social-links">
+                    <a href="https://www.linkedin.com/in/lifeprint"><i class="fab fa-linkedin"></i></a>
+                    <a href="https://twitter.com/lifeprint"><i class="fab fa-twitter"></i></a>
+                    <a href="https://www.instagram.com/lifeprint"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.facebook.com/lifeprint"><i class="fab fa-facebook"></i></a>
+                    <a href="https://www.youtube.com/lifeprint"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul class="footer-links">
+                    <li><a href="home.html">Home</a></li>
+                    <li><a href="dashboard-new.html">Dashboard</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Modules</h4>
+                <ul class="footer-links">
+                    <li><a href="persona-print.html">PersonaPrint</a></li>
+                    <li><a href="food-print.html">FoodPrint</a></li>
+                    <li><a href="story-weaver.html">StoryWeaver</a></li>
+                    <li><a href="time-capsule.html">Time Capsule 2040</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Legal</h4>
+                <ul class="footer-links">
+                    <li><a href="terms.html">Terms of Service</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Data Security</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 LifePrint. All rights reserved. Built with <i class="fas fa-heart" style="color: #667eea;"></i> in Rwanda</p>
+        </div>
+    </footer>
+
+    <script src="../assets/js/mobile-menu.js"></script>
+    <script>
+        const traits = [
+            { name: "Openness", score: 82, description: "Curious and creative" },
+            { name: "Conscientiousness", score: 75, description: "Organized and reliable" },
+            { name: "Extraversion", score: 58, description: "Balanced social energy" },
+            { name: "Agreeableness", score: 71, description: "Cooperative and trusting" },
+            { name: "Emotional Stability", score: 65, description: "Generally steady" }
+        ];
+
+        const strengths = [
+            { icon: "🧠", label: "Analytical Thinking", description: "You excel at breaking down complex problems" },
+            { icon: "❤️", label: "Empathy", description: "Strong ability to understand others' feelings" },
+            { icon: "⚡", label: "Adaptability", description: "Quick to adjust to new situations" },
+            { icon: "🎯", label: "Goal-Oriented", description: "Focused on achieving objectives" }
+        ];
+
+        function renderTraits() {
+            const container = document.getElementById('traitsContainer');
+            container.innerHTML = traits.map((trait, index) => `
+                <div class="trait-item" style="animation-delay: ${index * 0.1}s">
+                    <div class="trait-header">
+                        <span>
+                            <span class="trait-name">${trait.name}</span>
+                            <span class="trait-description">— ${trait.description}</span>
+                        </span>
+                        <span class="trait-score">${trait.score}</span>
+                    </div>
+                    <div class="trait-bar">
+                        <div class="trait-bar-fill" style="width: ${trait.score}%"></div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderStrengths() {
+            const container = document.getElementById('strengthsContainer');
+            container.innerHTML = strengths.map((strength, index) => `
+                <div class="strength-card" style="animation-delay: ${index * 0.1}s">
+                    <div class="strength-icon">${strength.icon}</div>
+                    <h3>${strength.label}</h3>
+                    <p>${strength.description}</p>
+                </div>
+            `).join('');
+        }
+
+        function continueAssessment() {
+            alert('Assessment continuation feature coming soon!');
+        }
+
+        // Navbar functionality
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const navLinks = document.getElementById('navLinks');
+        const navbar = document.getElementById('navbar');
+
+        if (mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileMenuBtn.classList.toggle('active');
+                navLinks.classList.toggle('active');
+            });
+
+            // Close menu when a link is clicked
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenuBtn.classList.remove('active');
+                    navLinks.classList.remove('active');
+                });
+            });
+        }
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 10) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+
+            if (mobileMenuBtn && mobileMenuBtn.classList.contains('active')) {
+                mobileMenuBtn.classList.remove('active');
+                navLinks.classList.remove('active');
+            }
+        });
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', function() {
+            renderTraits();
+            renderStrengths();
+        });
+    </script>
+</body>
+</html>

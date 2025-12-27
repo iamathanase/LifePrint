@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#667eea">
+    <link rel="icon" type="image/png" href="../assets/images/logo.png">
+    <title>Goals - LifePrint</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/premium-design.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+            --text-dark: #2d3748;
+            --text-light: #718096;
+            --bg-light: #f7fafc;
+            --white: #ffffff;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.12);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            background: var(--white);
+            box-shadow: var(--shadow-sm);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .navbar.scrolled {
+            box-shadow: var(--shadow-md);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: none;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        @media (min-width: 768px) {
+            .nav-links {
+                display: flex;
+            }
+            .mobile-menu-btn {
+                display: none !important;
+            }
+        }
+
+        .nav-links a {
+            color: var(--text-dark);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-gradient);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .mobile-menu-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            cursor: pointer;
+            display: block;
+        }
+
+        .mobile-menu {
+            position: fixed;
+            top: 70px;
+            left: 0;
+            right: 0;
+            background: var(--white);
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+            z-index: 999;
+        }
+
+        .mobile-menu.active {
+            max-height: calc(100vh - 70px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .mobile-menu ul {
+            list-style: none;
+            padding: 1rem 0;
+        }
+
+        .mobile-menu li {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .mobile-menu a {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.2rem 2rem;
+            color: var(--text-dark);
+            text-decoration: none;
+            font-weight: 500;
+            transition: background 0.3s ease;
+        }
+
+        .mobile-menu a:active {
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .mobile-menu i {
+            color: var(--primary-color);
+            width: 24px;
+        }
+
+        .hero {
+            margin-top: 70px;
+            background: var(--primary-gradient);
+            color: white;
+            padding: 4rem 2rem 3rem;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            opacity: 0.95;
+        }
+
+        @media (min-width: 768px) {
+            .hero h1 {
+                font-size: 3rem;
+            }
+        }
+
+        .content-section {
+            max-width: 1400px;
+            margin: -2rem auto 3rem;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .add-goal-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid rgba(102, 126, 234, 0.1);
+        }
+
+        .section-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            background: var(--primary-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.8rem;
+        }
+
+        .section-header h2 {
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid rgba(102, 126, 234, 0.1);
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 1rem 2.5rem;
+            border: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .goals-list {
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .goals-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .goals-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .goal-card {
+            background: var(--bg-light);
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .goal-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--primary-color);
+        }
+
+        .goal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .goal-status {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .goal-status.active { background: rgba(67, 233, 123, 0.2); color: #43e97b; }
+        .goal-status.completed { background: rgba(102, 126, 234, 0.2); color: #667eea; }
+        .goal-status.paused { background: rgba(254, 225, 64, 0.2); color: #f5a623; }
+
+        .goal-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+        }
+
+        .goal-description {
+            color: var(--text-light);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .goal-dates {
+            display: flex;
+            gap: 1rem;
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .goal-footer {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-complete {
+            background: rgba(67, 233, 123, 0.1);
+            color: #43e97b;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+        }
+
+        .btn-complete:hover {
+            background: #43e97b;
+            color: white;
+        }
+
+        .btn-delete {
+            background: rgba(245, 87, 108, 0.1);
+            color: #f5576c;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-delete:hover {
+            background: #f5576c;
+            color: white;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-light);
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.3;
+        }
+
+        .footer {
+            background: var(--text-dark);
+            color: white;
+            padding: 3rem 2rem 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .footer-content {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .footer h4 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="dashboard-new.html" class="logo">
+                <div class="logo-icon">L</div>
+                <span>LifePrint</span>
+            </a>
+            
+            <ul class="nav-links">
+                <li><a href="dashboard-new.html">Home</a></li>
+                <li><a href="analytics.html">Analytics</a></li>
+                <li><a href="personaprint.html">PersonaPrint</a></li>
+                <li><a href="foodprint.html">FoodPrint</a></li>
+                <li><a href="friends-new.html">Friends</a></li>
+                <li><a href="goals.html">Goals</a></li>
+                <li><a href="help.html">Get Help</a></li>
+                <li><a href="profile.html">Profile</a></li>
+                <li><a href="#" id="logoutLink">Logout</a></li>
+            </ul>
+
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <div class="mobile-menu nav-links" id="mobileMenu">
+        <ul id="navLinks">
+            <li><a href="dashboard-new.html"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="analytics.html"><i class="fas fa-chart-line"></i> Analytics</a></li>
+            <li><a href="personaprint.html"><i class="fas fa-fingerprint"></i> PersonaPrint</a></li>
+            <li><a href="foodprint.html"><i class="fas fa-utensils"></i> FoodPrint</a></li>
+            <li><a href="friends-new.html"><i class="fas fa-user-friends"></i> Friends</a></li>
+            <li><a href="goals.html"><i class="fas fa-bullseye"></i> Goals</a></li>
+            <li><a href="help.html"><i class="fas fa-hands-helping"></i> Get Help</a></li>
+            <li><a href="profile.html"><i class="fas fa-user-circle"></i> Profile</a></li>
+            <li><a href="#" id="mobileLogout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+        </ul>
+    </div>
+
+    <section class="hero">
+        <h1>🎯 Your Goals</h1>
+        <p>Set meaningful goals and track your progress</p>
+    </section>
+
+    <section class="content-section">
+        <div class="add-goal-card">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-plus"></i>
+                </div>
+                <h2>Create a Goal</h2>
+            </div>
+            <form id="goalForm">
+                <div class="form-group">
+                    <label for="goalTitle">Goal Title *</label>
+                    <input type="text" id="goalTitle" required placeholder="e.g., Exercise 3 times a week">
+                </div>
+                <div class="form-group">
+                    <label for="goalDescription">Description</label>
+                    <textarea id="goalDescription" rows="3" placeholder="What do you want to achieve? Why is this important?"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="goalTarget">Target Date *</label>
+                    <input type="date" id="goalTarget" required>
+                </div>
+                <button type="submit" class="btn-primary">
+                    <i class="fas fa-bullseye"></i> Create Goal
+                </button>
+            </form>
+        </div>
+
+        <div class="goals-list">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-tasks"></i>
+                </div>
+                <h2>My Goals</h2>
+            </div>
+            <div id="goalsContainer" class="goals-grid"></div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div>
+                <h4>LifePrint</h4>
+                <p style="color: rgba(255, 255, 255, 0.8); line-height: 1.8;">
+                    Your comprehensive digital wellness companion.
+                </p>
+            </div>
+            <div>
+                <h4>Quick Links</h4>
+                <ul class="footer-links">
+                    <li><a href="dashboard-new.html">Home</a></li>
+                    <li><a href="analytics.html">Analytics</a></li>
+                    <li><a href="friends-new.html">Friends</a></li>
+                    <li><a href="goals.html">Goals</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4>Contact</h4>
+                <ul class="footer-links">
+                    <li><a href="mailto:support@lifeprint.com">support@lifeprint.com</a></li>
+                    <li><a href="profile.html">My Profile</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 LifePrint. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu now handled by mobile-menu.js
+        const navbar = document.getElementById('navbar');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        const currentUser = JSON.parse(localStorage.getItem('lifeprint_user') || '{}');
+        if (!currentUser.email) {
+            window.location.href = 'login.html';
+        }
+
+        // Set minimum date to today
+        document.getElementById('goalTarget').min = new Date().toISOString().split('T')[0];
+
+        // Load goals
+        function loadGoals() {
+            const goals = JSON.parse(localStorage.getItem(`userGoals_${currentUser.email}`) || '[]');
+            const container = document.getElementById('goalsContainer');
+
+            if (goals.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-bullseye"></i>
+                        <h3>No goals yet</h3>
+                        <p>Set your first goal and start your wellness journey!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = goals.map((goal, index) => {
+                const targetDate = new Date(goal.targetDate);
+                const createdDate = new Date(goal.createdAt);
+                const daysLeft = Math.ceil((targetDate - new Date()) / (1000 * 60 * 60 * 24));
+                
+                return `
+                    <div class="goal-card">
+                        <div class="goal-header">
+                            <span class="goal-status ${goal.status}">${goal.status}</span>
+                        </div>
+                        <div class="goal-title">${goal.title}</div>
+                        <div class="goal-description">${goal.description || 'No description provided'}</div>
+                        <div class="goal-dates">
+                            <span><i class="fas fa-calendar-plus"></i> Created ${createdDate.toLocaleDateString()}</span>
+                            <span><i class="fas fa-flag-checkered"></i> ${daysLeft > 0 ? daysLeft + ' days left' : 'Overdue'}</span>
+                        </div>
+                        <div class="goal-footer">
+                            ${goal.status !== 'completed' ? `<button class="btn-complete" onclick="completeGoal(${index})">
+                                <i class="fas fa-check"></i> Complete
+                            </button>` : ''}
+                            <button class="btn-delete" onclick="deleteGoal(${index})">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Add goal
+        document.getElementById('goalForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const goals = JSON.parse(localStorage.getItem(`userGoals_${currentUser.email}`) || '[]');
+            
+            const newGoal = {
+                title: document.getElementById('goalTitle').value,
+                description: document.getElementById('goalDescription').value,
+                targetDate: document.getElementById('goalTarget').value,
+                status: 'active',
+                createdAt: new Date().toISOString()
+            };
+
+            goals.push(newGoal);
+            localStorage.setItem(`userGoals_${currentUser.email}`, JSON.stringify(goals));
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Goal Created!',
+                text: 'Your goal has been added successfully.',
+                showConfirmButton: false,
+                timer: 1500
+            });
+
+            document.getElementById('goalForm').reset();
+            loadGoals();
+        });
+
+        // Complete goal
+        window.completeGoal = function(index) {
+            const goals = JSON.parse(localStorage.getItem(`userGoals_${currentUser.email}`) || '[]');
+            goals[index].status = 'completed';
+            localStorage.setItem(`userGoals_${currentUser.email}`, JSON.stringify(goals));
+            
+            Swal.fire({
+                icon: 'success',
+                title: 'Congratulations!',
+                text: 'Goal marked as completed! 🎉',
+                showConfirmButton: false,
+                timer: 2000
+            });
+            
+            loadGoals();
+        };
+
+        // Delete goal
+        window.deleteGoal = function(index) {
+            Swal.fire({
+                title: 'Delete Goal?',
+                text: 'This action cannot be undone.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#f5576c',
+                confirmButtonText: 'Yes, delete it'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const goals = JSON.parse(localStorage.getItem(`userGoals_${currentUser.email}`) || '[]');
+                    goals.splice(index, 1);
+                    localStorage.setItem(`userGoals_${currentUser.email}`, JSON.stringify(goals));
+                    loadGoals();
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Deleted!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }
+            });
+        };
+
+        loadGoals();
+
+        function handleLogout(e) {
+            e.preventDefault();
+            Swal.fire({
+                title: 'Logout?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#667eea',
+                confirmButtonText: 'Yes, logout'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    localStorage.removeItem('lifeprint_user');
+                    localStorage.removeItem('lifeprint_token');
+                    window.location.href = 'login.html';
+                }
+            });
+        }
+
+        document.getElementById('logoutLink').addEventListener('click', handleLogout);
+        document.getElementById('mobileLogout').addEventListener('click', handleLogout);
+    </script>
+    <script src="../assets/js/mobile-menu.js"></script>
+</body>
+</html>

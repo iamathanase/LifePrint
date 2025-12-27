@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#667eea">
+    <link rel="icon" type="image/png" href="../assets/images/logo.png">
+    <title>Get Help - LifePrint</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --primary-color: #667eea;
+            --text-dark: #2d3748;
+            --text-light: #718096;
+            --bg-light: #f7fafc;
+            --white: #ffffff;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.12);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            background: var(--white);
+            box-shadow: var(--shadow-sm);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .navbar.scrolled {
+            box-shadow: var(--shadow-md);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: none;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        @media (min-width: 768px) {
+            .nav-links {
+                display: flex;
+            }
+            .mobile-menu-btn {
+                display: none !important;
+            }
+        }
+
+        .nav-links a {
+            color: var(--text-dark);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-gradient);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .mobile-menu-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            cursor: pointer;
+            display: block;
+        }
+
+        .mobile-menu {
+            position: fixed;
+            top: 70px;
+            left: 0;
+            right: 0;
+            background: var(--white);
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+            z-index: 999;
+        }
+
+        .mobile-menu.active {
+            max-height: calc(100vh - 70px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .mobile-menu ul {
+            list-style: none;
+            padding: 1rem 0;
+        }
+
+        .mobile-menu li {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .mobile-menu a {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.2rem 2rem;
+            color: var(--text-dark);
+            text-decoration: none;
+            font-weight: 500;
+            transition: background 0.3s ease;
+        }
+
+        .mobile-menu a:active {
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .mobile-menu i {
+            color: var(--primary-color);
+            width: 24px;
+        }
+
+        /* Hero Section */
+        .hero {
+            margin-top: 70px;
+            background: var(--primary-gradient);
+            color: white;
+            padding: 4rem 2rem 3rem;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            opacity: 0.95;
+        }
+
+        @media (min-width: 768px) {
+            .hero h1 {
+                font-size: 3rem;
+            }
+        }
+
+        /* Emergency Section */
+        .emergency-section {
+            max-width: 1000px;
+            margin: -2rem auto 3rem;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .emergency-card {
+            background: linear-gradient(135deg, #f5576c, #f093fb);
+            color: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .emergency-card h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .emergency-card p {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+        }
+
+        .btn-emergency {
+            background: white;
+            color: #f5576c;
+            padding: 1rem 2.5rem;
+            border: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .btn-emergency:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Content Section */
+        .content-section {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem 3rem;
+        }
+
+        .section-block {
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid rgba(102, 126, 234, 0.1);
+        }
+
+        .section-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            background: var(--primary-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.8rem;
+        }
+
+        .section-header h2 {
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+
+        .insights-grid, .professionals-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .insights-grid, .professionals-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .insight-card, .professional-card {
+            background: var(--bg-light);
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .insight-card:hover, .professional-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--primary-color);
+        }
+
+        .insight-icon-wrapper {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .insight-icon-wrapper.warning { background: #fee140; }
+        .insight-icon-wrapper.info { background: #4facfe; color: white; }
+        .insight-icon-wrapper.success { background: #43e97b; color: white; }
+
+        .insight-card h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .insight-card p {
+            color: var(--text-light);
+            line-height: 1.7;
+            margin-bottom: 1rem;
+        }
+
+        .btn-insight {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-insight:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .pro-header {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .pro-avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #43e97b, #38f9d7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.8rem;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .pro-info h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .pro-specialty {
+            color: var(--primary-color);
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .pro-match {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: rgba(67, 233, 123, 0.15);
+            color: #43e97b;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .pro-description {
+            color: var(--text-light);
+            line-height: 1.7;
+            margin: 1rem 0;
+        }
+
+        .btn-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            flex: 1;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--text-dark);
+            color: white;
+            padding: 3rem 2rem 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .footer-content {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .footer h4 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="dashboard-new.html" class="logo">
+                <div class="logo-icon">L</div>
+                <span>LifePrint</span>
+            </a>
+            
+            <ul class="nav-links">
+                <li><a href="dashboard-new.html">Home</a></li>
+                <li><a href="analytics.html">Analytics</a></li>
+                <li><a href="personaprint.html">PersonaPrint</a></li>
+                <li><a href="foodprint.html">FoodPrint</a></li>
+                <li><a href="friends-new.html">Friends</a></li>
+                <li><a href="goals.html">Goals</a></li>
+                <li><a href="help.html">Get Help</a></li>
+                <li><a href="profile.html">Profile</a></li>
+                <li><a href="#" id="logoutLink">Logout</a></li>
+            </ul>
+
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu nav-links" id="mobileMenu">
+        <ul id="navLinks">
+            <li><a href="dashboard-new.html"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="analytics.html"><i class="fas fa-chart-line"></i> Analytics</a></li>
+            <li><a href="personaprint.html"><i class="fas fa-fingerprint"></i> PersonaPrint</a></li>
+            <li><a href="foodprint.html"><i class="fas fa-utensils"></i> FoodPrint</a></li>
+            <li><a href="friends-new.html"><i class="fas fa-user-friends"></i> Friends</a></li>
+            <li><a href="goals.html"><i class="fas fa-bullseye"></i> Goals</a></li>
+            <li><a href="help.html"><i class="fas fa-hands-helping"></i> Get Help</a></li>
+            <li><a href="profile.html"><i class="fas fa-user-circle"></i> Profile</a></li>
+            <li><a href="#" id="mobileLogout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>🤝 Get Help & Support</h1>
+        <p>Personalized recommendations based on your wellness journey</p>
+    </section>
+
+    <!-- Emergency Help -->
+    <section class="emergency-section">
+        <div class="emergency-card">
+            <h2>⚠️ Need Immediate Help?</h2>
+            <p>If you're in crisis or need urgent support, we're here for you 24/7</p>
+            <button class="btn-emergency" onclick="showEmergency()">
+                <i class="fas fa-phone-alt"></i> Get Immediate Help
+            </button>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <section class="content-section">
+        <!-- AI Insights Block -->
+        <div class="section-block">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <div>
+                    <h2>AI-Powered Insights</h2>
+                    <p style="color: var(--text-light); margin: 0;">Based on your wellness data</p>
+                </div>
+            </div>
+            <div id="insightsContainer" class="insights-grid"></div>
+        </div>
+
+        <!-- Recommended Professionals Block -->
+        <div class="section-block">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-user-md"></i>
+                </div>
+                <h2>Recommended Professionals</h2>
+            </div>
+            <div id="professionalsContainer" class="professionals-grid"></div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div>
+                <h4>LifePrint</h4>
+                <p style="color: rgba(255, 255, 255, 0.8); line-height: 1.8;">
+                    Your comprehensive digital wellness companion.
+                </p>
+            </div>
+            <div>
+                <h4>Quick Links</h4>
+                <ul class="footer-links">
+                    <li><a href="dashboard-new.html">Home</a></li>
+                    <li><a href="analytics.html">Analytics</a></li>
+                    <li><a href="friends-new.html">Friends</a></li>
+                    <li><a href="goals.html">Goals</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4>Contact</h4>
+                <ul class="footer-links">
+                    <li><a href="mailto:support@lifeprint.com">support@lifeprint.com</a></li>
+                    <li><a href="profile.html">My Profile</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 LifePrint. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        // Mobile menu now handled by mobile-menu.js
+        const navbar = document.getElementById('navbar');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Authentication
+        const currentUser = JSON.parse(localStorage.getItem('lifeprint_user') || '{}');
+        if (!currentUser.email) {
+            window.location.href = 'login.html';
+        }
+
+        // Generate insights
+        function loadInsights() {
+            const goals = JSON.parse(localStorage.getItem(`userGoals_${currentUser.email}`) || '[]');
+            const activeGoals = goals.filter(g => g.status !== 'completed').length;
+            
+            const insights = [
+                {
+                    icon: 'warning',
+                    emoji: '⚠️',
+                    title: activeGoals > 3 ? 'Goal Overload Detected' : 'Stay Focused',
+                    text: activeGoals > 3 ? 
+                        `You have ${activeGoals} active goals. A coach can help you prioritize effectively.` :
+                        'Keep tracking your wellness journey. Regular check-ins with professionals can help.',
+                    action: 'Talk to a Coach'
+                },
+                {
+                    icon: 'info',
+                    emoji: 'ℹ️',
+                    title: 'Nutrition Support',
+                    text: 'Build better eating habits with professional guidance tailored to your lifestyle.',
+                    action: 'Find a Nutritionist'
+                },
+                {
+                    icon: 'success',
+                    emoji: '✅',
+                    title: 'Mental Wellness',
+                    text: 'Everyone needs support. Connect with therapists who understand your unique needs.',
+                    action: 'View Therapists'
+                },
+                {
+                    icon: 'info',
+                    emoji: '🎯',
+                    title: 'Personalized Recommendations',
+                    text: 'Our AI analyzes your activities to suggest the best professionals for your journey.',
+                    action: 'Learn More'
+                }
+            ];
+
+            document.getElementById('insightsContainer').innerHTML = insights.map(insight => `
+                <div class="insight-card">
+                    <div class="insight-icon-wrapper ${insight.icon}">${insight.emoji}</div>
+                    <h3>${insight.title}</h3>
+                    <p>${insight.text}</p>
+                    <button class="btn-insight">${insight.action}</button>
+                </div>
+            `).join('');
+        }
+
+        // Load professionals
+        function loadProfessionals() {
+            const professionals = [
+                {
+                    name: 'Dr. Sarah Johnson',
+                    specialty: 'Clinical Psychologist',
+                    match: '95% Match',
+                    description: 'Specializes in cognitive behavioral therapy and stress management with 15+ years experience.',
+                    avatar: 'SJ'
+                },
+                {
+                    name: 'Dr. Michael Chen',
+                    specialty: 'Nutritionist & Dietitian',
+                    match: '88% Match',
+                    description: 'Expert in personalized meal planning and sustainable nutrition habits.',
+                    avatar: 'MC'
+                },
+                {
+                    name: 'Emma Rodriguez',
+                    specialty: 'Life Coach',
+                    match: '92% Match',
+                    description: 'Helps clients set meaningful goals and build positive habits for lasting change.',
+                    avatar: 'ER'
+                },
+                {
+                    name: 'Dr. James Wilson',
+                    specialty: 'Psychiatrist',
+                    match: '85% Match',
+                    description: 'Specializes in anxiety, depression, and comprehensive mental health care.',
+                    avatar: 'JW'
+                }
+            ];
+
+            document.getElementById('professionalsContainer').innerHTML = professionals.map(pro => `
+                <div class="professional-card">
+                    <div class="pro-header">
+                        <div class="pro-avatar">${pro.avatar}</div>
+                        <div class="pro-info">
+                            <h3>${pro.name}</h3>
+                            <div class="pro-specialty">${pro.specialty}</div>
+                            <span class="pro-match"><i class="fas fa-check-circle"></i> ${pro.match}</span>
+                        </div>
+                    </div>
+                    <p class="pro-description">${pro.description}</p>
+                    <div class="btn-actions">
+                        <button class="btn-primary" onclick="bookAppointment('${pro.name}')">
+                            <i class="fas fa-calendar"></i> Book Appointment
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Emergency help
+        window.showEmergency = function() {
+            Swal.fire({
+                title: 'Emergency Resources',
+                html: `
+                    <div style="text-align: left; line-height: 2; padding: 1rem;">
+                        <p><strong>🆘 Crisis Hotlines:</strong></p>
+                        <p>• National Suicide Prevention: <strong>988</strong></p>
+                        <p>• Crisis Text Line: Text <strong>HOME</strong> to <strong>741741</strong></p>
+                        <p>• SAMHSA Helpline: <strong>1-800-662-4357</strong></p>
+                        <br>
+                        <p><strong>🏥 Emergency Services:</strong></p>
+                        <p>• Call <strong>911</strong> for immediate emergency</p>
+                        <p>• Visit nearest hospital emergency room</p>
+                    </div>
+                `,
+                icon: 'info',
+                confirmButtonColor: '#667eea'
+            });
+        };
+
+        // Book appointment
+        window.bookAppointment = function(name) {
+            const today = new Date().toISOString().split('T')[0];
+            Swal.fire({
+                title: `Book with ${name}`,
+                html: `
+                    <input type="date" id="appointmentDate" class="swal2-input" min="${today}">
+                    <select id="appointmentTime" class="swal2-input">
+                        <option value="">Select Time</option>
+                        <option value="09:00">9:00 AM</option>
+                        <option value="10:00">10:00 AM</option>
+                        <option value="14:00">2:00 PM</option>
+                        <option value="15:00">3:00 PM</option>
+                    </select>
+                `,
+                showCancelButton: true,
+                confirmButtonColor: '#667eea',
+                confirmButtonText: 'Book',
+                preConfirm: () => {
+                    const date = document.getElementById('appointmentDate').value;
+                    const time = document.getElementById('appointmentTime').value;
+                    if (!date || !time) {
+                        Swal.showValidationMessage('Please select date and time');
+                        return false;
+                    }
+                    return { date, time };
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Appointment Booked!',
+                        text: `Your appointment with ${name} is confirmed.`,
+                        confirmButtonColor: '#667eea'
+                    });
+                }
+            });
+        };
+
+        // Initialize
+        loadInsights();
+        loadProfessionals();
+
+        // Logout
+        function handleLogout(e) {
+            e.preventDefault();
+            Swal.fire({
+                title: 'Logout?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#667eea',
+                confirmButtonText: 'Yes, logout'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    localStorage.removeItem('lifeprint_user');
+                    localStorage.removeItem('lifeprint_token');
+                    window.location.href = 'login.html';
+                }
+            });
+        }
+
+        document.getElementById('logoutLink').addEventListener('click', handleLogout);
+        document.getElementById('mobileLogout').addEventListener('click', handleLogout);
+    </script>
+    <script src="../assets/js/mobile-menu.js"></script>
+</body>
+</html>

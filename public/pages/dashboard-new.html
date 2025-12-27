@@ -1,0 +1,4975 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - LifePrint</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="../assets/js/modules-api.js"></script>
+    <style>
+        :root {
+            --primary: #667eea;
+            --primary-light: #e0e7ff;
+            --primary-dark: #5a67d8;
+            --secondary: #764ba2;
+            --accent: #f59e0b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --text-dark: #1a202c;
+            --text-light: #64748b;
+            --bg-light: #f1f5f9;
+            --bg-white: #ffffff;
+            --sidebar-bg: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+            --border-color: #e2e8f0;
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+            --glass-bg: rgba(255, 255, 255, 0.9);
+            --glass-border: rgba(255, 255, 255, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            overflow-x: hidden;
+            width: 100%;
+            max-width: 100vw;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+            color: var(--text-dark);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+            width: 100%;
+            max-width: 100vw;
+            position: relative;
+        }
+
+        body.menu-open {
+            overflow: hidden;
+        }
+
+        /* Mobile Menu Toggle - Hidden by default, shown on mobile */
+        .mobile-menu-toggle {
+            display: none;
+        }
+
+        /* Sidebar Overlay */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 998;
+            backdrop-filter: blur(4px);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+
+        /* MODERN SIDEBAR */
+        .sidebar {
+            width: 260px;
+            background: var(--sidebar-bg);
+            padding: 1.5rem 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            left: 0;
+            top: 0;
+            z-index: 999;
+            box-shadow: 4px 0 24px rgba(102, 126, 234, 0.15);
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.3);
+            border-radius: 3px;
+        }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.875rem;
+            padding: 0.5rem 1.5rem 1.75rem;
+            border-bottom: 1px solid rgba(255,255,255,0.15);
+            margin-bottom: 1rem;
+        }
+
+        .sidebar-logo-icon {
+            width: 44px;
+            height: 44px;
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.25rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .sidebar-logo-text h2 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: white;
+            letter-spacing: -0.5px;
+        }
+
+        .sidebar-section {
+            padding: 1rem 0;
+        }
+
+        .sidebar-section-title {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.6);
+            padding: 0 1.5rem 0.75rem;
+            letter-spacing: 1.5px;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin: 0.25rem 0;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 0.875rem;
+            padding: 0.75rem 1.5rem;
+            color: rgba(255,255,255,0.85);
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-left: 3px solid transparent;
+            font-weight: 500;
+            font-size: 0.9rem;
+            margin: 0 0.75rem;
+            border-radius: 10px;
+        }
+
+        .sidebar-menu a:hover {
+            background: rgba(255,255,255,0.15);
+            color: white;
+            border-left-color: transparent;
+            transform: translateX(4px);
+        }
+
+        .sidebar-menu a.active {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border-left-color: transparent;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .sidebar-menu i {
+            width: 20px;
+            text-align: center;
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .sidebar-bottom {
+            position: absolute;
+            bottom: 1rem;
+            left: 0;
+            right: 0;
+            padding: 1rem 0.75rem 0;
+            border-top: 1px solid rgba(255,255,255,0.15);
+        }
+
+        .sidebar-bottom a {
+            display: flex;
+            align-items: center;
+            gap: 0.875rem;
+            padding: 0.75rem 1rem;
+            color: rgba(255,255,255,0.85);
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 10px;
+            margin-bottom: 0.25rem;
+            font-size: 0.9rem;
+        }
+
+        .sidebar-bottom a:hover {
+            background: rgba(255,255,255,0.15);
+            color: white;
+            transform: translateX(4px);
+        }
+
+        /* MAIN CONTENT */
+        .main-content {
+            margin-left: 260px;
+            flex: 1;
+            padding: 1.5rem 2rem;
+            overflow-y: auto;
+            overflow-x: hidden;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            min-height: 100vh;
+            max-width: calc(100vw - 260px);
+            width: 100%;
+        }
+
+        /* TOP BAR - GLASSMORPHISM */
+        .top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            padding: 1.25rem 1.75rem;
+            border-radius: 20px;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--glass-border);
+        }
+
+        .greeting {
+            flex: 1;
+        }
+
+        .greeting h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 0.25rem;
+            letter-spacing: -0.5px;
+        }
+
+        .greeting .user-name {
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+        }
+
+        .greeting .date {
+            font-size: 0.875rem;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .top-bar-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .top-bar .search-box input {
+            padding: 0.625rem 1rem;
+            padding-left: 2.5rem;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            width: 220px;
+            font-size: 0.875rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .top-bar .search-box input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+        .top-bar .search-box i {
+            position: absolute;
+            left: 0.875rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+            font-size: 0.875rem;
+        }
+
+        .top-bar-icons {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .notification-bell {
+            position: relative;
+            background: white;
+            border: 2px solid var(--border-color);
+            cursor: pointer;
+            font-size: 1rem;
+            color: var(--text-dark);
+            transition: all 0.3s ease;
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .notification-bell:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .user-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: var(--gradient-primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 1rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .user-avatar:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.35);
+        }
+
+        /* OVERVIEW ONLY SECTION - Hide when not on overview */
+        .overview-only-section {
+            display: block;
+        }
+
+        .overview-only-section.hidden {
+            display: none;
+        }
+
+        /* Left panel visibility */
+        .left-panel.hidden {
+            display: none;
+        }
+
+        /* Right panel full width when left panel hidden */
+        .dashboard-layout.module-active {
+            grid-template-columns: 1fr;
+        }
+
+        /* MOOD CHECK - MODERN */
+        .mood-check {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 1.5rem 1.75rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .mood-check-close {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            background: none;
+            border: none;
+            font-size: 1.1rem;
+            color: var(--text-light);
+            cursor: pointer;
+            opacity: 0.5;
+            transition: all 0.3s ease;
+            padding: 0.25rem;
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+        }
+
+        .mood-check-close:hover {
+            opacity: 1;
+            color: var(--danger);
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .mood-check-left {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+        }
+
+        .mood-check-icon {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+        }
+
+        .mood-check-text h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.2rem;
+            color: var(--text-dark);
+        }
+
+        .mood-check-text p {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        .mood-buttons {
+            display: flex;
+            gap: 0.625rem;
+        }
+
+        .mood-btn {
+            padding: 0.625rem 1.25rem;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 0.85rem;
+        }
+
+        .mood-btn.great {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            color: #b45309;
+            border: 2px solid transparent;
+        }
+
+        .mood-btn.good {
+            background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+            color: #065f46;
+            border: 2px solid transparent;
+        }
+
+        .mood-btn.okay {
+            background: linear-gradient(135deg, #e9d5ff, #ddd6fe);
+            color: #6b21a8;
+            border: 2px solid transparent;
+        }
+
+        .mood-btn.low {
+            background: linear-gradient(135deg, #fee2e2, #fecaca);
+            color: #991b1b;
+            border: 2px solid transparent;
+        }
+
+        .mood-btn:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        /* STATS GRID - MODERN CARDS */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 1.25rem 1.5rem;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--glass-border);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-primary);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .stat-card:hover::before {
+            opacity: 1;
+        }
+
+        .stat-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+        }
+
+        .stat-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .stat-card-title {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.75px;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 0.25rem;
+            letter-spacing: -1px;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .stat-badge {
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 0.25rem 0.625rem;
+            border-radius: 8px;
+            display: inline-block;
+        }
+
+        /* BLUEPRINT SCORE - ENHANCED */
+        .blueprint-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .blueprint-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 1.5rem 1.75rem;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--glass-border);
+        }
+
+        .blueprint-header {
+            margin-bottom: 1.5rem;
+        }
+
+        .blueprint-header h3 {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .score-badge {
+            font-size: 0.7rem;
+            padding: 0.25rem 0.625rem;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+            color: #065f46;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .blueprint-header h2 {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            letter-spacing: -0.5px;
+        }
+
+        .blueprint-circle {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: conic-gradient(
+                #667eea 0deg 198deg,
+                #f59e0b 198deg 226deg,
+                #ea580c 226deg 266deg,
+                #9333ea 266deg 360deg
+            );
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            position: relative;
+        }
+
+        .blueprint-circle-inner {
+            width: 160px;
+            height: 160px;
+            background: var(--bg-white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .blueprint-score {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .blueprint-score-max {
+            font-size: 1rem;
+            color: var(--text-light);
+        }
+
+        .blueprint-legend {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .legend-item-text {
+            font-size: 0.9rem;
+            color: var(--text-dark);
+        }
+
+        .legend-item-value {
+            font-weight: 600;
+            margin-left: auto;
+        }
+
+        .blueprint-tip {
+            background: var(--primary-light);
+            border-left: 4px solid var(--primary);
+            padding: 1rem;
+            border-radius: 6px;
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+            color: var(--text-dark);
+        }
+
+        /* MODULES SECTION */
+        .modules-section h2 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1.25rem;
+            color: var(--text-dark);
+            letter-spacing: -0.5px;
+        }
+
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .module-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--glass-border);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .module-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .module-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .module-card:hover::before {
+            opacity: 1;
+        }
+
+        .module-card:active {
+            transform: translateY(-2px);
+        }
+
+        .module-card-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.875rem;
+        }
+
+        .module-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .module-card-title {
+            font-size: 0.7rem;
+            color: var(--text-light);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.75px;
+        }
+
+        .module-card-name {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .module-card-desc {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-bottom: 1.25rem;
+            line-height: 1.6;
+        }
+
+        .module-progress {
+            margin-bottom: 0.875rem;
+        }
+
+        .module-progress-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            font-size: 0.8rem;
+        }
+
+        .module-progress-bar {
+            width: 100%;
+            height: 6px;
+            background: var(--bg-light);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .module-progress-fill {
+            height: 100%;
+            border-radius: 6px;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .module-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+
+        .module-action:hover {
+            color: var(--secondary);
+            gap: 0.75rem;
+        }
+
+        /* SETTINGS STYLES */
+        .settings-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: var(--text-dark);
+            font-size: 0.9rem;
+        }
+
+        .form-input, .form-textarea {
+            padding: 0.875rem 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #fafafa;
+        }
+
+        .form-input:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-input:disabled {
+            background: #f3f4f6;
+            color: #9ca3af;
+            cursor: not-allowed;
+        }
+
+        .settings-toggle-group {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .settings-toggle {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .settings-toggle:last-child {
+            border-bottom: none;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 52px;
+            height: 28px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #e5e7eb;
+            transition: 0.3s;
+            border-radius: 28px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.3s;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .toggle-switch input:checked + .toggle-slider {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+        }
+
+        .toggle-switch input:checked + .toggle-slider:before {
+            transform: translateX(24px);
+        }
+
+        .theme-options {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .theme-btn {
+            flex: 1;
+            padding: 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            background: #fff;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .theme-btn:hover {
+            border-color: var(--primary);
+            background: #f8f9ff;
+        }
+
+        .theme-btn.active {
+            border-color: var(--primary);
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            color: var(--primary);
+        }
+
+        .danger-zone {
+            border: 2px solid #fecaca;
+            background: #fef2f2;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+            transform: translateY(-2px);
+        }
+
+        /* PROFILE STYLES */
+        .profile-header-card {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            padding: 2rem;
+        }
+
+        .profile-avatar-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .profile-avatar-large {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: 700;
+            box-shadow: 0 8px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .profile-info-section {
+            flex: 1;
+        }
+
+        .profile-info-section h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.25rem;
+            color: var(--text-dark);
+        }
+
+        .profile-badges {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .profile-badge {
+            background: var(--bg-light);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .profile-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .profile-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 1rem;
+        }
+
+        .btn-secondary {
+            background: var(--bg-light);
+            color: var(--text-dark);
+            border: 1px solid var(--border-color);
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-secondary:hover {
+            background: #e2e8f0;
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 768px) {
+            .profile-header-card {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+
+            .profile-badges {
+                justify-content: center;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-actions {
+                flex-direction: column;
+            }
+
+            .profile-actions button {
+                width: 100%;
+            }
+        }
+
+        /* HELP STYLES */
+        .search-box {
+            position: relative;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+        .faq-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .faq-item {
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .faq-item:hover {
+            border-color: var(--primary);
+        }
+
+        .faq-item.open {
+            border-color: var(--primary);
+            background: #f8f9ff;
+        }
+
+        .faq-question {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.25rem;
+            font-weight: 600;
+        }
+
+        .faq-question i {
+            transition: transform 0.3s ease;
+            color: var(--primary);
+        }
+
+        .faq-item.open .faq-question i {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            padding: 0 1.25rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        .faq-item.open .faq-answer {
+            padding: 0 1.25rem 1rem;
+            max-height: 200px;
+        }
+
+        .support-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .support-option {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.25rem;
+            background: #f8f9fa;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .support-option:hover {
+            background: #f0f4ff;
+            transform: translateY(-2px);
+        }
+
+        .support-icon {
+            font-size: 1.75rem;
+        }
+
+        .support-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .support-text strong {
+            color: var(--text-dark);
+        }
+
+        .support-text span {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        /* ANALYTICS CHART STYLES */
+        .weekly-chart {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            height: 150px;
+            padding: 1rem 0;
+            gap: 0.5rem;
+        }
+
+        .chart-bar-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            flex: 1;
+        }
+
+        .chart-bar {
+            width: 100%;
+            max-width: 40px;
+            background: linear-gradient(180deg, #667eea, #764ba2);
+            border-radius: 6px 6px 0 0;
+            transition: all 0.3s ease;
+            min-height: 20px;
+        }
+
+        .chart-bar-group:hover .chart-bar {
+            opacity: 0.8;
+            transform: scaleY(1.05);
+        }
+
+        .chart-bar-group.active .chart-bar {
+            background: linear-gradient(180deg, #10b981, #34d399);
+        }
+
+        .chart-bar-group span {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        /* Module Progress List */
+        .module-progress-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .module-progress-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .module-progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+
+        .module-progress-header span {
+            color: var(--text-dark);
+        }
+
+        .module-progress-header strong {
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .module-progress-bar-full {
+            width: 100%;
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .module-progress-fill-full {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        /* Insights Grid */
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.875rem;
+        }
+
+        .insight-card {
+            display: flex;
+            align-items: center;
+            gap: 0.875rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0,0,0,0.04);
+        }
+
+        .insight-card:hover {
+            box-shadow: var(--shadow-sm);
+            transform: translateY(-2px);
+        }
+
+        .insight-icon {
+            font-size: 1.5rem;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+            border-radius: 10px;
+        }
+
+        .insight-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .insight-text strong {
+            font-size: 0.875rem;
+            color: var(--text-dark);
+        }
+
+        .insight-text span {
+            font-size: 0.75rem;
+            color: var(--text-light);
+        }
+
+        /* Support Form */
+        .support-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        /* Week Summary Card - Insights Page */
+        .week-summary-card {
+            background: #f8fdf9;
+            border: 1px solid #d1fae5;
+        }
+
+        .week-summary-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            color: #065f46;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid #d1fae5;
+        }
+
+        .week-summary-header i {
+            color: #059669;
+        }
+
+        .week-summary-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            text-align: center;
+        }
+
+        .summary-stat {
+            padding: 0.5rem;
+        }
+
+        .summary-stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 0.25rem;
+        }
+
+        .summary-stat-label {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            margin-bottom: 0.25rem;
+        }
+
+        .summary-stat-change {
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .summary-stat-change.positive {
+            color: #059669;
+        }
+
+        .summary-stat-change.neutral {
+            color: #6b7280;
+        }
+
+        .summary-stat-change.negative {
+            color: #dc2626;
+        }
+
+        /* Key Insights Section */
+        .key-insights-section {
+            margin-top: 1.5rem;
+        }
+
+        .section-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+        }
+
+        .key-insights-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+
+        .key-insight-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.25rem;
+            border: 1px solid rgba(0,0,0,0.06);
+            transition: all 0.3s ease;
+        }
+
+        .key-insight-card:hover {
+            box-shadow: var(--shadow-sm);
+        }
+
+        .key-insight-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .key-insight-content h5 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .key-insight-content p {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        .insight-action {
+            display: inline-block;
+            color: #059669;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .insight-action:hover {
+            color: #047857;
+        }
+
+        /* 30-Day Trends Card */
+        .trends-card {
+            margin-top: 1.5rem;
+        }
+
+        .trends-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .trends-header h4 {
+            margin: 0;
+        }
+
+        .trends-status {
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .trends-status.positive {
+            color: #059669;
+        }
+
+        .trends-chart {
+            background: #f8fdf9;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .trend-bars {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            height: 120px;
+            gap: 4px;
+        }
+
+        .trend-bar {
+            flex: 1;
+            background: linear-gradient(to top, #6ee7b7, #34d399);
+            border-radius: 3px 3px 0 0;
+            min-height: 8px;
+            transition: opacity 0.2s;
+        }
+
+        .trend-bar:hover {
+            opacity: 0.8;
+        }
+
+        .trends-summary {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin: 0;
+        }
+
+        @media (max-width: 600px) {
+            .insights-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .weekly-chart {
+                height: 120px;
+            }
+
+            .week-summary-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .key-insights-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .key-insight-card {
+                padding: 1rem;
+            }
+
+            .key-insight-icon {
+                width: 48px;
+                height: 48px;
+                font-size: 1.25rem;
+            }
+
+            .key-insight-content h5 {
+                font-size: 1rem;
+            }
+
+            .key-insight-content p {
+                font-size: 0.9rem;
+                line-height: 1.6;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .key-insights-grid {
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+            }
+
+            .key-insight-card {
+                padding: 1.25rem;
+                display: flex;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .key-insight-icon {
+                width: 50px;
+                height: 50px;
+                min-width: 50px;
+                font-size: 1.25rem;
+                margin-bottom: 0;
+            }
+
+            .key-insight-content h5 {
+                font-size: 1.05rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .key-insight-content p {
+                font-size: 0.95rem;
+                line-height: 1.6;
+            }
+        }
+
+        /* Logo Image Styles */
+        .sidebar-logo-icon img {
+            width: 28px;
+            height: 28px;
+            object-fit: contain;
+        }
+
+        /* RESPONSIVE - ENHANCED */
+        @media (max-width: 1200px) {
+            .dashboard-layout {
+                grid-template-columns: 260px 1fr;
+            }
+            
+            .main-content {
+                padding: 1.25rem 1.5rem;
+            }
+        }
+
+        @media (max-width: 968px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+
+            .dashboard-layout {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .left-panel {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 0.5rem;
+                order: 2;
+                width: 100%;
+                max-width: 100%;
+                overflow: hidden;
+            }
+
+            .right-panel {
+                order: 1;
+                width: 100%;
+                max-width: 100%;
+                overflow: hidden;
+            }
+
+            .module-nav-card {
+                padding: 0.75rem 0.5rem;
+                flex-direction: column;
+                text-align: center;
+                gap: 0.25rem;
+                min-width: 0;
+            }
+
+            .module-nav-info {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                min-width: 0;
+                width: 100%;
+            }
+
+            .module-nav-arrow,
+            .module-nav-progress,
+            .module-nav-title {
+                display: none;
+            }
+
+            .module-nav-name {
+                font-size: 0.7rem;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-width: 100%;
+            }
+
+            .module-nav-icon {
+                width: 36px;
+                height: 36px;
+                font-size: 1rem;
+            }
+
+            .blueprint-section {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .left-panel {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.5rem;
+            }
+
+            .module-nav-card {
+                padding: 0.875rem 0.5rem;
+            }
+
+            .module-nav-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 1.1rem;
+            }
+
+            .module-nav-name {
+                font-size: 0.75rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                left: -280px;
+                width: 260px;
+                padding: 1rem 0;
+                transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                z-index: 1000;
+            }
+
+            .sidebar.active {
+                left: 0;
+            }
+
+            .sidebar-logo-text,
+            .sidebar-section-title,
+            .sidebar-menu a span,
+            .sidebar-bottom a span {
+                display: block;
+            }
+
+            .sidebar-logo {
+                padding: 0.5rem 1.5rem 1.5rem;
+                justify-content: flex-start;
+            }
+
+            .sidebar-menu a,
+            .sidebar-bottom a {
+                padding: 0.75rem 1.25rem;
+                justify-content: flex-start;
+                margin: 0.25rem 0.5rem;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 1rem;
+                width: 100%;
+                max-width: 100vw;
+            }
+
+            .dashboard-layout {
+                width: 100%;
+                max-width: 100%;
+            }
+
+            .mobile-menu-toggle {
+                display: flex !important;
+                position: fixed;
+                bottom: 1.25rem;
+                right: 1.25rem;
+                z-index: 1001;
+                width: 56px;
+                height: 56px;
+                border-radius: 16px;
+                background: var(--gradient-primary);
+                color: white;
+                border: none;
+                box-shadow: 0 4px 20px rgba(102, 126, 234, 0.5);
+                cursor: pointer;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.25rem;
+            }
+
+            .top-bar {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1.25rem;
+                border-radius: 16px;
+            }
+
+            .greeting h1 {
+                font-size: 1.35rem;
+            }
+
+            .top-bar .search-box {
+                width: 100%;
+            }
+
+            .top-bar .search-box input {
+                width: 100%;
+            }
+
+            .left-panel {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .right-panel {
+                padding: 1.25rem;
+                border-radius: 18px;
+            }
+
+            .mood-check {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 1rem;
+                padding: 1.25rem;
+                padding-top: 2.5rem;
+                border-radius: 16px;
+            }
+
+            .mood-check-left {
+                flex-direction: row;
+                align-items: center;
+            }
+
+            .mood-buttons {
+                width: 100%;
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 0.5rem;
+            }
+
+            .mood-btn {
+                padding: 0.5rem 0.75rem;
+                font-size: 0.8rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.75rem;
+            }
+
+            .stat-card {
+                padding: 1rem;
+                border-radius: 16px;
+            }
+
+            .stat-value {
+                font-size: 1.5rem;
+            }
+
+            .content-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                margin-left: 0;
+                padding: 0.75rem;
+                padding-bottom: 5rem;
+            }
+
+            .sidebar {
+                position: fixed;
+                left: -260px;
+                width: 260px;
+                transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                z-index: 1000;
+            }
+
+            .sidebar.active {
+                left: 0;
+            }
+
+            .sidebar-overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0,0,0,0.5);
+                z-index: 998;
+                backdrop-filter: blur(4px);
+            }
+
+            .sidebar-overlay.active {
+                display: block;
+            }
+
+            .sidebar-logo-text,
+            .sidebar-section-title,
+            .sidebar-menu a span,
+            .sidebar-bottom a span {
+                display: block;
+            }
+
+            .sidebar-logo {
+                padding: 0.5rem 1.5rem 1.5rem;
+            }
+
+            .sidebar-menu a,
+            .sidebar-bottom a {
+                padding: 0.75rem 1.25rem;
+                justify-content: flex-start;
+            }
+
+            .mobile-menu-toggle {
+                display: flex !important;
+                position: fixed;
+                bottom: 1.25rem;
+                right: 1.25rem;
+                z-index: 1001;
+                width: 56px;
+                height: 56px;
+                border-radius: 16px;
+                background: var(--gradient-primary);
+                color: white;
+                border: none;
+                box-shadow: 0 4px 20px rgba(102, 126, 234, 0.5);
+                cursor: pointer;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.25rem;
+                transition: all 0.3s ease;
+            }
+
+            .mobile-menu-toggle:hover {
+                transform: scale(1.05);
+            }
+
+            .mobile-menu-toggle.active {
+                background: #ef4444;
+            }
+
+            .top-bar {
+                padding: 1rem;
+                border-radius: 14px;
+            }
+
+            .greeting h1 {
+                font-size: 1.15rem;
+            }
+
+            .stat-value {
+                font-size: 1.35rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.625rem;
+            }
+
+            .stat-card {
+                padding: 0.875rem;
+            }
+
+            .left-panel {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.625rem;
+            }
+
+            .module-nav-icon {
+                width: 36px;
+                height: 36px;
+                font-size: 1rem;
+                border-radius: 10px;
+            }
+
+            .module-nav-name {
+                font-size: 0.75rem;
+            }
+
+            .right-panel {
+                padding: 1rem;
+                border-radius: 16px;
+            }
+
+            .content-header-icon {
+                width: 44px;
+                height: 44px;
+                font-size: 1.25rem;
+                border-radius: 12px;
+            }
+
+            .content-header-text h2 {
+                font-size: 1.1rem;
+            }
+
+            .content-header-text p {
+                font-size: 0.8rem;
+            }
+
+            .content-card {
+                padding: 1rem;
+                border-radius: 12px;
+            }
+
+            .mood-buttons {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .quick-stats {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.5rem;
+            }
+
+            .quick-stat {
+                padding: 0.75rem;
+                border-radius: 10px;
+            }
+
+            .quick-stat-value {
+                font-size: 1.1rem;
+            }
+        }
+
+        /* DASHBOARD LAYOUT - Two Column Modern */
+        .dashboard-layout {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 1.5rem;
+            margin-top: 1.25rem;
+        }
+
+        /* Left Panel - Modules Navigation */
+        .left-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .module-nav-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 16px;
+            padding: 1rem 1.25rem;
+            box-shadow: var(--shadow-md);
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .module-nav-card:hover {
+            transform: translateX(6px);
+            box-shadow: var(--shadow-lg);
+            border-color: rgba(102, 126, 234, 0.3);
+        }
+
+        .module-nav-card.active {
+            border-color: var(--primary);
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.2);
+        }
+
+        .module-nav-card.active .module-nav-icon {
+            transform: scale(1.08);
+            box-shadow: var(--shadow-md);
+        }
+
+        .module-nav-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.35rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            flex-shrink: 0;
+        }
+
+        .module-nav-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .module-nav-title {
+            font-size: 0.65rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.75px;
+            margin-bottom: 0.125rem;
+            font-weight: 600;
+        }
+
+        .module-nav-name {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .module-nav-progress {
+            width: 100%;
+            height: 4px;
+            background: rgba(0,0,0,0.06);
+            border-radius: 4px;
+            margin-top: 0.5rem;
+            overflow: hidden;
+        }
+
+        .module-nav-progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .module-nav-arrow {
+            color: var(--text-light);
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+            opacity: 0.5;
+        }
+
+        .module-nav-card:hover .module-nav-arrow,
+        .module-nav-card.active .module-nav-arrow {
+            color: var(--primary);
+            transform: translateX(4px);
+            opacity: 1;
+        }
+
+        /* Right Panel - Dynamic Content */
+        .right-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 1.75rem 2rem;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--glass-border);
+            min-height: 480px;
+            width: 100%;
+            max-width: 100%;
+            overflow: hidden;
+        }
+
+        .content-section {
+            display: none;
+            animation: fadeInUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .content-header {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.25rem;
+            border-bottom: 2px solid rgba(0,0,0,0.04);
+        }
+
+        .content-header-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .content-header-text h2 {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 0.25rem;
+            letter-spacing: -0.5px;
+        }
+
+        .content-header-text p {
+            font-size: 0.875rem;
+            color: var(--text-light);
+        }
+
+        .content-body {
+            padding: 0.25rem 0;
+        }
+
+        /* OVERVIEW SECTION STYLES */
+        .overview-progress-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .progress-ring-container {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+            border-radius: 20px;
+            border: 1px solid rgba(0,0,0,0.04);
+        }
+
+        .progress-ring {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            flex-shrink: 0;
+        }
+
+        .progress-ring svg {
+            transform: rotate(-90deg);
+        }
+
+        .progress-ring-bg {
+            fill: none;
+            stroke: #e5e7eb;
+            stroke-width: 10;
+        }
+
+        .progress-ring-fill {
+            fill: none;
+            stroke: url(#progressGradient);
+            stroke-width: 10;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 1s ease;
+        }
+
+        .progress-ring-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .progress-value {
+            display: block;
+            font-size: 2rem;
+            font-weight: 800;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .progress-label {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--text-light);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .progress-ring-info h4 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 0.25rem;
+        }
+
+        .progress-ring-info > p {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+
+        .score-breakdown {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .score-item {
+            display: flex;
+            align-items: center;
+            gap: 0.625rem;
+            font-size: 0.85rem;
+        }
+
+        .score-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .score-item span:not(.score-dot) {
+            flex: 1;
+            color: var(--text-light);
+        }
+
+        .score-item strong {
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+
+        /* Quick Actions Grid */
+        .quick-actions-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.875rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .quick-action-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.625rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(0,0,0,0.04);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .quick-action-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .quick-action-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.35rem;
+        }
+
+        .quick-action-card span {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            text-align: center;
+        }
+
+        /* Card Header Flex */
+        .card-header-flex {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.875rem;
+        }
+
+        .card-header-flex h4 {
+            margin-bottom: 0;
+        }
+
+        .see-all-link {
+            font-size: 0.8rem;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .see-all-link:hover {
+            color: var(--secondary);
+        }
+
+        /* Activity Timeline */
+        .activity-timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 0.875rem;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem;
+            background: white;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .activity-item:hover {
+            box-shadow: var(--shadow-sm);
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .activity-time {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            margin-top: 0.125rem;
+        }
+
+        /* Next Steps */
+        .next-steps-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.625rem;
+        }
+
+        .next-step-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid transparent;
+        }
+
+        .next-step-item:hover {
+            border-color: var(--primary);
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
+            transform: translateX(4px);
+        }
+
+        .next-step-icon {
+            font-size: 1.5rem;
+        }
+
+        .next-step-content {
+            flex: 1;
+        }
+
+        .next-step-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .next-step-subtitle {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-top: 0.125rem;
+        }
+
+        .next-step-arrow {
+            color: var(--text-light);
+            transition: all 0.3s ease;
+        }
+
+        .next-step-item:hover .next-step-arrow {
+            color: var(--primary);
+            transform: translateX(4px);
+        }
+
+        @media (max-width: 768px) {
+            .quick-actions-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .progress-ring-container {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .score-breakdown {
+                align-items: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .progress-ring {
+                width: 100px;
+                height: 100px;
+            }
+
+            .progress-value {
+                font-size: 1.5rem;
+            }
+
+            .quick-action-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 1.1rem;
+            }
+
+            .quick-action-card span {
+                font-size: 0.7rem;
+            }
+        }
+
+        /* Content Cards Inside Right Panel */
+        .content-card {
+            background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+            border-radius: 16px;
+            padding: 1.25rem 1.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(0,0,0,0.04);
+            transition: all 0.3s ease;
+        }
+
+        .content-card:hover {
+            box-shadow: var(--shadow-sm);
+        }
+
+        .content-card h4 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 0.875rem;
+        }
+
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            box-shadow: 0 4px 14px rgba(102, 126, 234, 0.35);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.45);
+        }
+
+        .action-btn-secondary {
+            background: white;
+            color: var(--text-dark);
+            border: 2px solid var(--border-color);
+            box-shadow: none;
+        }
+
+        .action-btn-secondary:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            box-shadow: 0 4px 14px rgba(102, 126, 234, 0.35);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.45);
+        }
+
+        /* Quick Stats in Content - Modern */
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+            gap: 0.875rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .quick-stat {
+            background: white;
+            padding: 1rem;
+            border-radius: 14px;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(0,0,0,0.04);
+            transition: all 0.3s ease;
+        }
+
+        .quick-stat:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .quick-stat-value {
+            font-size: 1.35rem;
+            font-weight: 800;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .quick-stat-label {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            margin-top: 0.25rem;
+            font-weight: 500;
+        }
+
+        /* Form Elements in Content */
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            background: var(--bg-white);
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        /* List Items */
+        .list-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--bg-white);
+            border-radius: 10px;
+            margin-bottom: 0.75rem;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .list-item:hover {
+            border-color: var(--primary-light);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .list-item-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .list-item-content {
+            flex: 1;
+        }
+
+        .list-item-title {
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.125rem;
+        }
+
+        .list-item-subtitle {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .empty-state h3 {
+            font-size: 1.25rem;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-state p {
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- SVG Gradient Definition for Progress Ring -->
+    <svg width="0" height="0" style="position: absolute;">
+        <defs>
+            <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#667eea" />
+                <stop offset="100%" stop-color="#764ba2" />
+            </linearGradient>
+        </defs>
+    </svg>
+
+    <!-- Sidebar Overlay for Mobile -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Mobile Menu Toggle -->
+    <button class="mobile-menu-toggle" id="mobileMenuToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <div class="sidebar-logo-icon">
+                <img src="../assets/images/logo.png" alt="LifePrint" onerror="this.style.display='none'; this.parentElement.innerHTML='LP';">
+            </div>
+            <div class="sidebar-logo-text">
+                <h2>LifePrint</h2>
+            </div>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="sidebar-section-title">Your Blueprint</div>
+            <ul class="sidebar-menu">
+                <li><a href="#" data-module="overview" class="active" onclick="switchModule('overview'); return false;"><i class="fas fa-chart-pie"></i> <span>Overview</span></a></li>
+            </ul>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="sidebar-section-title">Modules</div>
+            <ul class="sidebar-menu">
+                <li><a href="#" data-module="personaprint" onclick="switchModule('personaprint'); return false;"><i class="fas fa-user-circle"></i> <span>personaPrint</span></a></li>
+                <li><a href="#" data-module="foodprint" onclick="switchModule('foodprint'); return false;"><i class="fas fa-utensils"></i> <span>FoodPrint</span></a></li>
+                <li><a href="#" data-module="storyweaver" onclick="switchModule('storyweaver'); return false;"><i class="fas fa-book"></i> <span>StoryWeaver</span></a></li>
+                <li><a href="#" data-module="timecapsule" onclick="switchModule('timecapsule'); return false;"><i class="fas fa-calendar-alt"></i> <span>Time Capsule 2040</span></a></li>
+            </ul>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="sidebar-section-title">Analytics</div>
+            <ul class="sidebar-menu">
+                <li><a href="#" data-module="analytics" onclick="switchModule('analytics'); return false;"><i class="fas fa-chart-line"></i> <span>Insights</span></a></li>
+            </ul>
+        </div>
+
+        <div class="sidebar-bottom">
+            <a href="#" data-module="settings" onclick="switchModule('settings'); return false;"><i class="fas fa-cog"></i> <span>Settings</span></a>
+            <a href="#" data-module="help" onclick="switchModule('help'); return false;"><i class="fas fa-question-circle"></i> <span>Help & Support</span></a>
+            <a href="#" onclick="handleLogout(); return false;"><i class="fas fa-sign-out-alt"></i> <span>Sign Out</span></a>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+        <!-- TOP BAR -->
+        <div class="top-bar">
+            <div class="greeting">
+                <h1>Good afternoon, <span class="user-name">Athanase</span> ✨</h1>
+                <div class="date" id="currentDate">Thursday, December 18</div>
+            </div>
+            <div class="top-bar-actions">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search your blueprint...">
+                </div>
+                <div class="top-bar-icons">
+                    <button class="notification-bell">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">3</span>
+                    </button>
+                    <div class="user-avatar" id="userAvatar">
+                        <img src="" alt="" id="userAvatarImg" style="display:none; width:100%; height:100%; object-fit:cover; border-radius:12px;">
+                        <span id="userAvatarInitial">A</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MOOD CHECK -->
+        <div class="overview-only-section" id="overviewOnlySection">
+        <div class="mood-check" id="moodCheck">
+            <button class="mood-check-close" onclick="document.getElementById('moodCheck').style.display='none'">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="mood-check-left">
+                <div class="mood-check-icon">😊</div>
+                <div class="mood-check-text">
+                    <h3>How are you feeling today?</h3>
+                    <p>Your daily check-in helps LifePrint understand your journey better.</p>
+                </div>
+            </div>
+            <div class="mood-buttons">
+                <button class="mood-btn great">☀️ Great</button>
+                <button class="mood-btn good">✓ Good</button>
+                <button class="mood-btn okay">🙂 Okay</button>
+                <button class="mood-btn low">📉 Low</button>
+            </div>
+        </div>
+
+        <!-- STATS GRID -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <div class="stat-card-title">Days Active</div>
+                </div>
+                <div class="stat-value">47</div>
+                <div class="stat-label">Keep it up! 💪</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <div class="stat-card-title">Check-ins</div>
+                </div>
+                <div class="stat-value">32</div>
+                <div class="stat-label"><span class="stat-badge" style="background: #d1fae5; color: #065f46;">This month</span></div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <div class="stat-card-title">Insights</div>
+                </div>
+                <div class="stat-value">18</div>
+                <div class="stat-label"><span class="stat-badge" style="background: #e9d5ff; color: #6b21a8;">Unlocked</span></div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <div class="stat-card-title">Goals</div>
+                </div>
+                <div class="stat-value">5/8</div>
+                <div class="stat-label"><span class="stat-badge" style="background: #fee2e2; color: #991b1b;">Completed</span></div>
+            </div>
+        </div>
+
+        <!-- BLUEPRINT SCORE & PROGRESS -->
+        <div class="blueprint-section">
+            <div class="blueprint-card">
+                <div class="blueprint-header">
+                    <h3>
+                        <i class="fas fa-chart-line" style="color: var(--primary);"></i> 
+                        Lifeprint Score
+                        <span class="score-badge">
+                            <i class="fas fa-arrow-up"></i> +8%
+                        </span>
+                    </h3>
+                    <h2>Your Blueprint</h2>
+                </div>
+                <div class="blueprint-circle">
+                    <div class="blueprint-circle-inner">
+                        <div class="blueprint-score">55</div>
+                        <div class="blueprint-score-max">of 100</div>
+                    </div>
+                </div>
+                <div class="blueprint-legend">
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background: #667eea;"></div>
+                        <span class="legend-item-text">Identity</span>
+                        <span class="legend-item-value">75%</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background: #f59e0b;"></div>
+                        <span class="legend-item-text">Habits</span>
+                        <span class="legend-item-value">62%</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background: #ea580c;"></div>
+                        <span class="legend-item-text">Story</span>
+                        <span class="legend-item-value">48%</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background: #9333ea;"></div>
+                        <span class="legend-item-text">Future</span>
+                        <span class="legend-item-value">35%</span>
+                    </div>
+                </div>
+                <div class="blueprint-tip">
+                    💡 Focus on completing your <strong>Story</strong> to unlock deeper insights about your journey.
+                </div>
+            </div>
+
+            <div class="blueprint-card">
+                <div class="blueprint-header">
+                    <h3>Module Progress</h3>
+                    <h2>Your Progress</h2>
+                </div>
+
+                <div class="module-progress">
+                    <div class="module-progress-label">
+                        <span>PersonaPrint</span>
+                        <span>75%</span>
+                    </div>
+                    <div class="module-progress-bar">
+                        <div class="module-progress-fill" style="width: 75%; background: #667eea;"></div>
+                    </div>
+                </div>
+
+                <div class="module-progress">
+                    <div class="module-progress-label">
+                        <span>FoodPrint</span>
+                        <span>62%</span>
+                    </div>
+                    <div class="module-progress-bar">
+                        <div class="module-progress-fill" style="width: 62%; background: #f59e0b;"></div>
+                    </div>
+                </div>
+
+                <div class="module-progress">
+                    <div class="module-progress-label">
+                        <span>StoryWeaver</span>
+                        <span>48%</span>
+                    </div>
+                    <div class="module-progress-bar">
+                        <div class="module-progress-fill" style="width: 48%; background: #f97316;"></div>
+                    </div>
+                </div>
+
+                <div class="module-progress">
+                    <div class="module-progress-label">
+                        <span>Time Capsule</span>
+                        <span>35%</span>
+                    </div>
+                    <div class="module-progress-bar">
+                        <div class="module-progress-fill" style="width: 35%; background: #c084fc;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div> <!-- End overview-only-section -->
+
+        <!-- DASHBOARD TWO-COLUMN LAYOUT -->
+        <div class="dashboard-layout" id="dashboardLayout">
+            <!-- LEFT PANEL - Module Navigation -->
+            <div class="left-panel">
+                <div class="module-nav-card active" data-module="overview">
+                    <div class="module-nav-icon" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white;">📊</div>
+                    <div class="module-nav-info">
+                        <div class="module-nav-title">Dashboard</div>
+                        <div class="module-nav-name">Overview</div>
+                    </div>
+                    <i class="fas fa-chevron-right module-nav-arrow"></i>
+                </div>
+
+                <div class="module-nav-card" data-module="personaprint">
+                    <div class="module-nav-icon" style="background: #e0e7ff; color: #667eea;">👤</div>
+                    <div class="module-nav-info">
+                        <div class="module-nav-title">Identity Engine</div>
+                        <div class="module-nav-name">personaPrint</div>
+                        <div class="module-nav-progress">
+                            <div class="module-nav-progress-fill" style="width: 75%; background: #667eea;"></div>
+                        </div>
+                    </div>
+                    <i class="fas fa-chevron-right module-nav-arrow"></i>
+                </div>
+
+                <div class="module-nav-card" data-module="foodprint">
+                    <div class="module-nav-icon" style="background: #fef3c7; color: #f59e0b;">🍽️</div>
+                    <div class="module-nav-info">
+                        <div class="module-nav-title">Habit & Health</div>
+                        <div class="module-nav-name">FoodPrint</div>
+                        <div class="module-nav-progress">
+                            <div class="module-nav-progress-fill" style="width: 62%; background: #f59e0b;"></div>
+                        </div>
+                    </div>
+                    <i class="fas fa-chevron-right module-nav-arrow"></i>
+                </div>
+
+                <div class="module-nav-card" data-module="storyweaver">
+                    <div class="module-nav-icon" style="background: #fed7aa; color: #ea580c;">📖</div>
+                    <div class="module-nav-info">
+                        <div class="module-nav-title">Life Narrative</div>
+                        <div class="module-nav-name">StoryWeaver</div>
+                        <div class="module-nav-progress">
+                            <div class="module-nav-progress-fill" style="width: 48%; background: #ea580c;"></div>
+                        </div>
+                    </div>
+                    <i class="fas fa-chevron-right module-nav-arrow"></i>
+                </div>
+
+                <div class="module-nav-card" data-module="timecapsule">
+                    <div class="module-nav-icon" style="background: #e9d5ff; color: #9333ea;">🗓️</div>
+                    <div class="module-nav-info">
+                        <div class="module-nav-title">Vision & Goals</div>
+                        <div class="module-nav-name">Time Capsule 2040</div>
+                        <div class="module-nav-progress">
+                            <div class="module-nav-progress-fill" style="width: 35%; background: #9333ea;"></div>
+                        </div>
+                    </div>
+                    <i class="fas fa-chevron-right module-nav-arrow"></i>
+                </div>
+
+                <div class="module-nav-card" data-module="analytics">
+                    <div class="module-nav-icon" style="background: #dcfce7; color: #16a34a;">📈</div>
+                    <div class="module-nav-info">
+                        <div class="module-nav-title">Insights</div>
+                        <div class="module-nav-name">Analytics</div>
+                    </div>
+                    <i class="fas fa-chevron-right module-nav-arrow"></i>
+                </div>
+            </div>
+
+            <!-- RIGHT PANEL - Dynamic Content -->
+            <div class="right-panel">
+                <!-- Overview Section (Default) -->
+                <div class="content-section active" id="content-overview">
+                    <div class="content-header">
+                        <div class="content-header-icon" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white;">🏠</div>
+                        <div class="content-header-text">
+                            <h2>Welcome Back!</h2>
+                            <p>Your personalized wellness dashboard at a glance</p>
+                        </div>
+                    </div>
+                    <div class="content-body">
+                        <!-- Progress Overview -->
+                        <div class="overview-progress-section">
+                            <div class="progress-ring-container">
+                                <div class="progress-ring">
+                                    <svg viewBox="0 0 120 120">
+                                        <circle class="progress-ring-bg" cx="60" cy="60" r="52"></circle>
+                                        <circle class="progress-ring-fill" cx="60" cy="60" r="52" style="stroke-dasharray: 327; stroke-dashoffset: 147;"></circle>
+                                    </svg>
+                                    <div class="progress-ring-text">
+                                        <span class="progress-value">55</span>
+                                        <span class="progress-label">Score</span>
+                                    </div>
+                                </div>
+                                <div class="progress-ring-info">
+                                    <h4>Your LifePrint Score</h4>
+                                    <p>Based on your activity and progress</p>
+                                    <div class="score-breakdown">
+                                        <div class="score-item">
+                                            <span class="score-dot" style="background: #667eea;"></span>
+                                            <span>Identity</span>
+                                            <strong>75%</strong>
+                                        </div>
+                                        <div class="score-item">
+                                            <span class="score-dot" style="background: #f59e0b;"></span>
+                                            <span>Nutrition</span>
+                                            <strong>62%</strong>
+                                        </div>
+                                        <div class="score-item">
+                                            <span class="score-dot" style="background: #10b981;"></span>
+                                            <span>Story</span>
+                                            <strong>48%</strong>
+                                        </div>
+                                        <div class="score-item">
+                                            <span class="score-dot" style="background: #8b5cf6;"></span>
+                                            <span>Goals</span>
+                                            <strong>35%</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Quick Actions Grid -->
+                        <div class="quick-actions-grid">
+                            <div class="quick-action-card" onclick="switchModule('personaprint')">
+                                <div class="quick-action-icon" style="background: linear-gradient(135deg, #e0e7ff, #c7d2fe);">👤</div>
+                                <span>Take Assessment</span>
+                            </div>
+                            <div class="quick-action-card" onclick="switchModule('foodprint')">
+                                <div class="quick-action-icon" style="background: linear-gradient(135deg, #fef3c7, #fde68a);">🍎</div>
+                                <span>Log Meal</span>
+                            </div>
+                            <div class="quick-action-card" onclick="switchModule('storyweaver')">
+                                <div class="quick-action-icon" style="background: linear-gradient(135deg, #fed7aa, #fdba74);">✍️</div>
+                                <span>Write Story</span>
+                            </div>
+                            <div class="quick-action-card" onclick="switchModule('timecapsule')">
+                                <div class="quick-action-icon" style="background: linear-gradient(135deg, #ddd6fe, #c4b5fd);">🎯</div>
+                                <span>Set Goal</span>
+                            </div>
+                        </div>
+
+                        <!-- Recent Activity -->
+                        <div class="content-card">
+                            <div class="card-header-flex">
+                                <h4>📈 Recent Activity</h4>
+                                <a href="#" class="see-all-link" onclick="switchModule('analytics'); return false;">See All</a>
+                            </div>
+                            <div class="activity-timeline">
+                                <div class="activity-item">
+                                    <div class="activity-icon" style="background: #e0e7ff; color: #667eea;">✓</div>
+                                    <div class="activity-content">
+                                        <div class="activity-title">Completed daily check-in</div>
+                                        <div class="activity-time">Today, 9:30 AM</div>
+                                    </div>
+                                </div>
+                                <div class="activity-item">
+                                    <div class="activity-icon" style="background: #fef3c7; color: #f59e0b;">🍽️</div>
+                                    <div class="activity-content">
+                                        <div class="activity-title">Logged breakfast</div>
+                                        <div class="activity-time">Today, 8:15 AM</div>
+                                    </div>
+                                </div>
+                                <div class="activity-item">
+                                    <div class="activity-icon" style="background: #d1fae5; color: #10b981;">🎯</div>
+                                    <div class="activity-content">
+                                        <div class="activity-title">Added new goal: Learn a new skill</div>
+                                        <div class="activity-time">Yesterday</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Suggested Next Steps -->
+                        <div class="content-card">
+                            <h4>💡 Suggested Next Steps</h4>
+                            <div class="next-steps-list">
+                                <div class="next-step-item" onclick="switchModule('personaprint')">
+                                    <div class="next-step-icon">✨</div>
+                                    <div class="next-step-content">
+                                        <div class="next-step-title">Complete your personality assessment</div>
+                                        <div class="next-step-subtitle">Unlock deeper insights about yourself</div>
+                                    </div>
+                                    <div class="next-step-arrow"><i class="fas fa-chevron-right"></i></div>
+                                </div>
+                                <div class="next-step-item" onclick="switchModule('storyweaver')">
+                                    <div class="next-step-icon">📝</div>
+                                    <div class="next-step-content">
+                                        <div class="next-step-title">Write your first journal entry</div>
+                                        <div class="next-step-subtitle">Capture your thoughts and memories</div>
+                                    </div>
+                                    <div class="next-step-arrow"><i class="fas fa-chevron-right"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PersonaPrint Section -->
+                <div class="content-section" id="content-personaprint">
+                    <div class="content-header">
+                        <div class="content-header-icon" style="background: #e0e7ff; color: #667eea;">👤</div>
+                        <div class="content-header-text">
+                            <h2>personaPrint</h2>
+                            <p>Discover your unique personality patterns and strengths</p>
+                        </div>
+                    </div>
+                    <div class="content-body">
+                        <div class="quick-stats">
+                            <div class="quick-stat">
+                                <div class="quick-stat-value">75%</div>
+                                <div class="quick-stat-label">Profile Complete</div>
+                            </div>
+                            <div class="quick-stat">
+                                <div class="quick-stat-value">12</div>
+                                <div class="quick-stat-label">Traits Identified</div>
+                            </div>
+                            <div class="quick-stat">
+                                <div class="quick-stat-value">5</div>
+                                <div class="quick-stat-label">Strengths</div>
+                            </div>
+                        </div>
+                        <div class="content-card">
+                            <h4>🎯 Take Personality Assessment</h4>
+                            <p style="color: var(--text-light); margin-bottom: 1rem;">Answer questions to discover your personality type, communication style, and growth areas.</p>
+                            <button class="action-btn" onclick="startAssessment()">
+                                <i class="fas fa-play"></i> Start Assessment
+                            </button>
+                        </div>
+                        <div class="content-card">
+                            <h4>📋 Your Personality Traits</h4>
+                            <div id="personalityTraits">
+                                <div class="list-item">
+                                    <div class="list-item-icon" style="background: #e0e7ff;">🎨</div>
+                                    <div class="list-item-content">
+                                        <div class="list-item-title">Creative Thinker</div>
+                                        <div class="list-item-subtitle">You approach problems with innovative solutions</div>
+                                    </div>
+                                </div>
+                                <div class="list-item">
+                                    <div class="list-item-icon" style="background: #dcfce7;">🤝</div>
+                                    <div class="list-item-content">
+                                        <div class="list-item-title">Empathetic Listener</div>
+                                        <div class="list-item-subtitle">You understand and connect with others deeply</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FoodPrint Section -->
+                <div class="content-section" id="content-foodprint">
+                    <div class="content-header">
+                        <div class="content-header-icon" style="background: #fef3c7; color: #f59e0b;">🍽️</div>
+                        <div class="content-header-text">
+                            <h2>FoodPrint</h2>
+                            <p>Track your nutrition and build healthy eating habits</p>
+                        </div>
+                    </div>
+                    <div class="content-body">
+                        <div class="quick-stats">
+                            <div class="quick-stat">
+                                <div class="quick-stat-value">1,850</div>
+                                <div class="quick-stat-label">Calories Today</div>
+                            </div>
+                            <div class="quick-stat">
+                                <div class="quick-stat-value">65g</div>
+                                <div class="quick-stat-label">Protein</div>
+                            </div>
+                            <div class="quick-stat">
+                                <div class="quick-stat-value">8</div>
+                                <div class="quick-stat-label">Glasses of Water</div>
+                            </div>
+                        </div>
+                        <div class="content-card">
+                            <h4>➕ Log a Meal</h4>
+                            <div class="form-group">
+                                <label>Meal Type</label>
+                                <select id="mealType">
+                                    <option value="breakfast">🌅 Breakfast</option>
+                                    <option value="lunch">☀️ Lunch</option>
+                                    <option value="dinner">🌙 Dinner</option>
+                                    <option value="snack">🍎 Snack</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>What did you eat?</label>
+                                <textarea id="mealDescription" placeholder="Describe your meal..."></textarea>
+                            </div>
+                            <button class="action-btn" onclick="logMeal()">
+                                <i class="fas fa-plus"></i> Log Meal
+                            </button>
+                        </div>
+                        <div class="content-card">
+                            <h4>📊 Today's Meals</h4>
+                            <div id="todaysMeals">
+                                <div class="empty-state">
+                                    <div class="empty-state-icon">🍽️</div>
+                                    <h3>No meals logged today</h3>
+                                    <p>Start tracking your nutrition by logging your first meal</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- StoryWeaver Section -->
+                <div class="content-section" id="content-storyweaver">
+                    <div class="content-header">
+                        <div class="content-header-icon" style="background: #fed7aa; color: #ea580c;">📖</div>
+                        <div class="content-header-text">
+                            <h2>StoryWeaver</h2>
+                            <p>Document your life's journey and create your narrative</p>
+                        </div>
+                    </div>
+                    <div class="content-body">
+                        <div class="quick-stats">
+                            <div class="quick-stat">
+                                <div class="quick-stat-value">23</div>
+                                <div class="quick-stat-label">Journal Entries</div>
+                            </div>
+                            <div class="quick-stat">
+                                <div class="quick-stat-value">8</div>
+                                <div class="quick-stat-label">Memories</div>
+                            </div>
+                            <div class="quick-stat">
+                                <div class="quick-stat-value">3</div>
+                                <div class="quick-stat-label">Life Chapters</div>
+                            </div>
+                        </div>
+                        <div class="content-card">
+                            <h4>✍️ Write a New Entry</h4>
+                            <div class="form-group">
+                                <label>Title</label>
+                                <input type="text" id="storyTitle" placeholder="Give your story a title...">
+                            </div>
+                            <div class="form-group">
+                                <label>Your Story</label>
+                                <textarea id="storyContent" placeholder="What's on your mind today? Share your thoughts, memories, or experiences..."></textarea>
+                            </div>
+                            <div style="display: flex; gap: 1rem;">
+                                <button class="action-btn" onclick="saveStory()">
+                                    <i class="fas fa-save"></i> Save Entry
+                                </button>
+                                <button class="action-btn action-btn-secondary">
+                                    <i class="fas fa-image"></i> Add Photo
+                                </button>
+                            </div>
+                        </div>
+                        <div class="content-card">
+                            <h4>📚 Recent Entries</h4>
+                            <div id="recentStories">
+                                <div class="list-item">
+                                    <div class="list-item-icon" style="background: #fed7aa;">📝</div>
+                                    <div class="list-item-content">
+                                        <div class="list-item-title">A Day to Remember</div>
+                                        <div class="list-item-subtitle">December 15, 2025</div>
+                                    </div>
+                                </div>
+                                <div class="list-item">
+                                    <div class="list-item-icon" style="background: #fed7aa;">📝</div>
+                                    <div class="list-item-content">
+                                        <div class="list-item-title">Reflections on Growth</div>
+                                        <div class="list-item-subtitle">December 10, 2025</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Time Capsule Section -->
+                <div class="content-section" id="content-timecapsule">
+                    <div class="content-header">
+                        <div class="content-header-icon" style="background: #e9d5ff; color: #9333ea;">🗓️</div>
+                        <div class="content-header-text">
+                            <h2>Time Capsule 2040</h2>
+                            <p>Set your vision for the future and track your goals</p>
+                        </div>
+                    </div>
+                    <div class="content-body">
+                        <div class="quick-stats">
+                            <div class="quick-stat">
+                                <div class="quick-stat-value">5</div>
+                                <div class="quick-stat-label">Active Goals</div>
+                            </div>
+                            <div class="quick-stat">
+                                <div class="quick-stat-value">3</div>
+                                <div class="quick-stat-label">Completed</div>
+                            </div>
+                            <div class="quick-stat">
+                                <div class="quick-stat-value">15</div>
+                                <div class="quick-stat-label">Years to 2040</div>
+                            </div>
+                        </div>
+                        <div class="content-card">
+                            <h4>🎯 Add New Goal</h4>
+                            <div class="form-group">
+                                <label>Goal Title</label>
+                                <input type="text" id="goalTitle" placeholder="What do you want to achieve?">
+                            </div>
+                            <div class="form-group">
+                                <label>Target Date</label>
+                                <input type="date" id="goalDate">
+                            </div>
+                            <div class="form-group">
+                                <label>Category</label>
+                                <select id="goalCategory">
+                                    <option value="career">💼 Career</option>
+                                    <option value="health">❤️ Health</option>
+                                    <option value="personal">🌟 Personal Growth</option>
+                                    <option value="relationships">👥 Relationships</option>
+                                    <option value="financial">💰 Financial</option>
+                                </select>
+                            </div>
+                            <button class="action-btn" onclick="addGoal()">
+                                <i class="fas fa-plus"></i> Add Goal
+                            </button>
+                        </div>
+                        <div class="content-card">
+                            <h4>📋 Your Goals</h4>
+                            <div id="goalsList">
+                                <div class="list-item">
+                                    <div class="list-item-icon" style="background: #e9d5ff;">💼</div>
+                                    <div class="list-item-content">
+                                        <div class="list-item-title">Start my own business</div>
+                                        <div class="list-item-subtitle">Target: 2028</div>
+                                    </div>
+                                </div>
+                                <div class="list-item">
+                                    <div class="list-item-icon" style="background: #dcfce7;">❤️</div>
+                                    <div class="list-item-content">
+                                        <div class="list-item-title">Run a marathon</div>
+                                        <div class="list-item-subtitle">Target: 2026</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Analytics Section -->
+                <div class="content-section" id="content-analytics">
+                    <div class="content-header">
+                        <div class="content-header-icon" style="background: #d1fae5; color: #059669;">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="content-header-text">
+                            <h2>Your Insights</h2>
+                            <p>Patterns, trends, and discoveries from your LifePrint journey. These insights evolve as you continue to grow.</p>
+                        </div>
+                    </div>
+                    <div class="content-body">
+                        <!-- This Week's Summary -->
+                        <div class="content-card week-summary-card">
+                            <div class="week-summary-header">
+                                <i class="far fa-calendar-alt"></i>
+                                <span>This Week's Summary</span>
+                            </div>
+                            <div class="week-summary-stats">
+                                <div class="summary-stat">
+                                    <div class="summary-stat-value">5/7</div>
+                                    <div class="summary-stat-label">Check-ins</div>
+                                    <div class="summary-stat-change positive">+2</div>
+                                </div>
+                                <div class="summary-stat">
+                                    <div class="summary-stat-value">4</div>
+                                    <div class="summary-stat-label">Journal Entries</div>
+                                    <div class="summary-stat-change positive">+1</div>
+                                </div>
+                                <div class="summary-stat">
+                                    <div class="summary-stat-value">Good</div>
+                                    <div class="summary-stat-label">Mood Average</div>
+                                    <div class="summary-stat-change neutral">stable</div>
+                                </div>
+                                <div class="summary-stat">
+                                    <div class="summary-stat-value">62%</div>
+                                    <div class="summary-stat-label">Goals Progress</div>
+                                    <div class="summary-stat-change positive">+8%</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Key Insights -->
+                        <div class="key-insights-section">
+                            <h4 class="section-title">Key Insights</h4>
+                            <div class="key-insights-grid">
+                                <div class="key-insight-card">
+                                    <div class="key-insight-icon" style="background: #d1fae5; color: #059669;">
+                                        <i class="fas fa-bolt"></i>
+                                    </div>
+                                    <div class="key-insight-content">
+                                        <h5>Energy Pattern</h5>
+                                        <p>Your highest energy days correlate with morning exercise. Consider making it a regular habit.</p>
+                                    </div>
+                                </div>
+                                <div class="key-insight-card">
+                                    <div class="key-insight-icon" style="background: #fef3c7; color: #d97706;">
+                                        <i class="fas fa-heart"></i>
+                                    </div>
+                                    <div class="key-insight-content">
+                                        <h5>Emotional Trend</h5>
+                                        <p>Journaling 3+ times per week is linked to your most positive emotional states.</p>
+                                    </div>
+                                </div>
+                                <div class="key-insight-card">
+                                    <div class="key-insight-icon" style="background: #fee2e2; color: #dc2626;">
+                                        <i class="fas fa-exclamation-circle"></i>
+                                    </div>
+                                    <div class="key-insight-content">
+                                        <h5>Growth Area</h5>
+                                        <p>You haven't logged meals for 3 days. Consistent tracking helps identify patterns.</p>
+                                        <a href="#" onclick="switchModule('foodprint'); return false;" class="insight-action">Log now &#8594;</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 30-Day Trends -->
+                        <div class="content-card trends-card">
+                            <div class="trends-header">
+                                <h4>30-Day Trends</h4>
+                                <div class="trends-status positive">
+                                    <i class="fas fa-arrow-trend-up"></i> Overall positive
+                                </div>
+                            </div>
+                            <div class="trends-chart">
+                                <div class="trend-bars">
+                                    <div class="trend-bar" style="height: 55%;"></div>
+                                    <div class="trend-bar" style="height: 70%;"></div>
+                                    <div class="trend-bar" style="height: 45%;"></div>
+                                    <div class="trend-bar" style="height: 60%;"></div>
+                                    <div class="trend-bar" style="height: 35%;"></div>
+                                    <div class="trend-bar" style="height: 50%;"></div>
+                                    <div class="trend-bar" style="height: 65%;"></div>
+                                    <div class="trend-bar" style="height: 80%;"></div>
+                                    <div class="trend-bar" style="height: 55%;"></div>
+                                    <div class="trend-bar" style="height: 70%;"></div>
+                                    <div class="trend-bar" style="height: 40%;"></div>
+                                    <div class="trend-bar" style="height: 55%;"></div>
+                                    <div class="trend-bar" style="height: 75%;"></div>
+                                    <div class="trend-bar" style="height: 60%;"></div>
+                                    <div class="trend-bar" style="height: 45%;"></div>
+                                    <div class="trend-bar" style="height: 70%;"></div>
+                                    <div class="trend-bar" style="height: 80%;"></div>
+                                    <div class="trend-bar" style="height: 55%;"></div>
+                                    <div class="trend-bar" style="height: 65%;"></div>
+                                    <div class="trend-bar" style="height: 50%;"></div>
+                                    <div class="trend-bar" style="height: 75%;"></div>
+                                    <div class="trend-bar" style="height: 85%;"></div>
+                                    <div class="trend-bar" style="height: 70%;"></div>
+                                    <div class="trend-bar" style="height: 60%;"></div>
+                                    <div class="trend-bar" style="height: 80%;"></div>
+                                    <div class="trend-bar" style="height: 75%;"></div>
+                                    <div class="trend-bar" style="height: 65%;"></div>
+                                    <div class="trend-bar" style="height: 85%;"></div>
+                                    <div class="trend-bar" style="height: 90%;"></div>
+                                    <div class="trend-bar" style="height: 95%;"></div>
+                                </div>
+                            </div>
+                            <p class="trends-summary">Your engagement has increased steadily over the past month. Keep up the momentum!</p>
+                        </div>
+                    </div>
+                </div>
+<!-- SETTINGS CONTENT -->
+                <div class="content-section" id="content-settings">
+                    <div class="content-header">
+                        <div class="content-header-icon" style="background: #f3e8ff; color: #9333ea;">⚙️</div>
+                        <div class="content-header-text">
+                            <h2>Settings</h2>
+                            <p>Manage your account and preferences</p>
+                        </div>
+                    </div>
+                    <div class="content-body">
+                        <div class="content-card">
+                            <h4>👤 Profile Information</h4>
+                            <div class="settings-form">
+                                <div class="form-group">
+                                    <label>Full Name</label>
+                                    <input type="text" id="settingsName" class="form-input" placeholder="Your name">
+                                </div>
+                                <div class="form-group">
+                                    <label>Email</label>
+                                    <input type="email" id="settingsEmail" class="form-input" placeholder="Your email" disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label>Bio</label>
+                                    <textarea id="settingsBio" class="form-textarea" rows="3" placeholder="Tell us about yourself..."></textarea>
+                                </div>
+                                <button class="btn-primary" onclick="saveProfile()">Save Changes</button>
+                            </div>
+                        </div>
+                        <div class="content-card">
+                            <h4>🔔 Notifications</h4>
+                            <div class="settings-toggle-group">
+                                <div class="settings-toggle">
+                                    <span>Email Notifications</span>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="emailNotif" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                                <div class="settings-toggle">
+                                    <span>Weekly Summary</span>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="weeklySum" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                                <div class="settings-toggle">
+                                    <span>Reminder Alerts</span>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="reminders">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="content-card">
+                            <h4>🎨 Appearance</h4>
+                            <div class="theme-options">
+                                <button class="theme-btn active" data-theme="light">☀️ Light</button>
+                                <button class="theme-btn" data-theme="dark">🌙 Dark</button>
+                                <button class="theme-btn" data-theme="auto">🌓 Auto</button>
+                            </div>
+                        </div>
+                        <div class="content-card danger-zone">
+                            <h4>⚠️ Danger Zone</h4>
+                            <p style="color: var(--text-light); margin-bottom: 1rem;">Irreversible actions</p>
+                            <button class="btn-danger" onclick="confirmDeleteAccount()">Delete Account</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- HELP & SUPPORT CONTENT -->
+                <div class="content-section" id="content-help">
+                    <div class="content-header">
+                        <div class="content-header-icon" style="background: #dbeafe; color: #2563eb;">❓</div>
+                        <div class="content-header-text">
+                            <h2>Help & Support</h2>
+                            <p>Get help and find answers to your questions</p>
+                        </div>
+                    </div>
+                    <div class="content-body">
+                        <div class="content-card">
+                            <h4>🔍 Search Help</h4>
+                            <div class="search-box">
+                                <i class="fas fa-search"></i>
+                                <input type="text" placeholder="Search for help topics..." class="search-input">
+                            </div>
+                        </div>
+                        <div class="content-card">
+                            <h4>📚 Frequently Asked Questions</h4>
+                            <div class="faq-list">
+                                <div class="faq-item" onclick="toggleFaq(this)">
+                                    <div class="faq-question">
+                                        <span>How do I get started with LifePrint?</span>
+                                        <i class="fas fa-chevron-down"></i>
+                                    </div>
+                                    <div class="faq-answer">
+                                        Start by completing your PersonaPrint assessment to understand your unique traits. Then explore FoodPrint for nutrition tracking and StoryWeaver to document your journey.
+                                    </div>
+                                </div>
+                                <div class="faq-item" onclick="toggleFaq(this)">
+                                    <div class="faq-question">
+                                        <span>What is a Time Capsule?</span>
+                                        <i class="fas fa-chevron-down"></i>
+                                    </div>
+                                    <div class="faq-answer">
+                                        Time Capsule 2040 lets you set goals and messages for your future self. Create milestones and track your progress over time.
+                                    </div>
+                                </div>
+                                <div class="faq-item" onclick="toggleFaq(this)">
+                                    <div class="faq-question">
+                                        <span>How is my data protected?</span>
+                                        <i class="fas fa-chevron-down"></i>
+                                    </div>
+                                    <div class="faq-answer">
+                                        Your data is encrypted and stored securely. We never share your personal information with third parties.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="content-card">
+                            <h4>💬 Contact Support</h4>
+                            <div class="support-options">
+                                <div class="support-option" onclick="sendEmail()">
+                                    <div class="support-icon">📧</div>
+                                    <div class="support-text">
+                                        <strong>Email Us</strong>
+                                        <span>support@lifeprint.com</span>
+                                    </div>
+                                </div>
+                                <div class="support-option" onclick="startLiveChat()">
+                                    <div class="support-icon">💬</div>
+                                    <div class="support-text">
+                                        <strong>Live Chat</strong>
+                                        <span>Available 9AM - 6PM EST</span>
+                                    </div>
+                                </div>
+                                <div class="support-option" onclick="openDocumentation()">
+                                    <div class="support-icon">📖</div>
+                                    <div class="support-text">
+                                        <strong>Documentation</strong>
+                                        <span>Browse our guides</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Submit a Request -->
+                        <div class="content-card">
+                            <h4>📝 Submit a Request</h4>
+                            <div class="support-form">
+                                <div class="form-group">
+                                    <label>Subject</label>
+                                    <input type="text" id="supportSubject" class="form-input" placeholder="What do you need help with?">
+                                </div>
+                                <div class="form-group">
+                                    <label>Message</label>
+                                    <textarea id="supportMessage" class="form-textarea" rows="4" placeholder="Describe your issue or question..."></textarea>
+                                </div>
+                                <button class="btn-primary" onclick="submitSupportRequest()">
+                                    <i class="fas fa-paper-plane"></i> Send Request
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PROFILE CONTENT -->
+                <div class="content-section" id="content-profile">
+                    <div class="content-header">
+                        <div class="content-header-icon" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white;">👤</div>
+                        <div class="content-header-text">
+                            <h2>My Profile</h2>
+                            <p>View and edit your personal information</p>
+                        </div>
+                    </div>
+                    <div class="content-body">
+                        <!-- Profile Header Card -->
+                        <div class="content-card profile-header-card">
+                            <div class="profile-avatar-section">
+                                <div class="profile-avatar-large" id="profileAvatarLarge">
+                                    <img src="" alt="" id="profileAvatarImg" style="display:none; width:100%; height:100%; object-fit:cover; border-radius:50%;">
+                                    <span id="profileAvatarInitial">A</span>
+                                </div>
+                                <div class="profile-avatar-actions">
+                                    <button class="btn-secondary btn-sm" onclick="uploadProfilePicture()">
+                                        <i class="fas fa-camera"></i> Change Photo
+                                    </button>
+                                    <input type="file" id="profilePictureInput" accept="image/*" style="display: none;" onchange="handleProfilePicture(this)">
+                                </div>
+                            </div>
+                            <div class="profile-info-section">
+                                <h3 id="profileFullName">Loading...</h3>
+                                <p id="profileEmail" style="color: var(--text-light);">loading@email.com</p>
+                                <div class="profile-badges">
+                                    <span class="profile-badge"><i class="fas fa-calendar"></i> Member since <span id="profileMemberSince">2024</span></span>
+                                    <span class="profile-badge"><i class="fas fa-star"></i> <span id="profileLevel">Beginner</span></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Personal Information -->
+                        <div class="content-card">
+                            <h4>📝 Personal Information</h4>
+                            <div class="profile-form">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Full Name</label>
+                                        <input type="text" id="profileName" class="form-input" placeholder="Your full name">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Username</label>
+                                        <input type="text" id="profileUsername" class="form-input" placeholder="Your username">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Date of Birth</label>
+                                        <input type="date" id="profileDob" class="form-input">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Gender</label>
+                                        <select id="profileGender" class="form-input">
+                                            <option value="">Select gender</option>
+                                            <option value="male">Male</option>
+                                            <option value="female">Female</option>
+                                            <option value="other">Other</option>
+                                            <option value="prefer-not">Prefer not to say</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Bio</label>
+                                    <textarea id="profileBio" class="form-textarea" rows="3" placeholder="Tell us a bit about yourself..."></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label>Location</label>
+                                    <input type="text" id="profileLocation" class="form-input" placeholder="City, Country">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Contact Information -->
+                        <div class="content-card">
+                            <h4>📧 Contact Information</h4>
+                            <div class="profile-form">
+                                <div class="form-group">
+                                    <label>Email Address</label>
+                                    <input type="email" id="profileEmailInput" class="form-input" disabled placeholder="Your email">
+                                    <small style="color: var(--text-light);">Email cannot be changed</small>
+                                </div>
+                                <div class="form-group">
+                                    <label>Phone Number (Optional)</label>
+                                    <input type="tel" id="profilePhone" class="form-input" placeholder="+1 (555) 123-4567">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Social Links -->
+                        <div class="content-card">
+                            <h4>🔗 Social Links</h4>
+                            <div class="profile-form">
+                                <div class="form-group">
+                                    <label><i class="fab fa-twitter" style="color: #1da1f2;"></i> Twitter</label>
+                                    <input type="text" id="profileTwitter" class="form-input" placeholder="@username">
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fab fa-instagram" style="color: #e4405f;"></i> Instagram</label>
+                                    <input type="text" id="profileInstagram" class="form-input" placeholder="@username">
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fab fa-linkedin" style="color: #0077b5;"></i> LinkedIn</label>
+                                    <input type="text" id="profileLinkedin" class="form-input" placeholder="linkedin.com/in/username">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Save Button -->
+                        <div class="profile-actions">
+                            <button class="btn-secondary" onclick="resetProfileForm()">
+                                <i class="fas fa-undo"></i> Reset Changes
+                            </button>
+                            <button class="btn-primary" onclick="saveProfileChanges()">
+                                <i class="fas fa-save"></i> Save Profile
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Authentication check
+        const currentUser = JSON.parse(localStorage.getItem('lifeprint_user') || '{}');
+        if (!currentUser.email) {
+            // Redirect to login if not authenticated
+            window.location.href = 'login.html';
+        }
+
+        // Update greeting with user's name
+        const userName = currentUser.fullName || currentUser.email?.split('@')[0] || 'User';
+        document.querySelector('.user-name').textContent = userName;
+        
+        // Update user avatar
+        const avatarInitial = document.getElementById('userAvatarInitial');
+        const avatarImg = document.getElementById('userAvatarImg');
+        if (avatarInitial) {
+            avatarInitial.textContent = userName.charAt(0).toUpperCase();
+        }
+        // If user has a profile picture URL, show it
+        if (currentUser.profilePicture) {
+            avatarImg.src = currentUser.profilePicture;
+            avatarImg.style.display = 'block';
+            avatarInitial.style.display = 'none';
+        }
+
+        // Click on user avatar to open settings
+        const userAvatar = document.getElementById('userAvatar');
+        if (userAvatar) {
+            userAvatar.addEventListener('click', function() {
+                switchModule('settings');
+            });
+        }
+
+        // Update current date
+        const dateElement = document.getElementById('currentDate');
+        const options = { weekday: 'long', month: 'long', day: 'numeric' };
+        const today = new Date().toLocaleDateString('en-US', options);
+        dateElement.textContent = today;
+
+        // =====================
+        // MODULE NAVIGATION
+        // =====================
+        function switchModule(moduleName) {
+            // Remove active class from all nav cards and content sections
+            document.querySelectorAll('.module-nav-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Update sidebar active state
+            document.querySelectorAll('.sidebar-menu a').forEach(link => {
+                link.classList.remove('active');
+                if (link.dataset.module === moduleName) {
+                    link.classList.add('active');
+                }
+            });
+
+            // Add active class to clicked nav card
+            const navCard = document.querySelector(`.module-nav-card[data-module="${moduleName}"]`);
+            if (navCard) {
+                navCard.classList.add('active');
+            }
+
+            // Show corresponding content section
+            const contentSection = document.getElementById(`content-${moduleName}`);
+            if (contentSection) {
+                contentSection.classList.add('active');
+            }
+
+            // Show/hide overview-only sections (stats, mood check, blueprint)
+            const overviewSection = document.getElementById('overviewOnlySection');
+            const leftPanel = document.querySelector('.left-panel');
+            const dashboardLayout = document.getElementById('dashboardLayout');
+            
+            if (moduleName === 'overview') {
+                // Show all overview elements
+                if (overviewSection) overviewSection.classList.remove('hidden');
+                if (leftPanel) leftPanel.classList.remove('hidden');
+                if (dashboardLayout) dashboardLayout.classList.remove('module-active');
+            } else {
+                // Hide overview elements, show module content full width
+                if (overviewSection) overviewSection.classList.add('hidden');
+                if (leftPanel) leftPanel.classList.add('hidden');
+                if (dashboardLayout) dashboardLayout.classList.add('module-active');
+            }
+
+            // Load module-specific data
+            if (moduleName === 'foodprint') {
+                loadTodaysMeals();
+            } else if (moduleName === 'storyweaver') {
+                loadRecentStories();
+            } else if (moduleName === 'timecapsule') {
+                loadGoals();
+            } else if (moduleName === 'profile') {
+                loadProfileData();
+            }
+
+            // Close mobile sidebar after navigation
+            const sidebar = document.querySelector('.sidebar');
+            const sidebarOverlay = document.querySelector('.sidebar-overlay');
+            const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+            if (sidebar && window.innerWidth <= 768) {
+                sidebar.classList.remove('active');
+                if (sidebarOverlay) sidebarOverlay.classList.remove('active');
+                if (mobileMenuToggle) {
+                    const icon = mobileMenuToggle.querySelector('i');
+                    if (icon) {
+                        icon.classList.add('fa-bars');
+                        icon.classList.remove('fa-times');
+                    }
+                }
+                document.body.classList.remove('menu-open');
+            }
+
+            // Scroll to top of content when switching modules
+            const mainContent = document.querySelector('.main-content');
+            if (mainContent) {
+                mainContent.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // Save to localStorage for persistence
+            localStorage.setItem('activeModule', moduleName);
+        }
+
+        // Initialize module navigation
+        document.querySelectorAll('.module-nav-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const moduleName = this.dataset.module;
+                switchModule(moduleName);
+            });
+        });
+
+        // Restore last active module from localStorage
+        const lastModule = localStorage.getItem('activeModule') || 'overview';
+        switchModule(lastModule);
+
+        // =====================
+        // MOOD CHECK
+        // =====================
+        document.querySelectorAll('.mood-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const mood = this.textContent.trim();
+                localStorage.setItem('userMood_' + new Date().toDateString(), mood);
+                
+                // Remove highlight from all buttons, add to clicked
+                document.querySelectorAll('.mood-btn').forEach(b => b.style.transform = 'scale(1)');
+                this.style.transform = 'scale(1.05)';
+                
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Mood Recorded!',
+                    text: `Thanks for sharing how you're feeling today.`,
+                    timer: 2000,
+                    showConfirmButton: false,
+                    background: '#fff',
+                    customClass: {
+                        popup: 'animated fadeInDown'
+                    }
+                });
+            });
+        });
+
+        // =====================
+        // MODULE FUNCTIONS
+        // =====================
+        
+        // PersonaPrint - Start Assessment
+        const assessmentQuestions = [
+            {
+                question: "When faced with a new challenge, you typically:",
+                options: [
+                    "Dive in immediately and figure it out as you go",
+                    "Plan carefully before taking action",
+                    "Seek advice from others first",
+                    "Wait and observe how others handle it"
+                ]
+            },
+            {
+                question: "In social situations, you usually:",
+                options: [
+                    "Enjoy being the center of attention",
+                    "Prefer deep conversations with a few people",
+                    "Observe and listen more than talk",
+                    "Feel energized by meeting new people"
+                ]
+            },
+            {
+                question: "When making decisions, you rely more on:",
+                options: [
+                    "Logic and facts",
+                    "Gut feelings and intuition",
+                    "What others think and feel",
+                    "Past experiences and traditions"
+                ]
+            },
+            {
+                question: "Your ideal weekend involves:",
+                options: [
+                    "Going out and exploring new places",
+                    "Staying home and relaxing",
+                    "Spending quality time with close friends or family",
+                    "Working on personal projects or hobbies"
+                ]
+            },
+            {
+                question: "When working on a project, you prefer:",
+                options: [
+                    "Having a detailed plan and timeline",
+                    "Being flexible and adapting as you go",
+                    "Collaborating with a team",
+                    "Working independently at your own pace"
+                ]
+            },
+            {
+                question: "You handle stress by:",
+                options: [
+                    "Talking it out with someone",
+                    "Exercising or physical activity",
+                    "Spending time alone to recharge",
+                    "Distracting yourself with entertainment"
+                ]
+            },
+            {
+                question: "In conflicts, you tend to:",
+                options: [
+                    "Address the issue directly",
+                    "Avoid confrontation and hope it resolves",
+                    "Seek a compromise that works for everyone",
+                    "Stand firm on your position"
+                ]
+            },
+            {
+                question: "Your communication style is mostly:",
+                options: [
+                    "Direct and to the point",
+                    "Warm and empathetic",
+                    "Analytical and detailed",
+                    "Enthusiastic and expressive"
+                ]
+            },
+            {
+                question: "When learning something new, you prefer:",
+                options: [
+                    "Hands-on practice and experimentation",
+                    "Reading and researching thoroughly",
+                    "Watching videos or demonstrations",
+                    "Learning from a mentor or instructor"
+                ]
+            },
+            {
+                question: "Your life motto would be:",
+                options: [
+                    "Carpe diem - seize the day",
+                    "Slow and steady wins the race",
+                    "Treat others as you want to be treated",
+                    "Knowledge is power"
+                ]
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let assessmentAnswers = [];
+
+        function startAssessment() {
+            currentQuestionIndex = 0;
+            assessmentAnswers = [];
+            showQuestion(0);
+        }
+
+        function showQuestion(index) {
+            const q = assessmentQuestions[index];
+            const totalQuestions = assessmentQuestions.length;
+            const progress = Math.round(((index) / totalQuestions) * 100);
+
+            Swal.fire({
+                title: `<div style="font-size: 0.9rem; color: #667eea; margin-bottom: 0.5rem;">Question ${index + 1} of ${totalQuestions}</div>`,
+                html: `
+                    <div style="margin-bottom: 1rem;">
+                        <div style="background: #e2e8f0; border-radius: 10px; height: 8px; overflow: hidden; margin-bottom: 1rem;">
+                            <div style="background: linear-gradient(135deg, #667eea, #764ba2); height: 100%; width: ${progress}%; transition: width 0.3s;"></div>
+                        </div>
+                        <p style="font-size: 1.1rem; font-weight: 600; color: #1a1a2e; line-height: 1.5;">${q.question}</p>
+                    </div>
+                    <div id="optionsContainer" style="text-align: left;">
+                        ${q.options.map((opt, i) => `
+                            <label class="assessment-option" style="display: block; padding: 1rem; margin: 0.5rem 0; background: #f7fafc; border-radius: 12px; cursor: pointer; border: 2px solid transparent; transition: all 0.2s;" onmouseover="this.style.borderColor='#667eea'; this.style.background='#f0f4ff';" onmouseout="if(!this.querySelector('input').checked){this.style.borderColor='transparent'; this.style.background='#f7fafc';}">
+                                <input type="radio" name="q${index}" value="${i}" style="margin-right: 0.75rem; accent-color: #667eea; width: 18px; height: 18px;" onchange="document.querySelectorAll('.assessment-option').forEach(el => { el.style.borderColor='transparent'; el.style.background='#f7fafc'; }); this.parentElement.style.borderColor='#667eea'; this.parentElement.style.background='#ede9fe';">
+                                <span style="font-size: 0.95rem;">${opt}</span>
+                            </label>
+                        `).join('')}
+                    </div>
+                `,
+                confirmButtonText: index < totalQuestions - 1 ? 'Next →' : 'Complete Assessment',
+                confirmButtonColor: '#667eea',
+                showCancelButton: true,
+                cancelButtonText: index > 0 ? '← Back' : 'Exit',
+                allowOutsideClick: false,
+                width: '500px',
+                preConfirm: () => {
+                    const selected = document.querySelector(`input[name="q${index}"]:checked`);
+                    if (!selected) {
+                        Swal.showValidationMessage('Please select an answer');
+                        return false;
+                    }
+                    return parseInt(selected.value);
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    assessmentAnswers[index] = result.value;
+                    currentQuestionIndex = index + 1;
+                    
+                    if (currentQuestionIndex < totalQuestions) {
+                        showQuestion(currentQuestionIndex);
+                    } else {
+                        completeAssessment();
+                    }
+                } else if (result.dismiss === Swal.DismissReason.cancel && index > 0) {
+                    currentQuestionIndex = index - 1;
+                    showQuestion(currentQuestionIndex);
+                }
+            });
+        }
+
+        function completeAssessment() {
+            // Calculate personality traits based on answers
+            const traits = calculatePersonalityTraits();
+            
+            // Save to localStorage
+            localStorage.setItem('personaPrintResults', JSON.stringify({
+                answers: assessmentAnswers,
+                traits: traits,
+                completedAt: new Date().toISOString()
+            }));
+
+            Swal.fire({
+                icon: 'success',
+                title: '🎉 Assessment Complete!',
+                html: `
+                    <div style="text-align: center; padding: 1rem 0;">
+                        <p style="font-size: 1rem; color: #4b5563; margin-bottom: 1.5rem;">Your PersonaPrint profile has been created!</p>
+                        <div style="background: linear-gradient(135deg, #667eea15, #764ba215); border-radius: 16px; padding: 1.5rem; text-align: left;">
+                            <h4 style="color: #667eea; margin-bottom: 1rem; font-size: 1.1rem;">Your Top Traits:</h4>
+                            <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                                ${traits.slice(0, 4).map(trait => `<span style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.85rem; font-weight: 500;">${trait}</span>`).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `,
+                confirmButtonText: 'View Full Profile',
+                confirmButtonColor: '#667eea'
+            }).then(() => {
+                switchModule('personaprint');
+                updatePersonaPrintDisplay(traits);
+            });
+        }
+
+        function calculatePersonalityTraits() {
+            const traitOptions = [
+                ['Adventurous', 'Strategic', 'Collaborative', 'Observer'],
+                ['Extroverted', 'Deep Thinker', 'Listener', 'Social Butterfly'],
+                ['Analytical', 'Intuitive', 'Empathetic', 'Traditional'],
+                ['Explorer', 'Homebody', 'Family-oriented', 'Creative'],
+                ['Organized', 'Flexible', 'Team Player', 'Independent'],
+                ['Communicator', 'Active', 'Introspective', 'Easy-going'],
+                ['Direct', 'Peaceful', 'Diplomatic', 'Assertive'],
+                ['Concise', 'Warm', 'Detailed', 'Enthusiastic'],
+                ['Hands-on Learner', 'Researcher', 'Visual Learner', 'Mentee'],
+                ['Spontaneous', 'Patient', 'Kind', 'Curious']
+            ];
+
+            const selectedTraits = assessmentAnswers.map((answer, index) => traitOptions[index][answer]);
+            
+            // Get unique traits
+            const uniqueTraits = [...new Set(selectedTraits)];
+            return uniqueTraits;
+        }
+
+        function updatePersonaPrintDisplay(traits) {
+            const traitsContainer = document.querySelector('#content-personaprint .traits-display');
+            if (traitsContainer) {
+                traitsContainer.innerHTML = traits.map(trait => `<span class="trait-tag">${trait}</span>`).join('');
+            }
+        }
+
+        // FoodPrint - Log Meal
+        function logMeal() {
+            const mealType = document.getElementById('mealType').value;
+            const description = document.getElementById('mealDescription').value;
+
+            if (!description.trim()) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Please describe your meal',
+                    confirmButtonColor: '#667eea'
+                });
+                return;
+            }
+
+            // Save meal to localStorage
+            const meals = JSON.parse(localStorage.getItem('foodLogs_' + currentUser.email) || '[]');
+            meals.push({
+                type: mealType,
+                description: description,
+                date: new Date().toISOString(),
+                id: Date.now()
+            });
+            localStorage.setItem('foodLogs_' + currentUser.email, JSON.stringify(meals));
+
+            // Clear form
+            document.getElementById('mealDescription').value = '';
+
+            // Update UI
+            loadTodaysMeals();
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Meal Logged!',
+                text: 'Your meal has been recorded.',
+                timer: 1500,
+                showConfirmButton: false
+            });
+        }
+
+        // Load today's meals
+        function loadTodaysMeals() {
+            const meals = JSON.parse(localStorage.getItem('foodLogs_' + currentUser.email) || '[]');
+            const todayStr = new Date().toDateString();
+            const todaysMeals = meals.filter(m => new Date(m.date).toDateString() === todayStr);
+            
+            const container = document.getElementById('todaysMeals');
+            if (todaysMeals.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🍽️</div>
+                        <h3>No meals logged today</h3>
+                        <p>Start tracking your nutrition by logging your first meal</p>
+                    </div>
+                `;
+            } else {
+                const mealIcons = { breakfast: '🌅', lunch: '☀️', dinner: '🌙', snack: '🍎' };
+                container.innerHTML = todaysMeals.map(meal => `
+                    <div class="list-item">
+                        <div class="list-item-icon" style="background: #fef3c7;">${mealIcons[meal.type]}</div>
+                        <div class="list-item-content">
+                            <div class="list-item-title">${meal.type.charAt(0).toUpperCase() + meal.type.slice(1)}</div>
+                            <div class="list-item-subtitle">${meal.description}</div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // StoryWeaver - Save Story
+        function saveStory() {
+            const title = document.getElementById('storyTitle').value;
+            const content = document.getElementById('storyContent').value;
+
+            if (!title.trim() || !content.trim()) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Please fill in all fields',
+                    confirmButtonColor: '#667eea'
+                });
+                return;
+            }
+
+            // Save story to localStorage
+            const stories = JSON.parse(localStorage.getItem('stories_' + currentUser.email) || '[]');
+            stories.unshift({
+                title: title,
+                content: content,
+                date: new Date().toISOString(),
+                id: Date.now()
+            });
+            localStorage.setItem('stories_' + currentUser.email, JSON.stringify(stories));
+
+            // Clear form
+            document.getElementById('storyTitle').value = '';
+            document.getElementById('storyContent').value = '';
+
+            // Update UI
+            loadRecentStories();
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Story Saved!',
+                text: 'Your journal entry has been saved.',
+                timer: 1500,
+                showConfirmButton: false
+            });
+        }
+
+        // Load recent stories
+        function loadRecentStories() {
+            const stories = JSON.parse(localStorage.getItem('stories_' + currentUser.email) || '[]');
+            const container = document.getElementById('recentStories');
+            
+            if (stories.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📖</div>
+                        <h3>No stories yet</h3>
+                        <p>Start writing your first journal entry</p>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = stories.slice(0, 5).map(story => `
+                    <div class="list-item">
+                        <div class="list-item-icon" style="background: #fed7aa;">📝</div>
+                        <div class="list-item-content">
+                            <div class="list-item-title">${story.title}</div>
+                            <div class="list-item-subtitle">${new Date(story.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // Time Capsule - Add Goal
+        function addGoal() {
+            const title = document.getElementById('goalTitle').value;
+            const date = document.getElementById('goalDate').value;
+            const category = document.getElementById('goalCategory').value;
+
+            if (!title.trim()) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Please enter a goal title',
+                    confirmButtonColor: '#667eea'
+                });
+                return;
+            }
+
+            // Save goal to localStorage
+            const goals = JSON.parse(localStorage.getItem('goals_' + currentUser.email) || '[]');
+            goals.unshift({
+                title: title,
+                date: date,
+                category: category,
+                status: 'active',
+                id: Date.now()
+            });
+            localStorage.setItem('goals_' + currentUser.email, JSON.stringify(goals));
+
+            // Clear form
+            document.getElementById('goalTitle').value = '';
+            document.getElementById('goalDate').value = '';
+
+            // Update UI
+            loadGoals();
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Goal Added!',
+                text: 'Your goal has been saved.',
+                timer: 1500,
+                showConfirmButton: false
+            });
+        }
+
+        // Load goals
+        function loadGoals() {
+            const goals = JSON.parse(localStorage.getItem('goals_' + currentUser.email) || '[]');
+            const container = document.getElementById('goalsList');
+            const categoryIcons = { career: '💼', health: '❤️', personal: '🌟', relationships: '👥', financial: '💰' };
+            const categoryColors = { career: '#e9d5ff', health: '#dcfce7', personal: '#fef3c7', relationships: '#e0e7ff', financial: '#fed7aa' };
+            
+            if (goals.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🎯</div>
+                        <h3>No goals yet</h3>
+                        <p>Set your first goal to start your journey</p>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = goals.slice(0, 5).map(goal => `
+                    <div class="list-item">
+                        <div class="list-item-icon" style="background: ${categoryColors[goal.category] || '#e0e7ff'};">${categoryIcons[goal.category] || '🎯'}</div>
+                        <div class="list-item-content">
+                            <div class="list-item-title">${goal.title}</div>
+                            <div class="list-item-subtitle">${goal.date ? 'Target: ' + new Date(goal.date).getFullYear() : 'No target date'}</div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // =====================
+        // SIDEBAR & NAVIGATION
+        // =====================
+        document.querySelectorAll('.sidebar-menu a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                
+                // Handle internal navigation
+                if (href.startsWith('#') || !href.includes('.html')) {
+                    e.preventDefault();
+                }
+                
+                // Remove active from all, add to clicked
+                document.querySelectorAll('.sidebar-menu a').forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // =====================
+        // NOTIFICATION & PROFILE
+        // =====================
+        document.querySelector('.notification-bell').addEventListener('click', function() {
+            Swal.fire({
+                title: 'Notifications',
+                html: `
+                    <ul style="text-align: left; padding-left: 1.5rem; line-height: 1.8;">
+                        <li>Complete your StoryWeaver profile</li>
+                        <li>New wellness insights available</li>
+                        <li>Weekly progress summary is ready</li>
+                    </ul>
+                `,
+                icon: 'info',
+                confirmButtonText: 'Got it!',
+                confirmButtonColor: '#667eea'
+            });
+        });
+
+        document.querySelector('.user-avatar').addEventListener('click', function() {
+            Swal.fire({
+                title: userName,
+                html: `
+                    <div style="text-align: left;">
+                        <a href="#" onclick="switchModule('settings'); Swal.close(); return false;" style="color: #667eea; text-decoration: none; display: block; padding: 0.5rem 0;">
+                            <i class="fas fa-cog"></i> Settings
+                        </a>
+                        <a href="#" onclick="handleLogout(); Swal.close();" style="color: #e74c3c; text-decoration: none; display: block; padding: 0.5rem 0;">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                `,
+                showConfirmButton: false,
+                showCloseButton: true
+            });
+        });
+
+        // Logout function
+        function handleLogout() {
+            Swal.fire({
+                title: 'Logout?',
+                text: 'Are you sure you want to logout?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#667eea',
+                cancelButtonColor: '#e74c3c',
+                confirmButtonText: 'Yes, logout',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    localStorage.removeItem('lifeprint_user');
+                    localStorage.removeItem('lifeprint_token');
+                    window.location.href = 'login.html';
+                }
+            });
+        }
+
+        // =====================
+        // SETTINGS FUNCTIONS
+        // =====================
+        // Load settings on page load
+        function loadSettings() {
+            document.getElementById('settingsName').value = currentUser.fullName || '';
+            document.getElementById('settingsEmail').value = currentUser.email || '';
+            document.getElementById('settingsBio').value = currentUser.bio || '';
+        }
+        loadSettings();
+
+        function saveProfile() {
+            const name = document.getElementById('settingsName').value;
+            const bio = document.getElementById('settingsBio').value;
+            
+            currentUser.fullName = name;
+            currentUser.bio = bio;
+            localStorage.setItem('lifeprint_user', JSON.stringify(currentUser));
+            
+            // Update the displayed name and avatar
+            document.querySelector('.user-name').textContent = name || currentUser.email?.split('@')[0];
+            const avatarInitial = document.getElementById('userAvatarInitial');
+            if (avatarInitial) {
+                avatarInitial.textContent = (name || currentUser.email)?.charAt(0).toUpperCase();
+            }
+            
+            Swal.fire({
+                icon: 'success',
+                title: 'Profile Updated!',
+                text: 'Your changes have been saved.',
+                timer: 1500,
+                showConfirmButton: false
+            });
+        }
+
+        function confirmDeleteAccount() {
+            Swal.fire({
+                title: 'Delete Account?',
+                html: `
+                    <p style="color: #ef4444; font-weight: 600; margin-bottom: 1rem;">This action cannot be undone!</p>
+                    <p>All your data will be permanently deleted.</p>
+                `,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: 'Yes, delete my account',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Clear all user data
+                    localStorage.clear();
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Account Deleted',
+                        text: 'Your account has been removed.',
+                        timer: 2000,
+                        showConfirmButton: false
+                    }).then(() => {
+                        window.location.href = 'login.html';
+                    });
+                }
+            });
+        }
+
+        // Theme toggle
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                const theme = this.dataset.theme;
+                localStorage.setItem('theme', theme);
+                Swal.fire({
+                    icon: 'success',
+                    title: `${theme.charAt(0).toUpperCase() + theme.slice(1)} Mode`,
+                    text: 'Theme preference saved!',
+                    timer: 1000,
+                    showConfirmButton: false
+                });
+            });
+        });
+
+        // =====================
+        // HELP FUNCTIONS
+        // =====================
+        function toggleFaq(element) {
+            // Close other open FAQs
+            document.querySelectorAll('.faq-item').forEach(item => {
+                if (item !== element) {
+                    item.classList.remove('open');
+                }
+            });
+            element.classList.toggle('open');
+        }
+
+        function sendEmail() {
+            Swal.fire({
+                title: 'Email Support',
+                html: `
+                    <p style="margin-bottom: 1rem;">Send us an email at:</p>
+                    <a href="mailto:support@lifeprint.com" style="color: var(--primary); font-weight: 600; font-size: 1.1rem;">support@lifeprint.com</a>
+                `,
+                icon: 'info',
+                confirmButtonText: 'Copy Email',
+                confirmButtonColor: '#667eea',
+                showCancelButton: true,
+                cancelButtonText: 'Close'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    navigator.clipboard.writeText('support@lifeprint.com');
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Copied!',
+                        text: 'Email address copied to clipboard',
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+                }
+            });
+        }
+
+        function startLiveChat() {
+            Swal.fire({
+                title: 'Live Chat',
+                html: `
+                    <div style="text-align: center;">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">💬</div>
+                        <p style="margin-bottom: 1rem;">Our support team is available:</p>
+                        <p style="font-weight: 600; color: var(--primary);">Monday - Friday</p>
+                        <p style="color: var(--text-light);">9:00 AM - 6:00 PM EST</p>
+                    </div>
+                `,
+                icon: 'info',
+                confirmButtonText: 'Start Chat',
+                confirmButtonColor: '#667eea',
+                showCancelButton: true,
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Connecting...',
+                        text: 'Please wait while we connect you to an agent.',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                }
+            });
+        }
+
+        function openDocumentation() {
+            Swal.fire({
+                title: 'Documentation',
+                html: `
+                    <div style="text-align: left;">
+                        <div style="padding: 0.75rem; background: #f8fafc; border-radius: 8px; margin-bottom: 0.5rem; cursor: pointer;" onclick="window.open('#', '_blank')">
+                            📖 Getting Started Guide
+                        </div>
+                        <div style="padding: 0.75rem; background: #f8fafc; border-radius: 8px; margin-bottom: 0.5rem; cursor: pointer;">
+                            🎯 Module Tutorials
+                        </div>
+                        <div style="padding: 0.75rem; background: #f8fafc; border-radius: 8px; margin-bottom: 0.5rem; cursor: pointer;">
+                            ❓ FAQ & Troubleshooting
+                        </div>
+                        <div style="padding: 0.75rem; background: #f8fafc; border-radius: 8px; cursor: pointer;">
+                            🔒 Privacy & Security
+                        </div>
+                    </div>
+                `,
+                confirmButtonText: 'Close',
+                confirmButtonColor: '#667eea'
+            });
+        }
+
+        function submitSupportRequest() {
+            const subject = document.getElementById('supportSubject').value;
+            const message = document.getElementById('supportMessage').value;
+
+            if (!subject || !message) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Missing Information',
+                    text: 'Please fill in both subject and message fields.',
+                    confirmButtonColor: '#667eea'
+                });
+                return;
+            }
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Request Submitted!',
+                text: 'We\'ll get back to you within 24-48 hours.',
+                confirmButtonColor: '#667eea'
+            }).then(() => {
+                document.getElementById('supportSubject').value = '';
+                document.getElementById('supportMessage').value = '';
+            });
+        }
+
+        // =====================
+        // MOBILE MENU
+        // =====================
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const sidebar = document.querySelector('.sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+        if (mobileMenuToggle) {
+            mobileMenuToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('active');
+                sidebarOverlay.classList.toggle('active');
+                document.body.classList.toggle('menu-open');
+                const icon = this.querySelector('i');
+                icon.classList.toggle('fa-bars');
+                icon.classList.toggle('fa-times');
+            });
+
+            if (sidebarOverlay) {
+                sidebarOverlay.addEventListener('click', function() {
+                    sidebar.classList.remove('active');
+                    sidebarOverlay.classList.remove('active');
+                    document.body.classList.remove('menu-open');
+                    mobileMenuToggle.querySelector('i').classList.add('fa-bars');
+                    mobileMenuToggle.querySelector('i').classList.remove('fa-times');
+                });
+            }
+        }
+
+        // =====================
+        // SEARCH FUNCTIONALITY
+        // =====================
+        const searchInput = document.querySelector('.search-box input');
+        searchInput.addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            
+            if (searchTerm.length > 1) {
+                // Search through module nav cards
+                document.querySelectorAll('.module-nav-card').forEach(card => {
+                    const text = card.textContent.toLowerCase();
+                    if (text.includes(searchTerm)) {
+                        card.style.border = '2px solid #667eea';
+                        card.style.display = 'flex';
+                    } else {
+                        card.style.border = '2px solid transparent';
+                        card.style.opacity = '0.5';
+                    }
+                });
+            } else {
+                // Reset all cards
+                document.querySelectorAll('.module-nav-card').forEach(card => {
+                    card.style.border = '2px solid transparent';
+                    card.style.opacity = '1';
+                    card.style.display = 'flex';
+                });
+            }
+        });
+
+        // =====================
+        // PROFILE FUNCTIONS
+        // =====================
+        function loadProfileData() {
+            const currentUser = JSON.parse(localStorage.getItem('lifeprint_user') || '{}');
+            const profileData = JSON.parse(localStorage.getItem('lifeprint_profile') || '{}');
+            
+            // Update profile header
+            const fullName = currentUser.fullName || currentUser.email?.split('@')[0] || 'User';
+            document.getElementById('profileFullName').textContent = fullName;
+            document.getElementById('profileEmail').textContent = currentUser.email || '';
+            
+            // Update avatar
+            const profileAvatarInitial = document.getElementById('profileAvatarInitial');
+            const profileAvatarImg = document.getElementById('profileAvatarImg');
+            if (profileAvatarInitial) {
+                profileAvatarInitial.textContent = fullName.charAt(0).toUpperCase();
+            }
+            if (currentUser.profilePicture && profileAvatarImg) {
+                profileAvatarImg.src = currentUser.profilePicture;
+                profileAvatarImg.style.display = 'block';
+                profileAvatarInitial.style.display = 'none';
+            }
+            
+            // Fill form fields
+            document.getElementById('profileName').value = currentUser.fullName || '';
+            document.getElementById('profileUsername').value = profileData.username || '';
+            document.getElementById('profileDob').value = profileData.dob || '';
+            document.getElementById('profileGender').value = profileData.gender || '';
+            document.getElementById('profileBio').value = profileData.bio || '';
+            document.getElementById('profileLocation').value = profileData.location || '';
+            document.getElementById('profileEmailInput').value = currentUser.email || '';
+            document.getElementById('profilePhone').value = profileData.phone || '';
+            document.getElementById('profileTwitter').value = profileData.twitter || '';
+            document.getElementById('profileInstagram').value = profileData.instagram || '';
+            document.getElementById('profileLinkedin').value = profileData.linkedin || '';
+            
+            // Member since
+            const memberSince = currentUser.createdAt ? new Date(currentUser.createdAt).getFullYear() : new Date().getFullYear();
+            document.getElementById('profileMemberSince').textContent = memberSince;
+            
+            // Calculate level based on activity
+            const level = calculateUserLevel();
+            document.getElementById('profileLevel').textContent = level;
+        }
+
+        function calculateUserLevel() {
+            const assessmentResults = localStorage.getItem('personaPrintResults');
+            const meals = JSON.parse(localStorage.getItem('foodPrintMeals') || '[]');
+            const stories = JSON.parse(localStorage.getItem('storyWeaverStories') || '[]');
+            const goals = JSON.parse(localStorage.getItem('timeCapsuleGoals') || '[]');
+            
+            let points = 0;
+            if (assessmentResults) points += 20;
+            points += meals.length * 2;
+            points += stories.length * 5;
+            points += goals.length * 3;
+            
+            if (points >= 100) return 'Expert';
+            if (points >= 50) return 'Intermediate';
+            if (points >= 20) return 'Explorer';
+            return 'Beginner';
+        }
+
+        function uploadProfilePicture() {
+            document.getElementById('profilePictureInput').click();
+        }
+
+        function handleProfilePicture(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const imageData = e.target.result;
+                    
+                    // Update profile avatar
+                    const profileAvatarImg = document.getElementById('profileAvatarImg');
+                    const profileAvatarInitial = document.getElementById('profileAvatarInitial');
+                    profileAvatarImg.src = imageData;
+                    profileAvatarImg.style.display = 'block';
+                    profileAvatarInitial.style.display = 'none';
+                    
+                    // Update header avatar
+                    const headerAvatarImg = document.getElementById('userAvatarImg');
+                    const headerAvatarInitial = document.getElementById('userAvatarInitial');
+                    headerAvatarImg.src = imageData;
+                    headerAvatarImg.style.display = 'block';
+                    headerAvatarInitial.style.display = 'none';
+                    
+                    // Save to localStorage
+                    const currentUser = JSON.parse(localStorage.getItem('lifeprint_user') || '{}');
+                    currentUser.profilePicture = imageData;
+                    localStorage.setItem('lifeprint_user', JSON.stringify(currentUser));
+                    
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Photo Updated!',
+                        text: 'Your profile picture has been changed.',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function saveProfileChanges() {
+            const profileData = {
+                username: document.getElementById('profileUsername').value,
+                dob: document.getElementById('profileDob').value,
+                gender: document.getElementById('profileGender').value,
+                bio: document.getElementById('profileBio').value,
+                location: document.getElementById('profileLocation').value,
+                phone: document.getElementById('profilePhone').value,
+                twitter: document.getElementById('profileTwitter').value,
+                instagram: document.getElementById('profileInstagram').value,
+                linkedin: document.getElementById('profileLinkedin').value,
+                updatedAt: new Date().toISOString()
+            };
+            
+            // Save profile data
+            localStorage.setItem('lifeprint_profile', JSON.stringify(profileData));
+            
+            // Update full name in user data
+            const currentUser = JSON.parse(localStorage.getItem('lifeprint_user') || '{}');
+            const newName = document.getElementById('profileName').value;
+            if (newName) {
+                currentUser.fullName = newName;
+                localStorage.setItem('lifeprint_user', JSON.stringify(currentUser));
+                
+                // Update displayed name
+                document.querySelector('.user-name').textContent = newName;
+                document.getElementById('profileFullName').textContent = newName;
+                
+                // Update avatars
+                const initial = newName.charAt(0).toUpperCase();
+                document.getElementById('userAvatarInitial').textContent = initial;
+                document.getElementById('profileAvatarInitial').textContent = initial;
+            }
+            
+            Swal.fire({
+                icon: 'success',
+                title: 'Profile Saved!',
+                text: 'Your profile has been updated successfully.',
+                confirmButtonColor: '#667eea'
+            });
+        }
+
+        function resetProfileForm() {
+            loadProfileData();
+            Swal.fire({
+                icon: 'info',
+                title: 'Form Reset',
+                text: 'All changes have been discarded.',
+                timer: 2000,
+                showConfirmButton: false
+            });
+        }
+
+        // =====================
+        // INITIALIZE DATA
+        // =====================
+        loadTodaysMeals();
+        loadRecentStories();
+        loadGoals();
+    </script>
+</body>
+</html>

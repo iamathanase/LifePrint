@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time Capsule 2040 - LifePrint</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/premium-design.css">
+    <link rel="stylesheet" href="../assets/css/enhanced-animations.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="../assets/js/modules-api.js"></script>
+    <style>
+        .timecapsule-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .timecapsule-hero {
+            background: linear-gradient(135deg, #A78BFA 0%, #7C3AED 100%);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 2rem;
+            align-items: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            color: white;
+        }
+
+        .timecapsule-hero-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+        }
+
+        .timecapsule-hero-content h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 0.5rem 0;
+            color: white;
+        }
+
+        .timecapsule-hero-content p {
+            color: rgba(255, 255, 255, 0.9);
+            margin: 0.5rem 0;
+            line-height: 1.6;
+        }
+
+        .timecapsule-hero-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.8);
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+
+        .countdown-badge {
+            text-align: center;
+            color: white;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .countdown-years {
+            font-size: 2.5rem;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .countdown-text {
+            font-size: 0.875rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        .future-vision-section {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+            margin-bottom: 2rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-header h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1a202c;
+            margin: 0;
+        }
+
+        .add-btn {
+            color: #667eea;
+            background: none;
+            border: none;
+            font-size: 0.875rem;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .add-btn:hover {
+            text-decoration: underline;
+        }
+
+        .goals-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .goal-item {
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            animation: slideInUp 0.5s ease-out forwards;
+            opacity: 0;
+        }
+
+        .goal-item:nth-child(1) { animation-delay: 0s; }
+        .goal-item:nth-child(2) { animation-delay: 0.1s; }
+        .goal-item:nth-child(3) { animation-delay: 0.2s; }
+        .goal-item:nth-child(4) { animation-delay: 0.3s; }
+
+        .goal-item:hover {
+            border-color: #a78bfa;
+            background: #faf5ff;
+            transform: translateX(4px);
+        }
+
+        .goal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .goal-icon {
+            font-size: 24px;
+        }
+
+        .goal-priority {
+            background: #e9d5ff;
+            color: #7c3aed;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+
+        .goal-title {
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .goal-description {
+            font-size: 0.875rem;
+            color: #718096;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .goal-timeline {
+            font-size: 0.875rem;
+            color: #718096;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .action-steps-section {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+            margin-bottom: 2rem;
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .step-card {
+            background: linear-gradient(135deg, #f3e8ff 0%, #faf5ff 100%);
+            border-radius: 12px;
+            padding: 1.5rem;
+            animation: slideInUp 0.5s ease-out forwards;
+            opacity: 0;
+        }
+
+        .step-card:nth-child(1) { animation-delay: 0s; }
+        .step-card:nth-child(2) { animation-delay: 0.1s; }
+        .step-card:nth-child(3) { animation-delay: 0.2s; }
+        .step-card:nth-child(4) { animation-delay: 0.3s; }
+
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            background: #7c3aed;
+            color: white;
+            border-radius: 50%;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .step-title {
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 0.5rem;
+        }
+
+        .step-description {
+            font-size: 0.875rem;
+            color: #718096;
+            line-height: 1.5;
+        }
+
+        .visualization-section {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+        }
+
+        .visualization-header {
+            margin-bottom: 1.5rem;
+        }
+
+        .visualization-header h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1a202c;
+            margin: 0 0 0.5rem 0;
+        }
+
+        .visualization-header p {
+            color: #718096;
+            margin: 0;
+            font-size: 0.875rem;
+        }
+
+        .vision-board {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+
+        .vision-item {
+            aspect-ratio: 1;
+            background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%);
+            border: 2px dashed #e9d5ff;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            animation: slideInUp 0.5s ease-out forwards;
+            opacity: 0;
+        }
+
+        .vision-item:nth-child(1) { animation-delay: 0s; }
+        .vision-item:nth-child(2) { animation-delay: 0.1s; }
+        .vision-item:nth-child(3) { animation-delay: 0.2s; }
+        .vision-item:nth-child(4) { animation-delay: 0.3s; }
+        .vision-item:nth-child(5) { animation-delay: 0.4s; }
+        .vision-item:nth-child(6) { animation-delay: 0.5s; }
+
+        .vision-item:hover {
+            border-color: #7c3aed;
+            background: linear-gradient(135deg, #f3e8ff 0%, #ede9fe 100%);
+            transform: scale(1.05);
+        }
+
+        .vision-item-content {
+            text-align: center;
+            color: #a78bfa;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .progress-milestone {
+            background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%);
+            border-radius: 16px;
+            padding: 2rem;
+            color: white;
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        .milestone-text {
+            font-size: 1.125rem;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .milestone-btn {
+            background: white;
+            color: #7c3aed;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .milestone-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        @media (max-width: 1024px) {
+            .timecapsule-hero {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .timecapsule-hero-icon {
+                margin: 0 auto;
+            }
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 999;
+            width: 40px;
+            height: 40px;
+            padding: 0;
+        }
+
+        .mobile-menu-btn span {
+            display: block;
+            width: 25px;
+            height: 3px;
+            background: #c084fc;
+            margin: 5px auto;
+            border-radius: 2px;
+            transition: 0.3s;
+        }
+
+        .mobile-menu-btn.active span:nth-child(1) {
+            transform: rotate(45deg) translate(8px, 8px);
+        }
+
+        .mobile-menu-btn.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-btn.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(8px, -8px);
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .timecapsule-container {
+                padding: 1rem;
+                padding-top: 70px;
+            }
+
+            .timecapsule-hero {
+                padding: 1.5rem;
+            }
+
+            .steps-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .vision-board {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        :root {
+            --primary: #667eea;
+            --secondary: #764ba2;
+            --text-dark: #1a202c;
+            --text-light: #718096;
+        }
+
+        body {
+            padding-top: 70px;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            z-index: 1000;
+            padding: 1rem 0;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 clamp(1rem, 5vw, 2rem);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            height: 50px;
+            width: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 0.5rem;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-link {
+            color: var(--text-dark);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            color: var(--primary);
+        }
+
+        .footer {
+            background: rgba(255, 255, 255, 0.98);
+            padding: 3rem 2rem 2.5rem;
+            color: var(--text-light);
+            margin-top: 3rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3,
+        .footer-section h4 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+        }
+
+        .footer-links {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.65rem;
+        }
+
+        .footer-links a {
+            color: var(--text-light);
+            text-decoration: none;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.25rem;
+        }
+
+        .social-links a {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        @media (min-width: 769px) {
+            .mobile-menu-btn {
+                display: none !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                position: absolute;
+                top: 70px;
+                left: 0;
+                right: 0;
+                background: rgba(255, 255, 255, 0.98);
+                flex-direction: column;
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.3s ease;
+            }
+
+            .nav-links.active {
+                max-height: 500px;
+            }
+
+            .nav-link {
+                display: block;
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="home.html">
+                <img src="../assets/images/logo.png" alt="LifePrint Logo" class="logo" onerror="this.style.display='none'">
+            </a>
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="home.html" class="nav-link">Home</a></li>
+                <li><a href="about.html" class="nav-link">About</a></li>
+                <li><a href="dashboard-new.html" class="nav-link" style="color: #c084fc; font-weight: 600;">Dashboard</a></li>
+                <li><a href="stories.html" class="nav-link">Stories</a></li>
+                <li><a href="contact.html" class="nav-link">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <button class="mobile-menu-btn" id="mobileMenuBtn2" aria-label="Toggle menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+    
+    <div class="timecapsule-container">
+        <!-- Header with Dashboard Link -->
+        <div style="margin-bottom: 2rem;">
+            <a href="dashboard-new.html" style="color: #667eea; text-decoration: none; font-weight: 500; display: inline-flex; align-items: center; gap: 0.5rem;">
+                ← Back to Dashboard
+            </a>
+        </div>
+
+        <!-- Hero Section -->
+        <div class="timecapsule-hero">
+            <div class="timecapsule-hero-icon">🚀</div>
+            <div class="timecapsule-hero-content">
+                <div class="timecapsule-hero-label">Future Vision Engine</div>
+                <h1>Time Capsule 2040</h1>
+                <p>Project your potential future based on current patterns and set intentions for who you want to become. Shape your tomorrow, starting today.</p>
+            </div>
+            <div class="countdown-badge">
+                <div class="countdown-years">16</div>
+                <div class="countdown-text">Years Ahead</div>
+            </div>
+        </div>
+
+        <!-- Future Vision Goals -->
+        <div class="future-vision-section">
+            <div class="section-header">
+                <h2>Your 2040 Vision</h2>
+                <button class="add-btn" onclick="addGoal()">+ Add Goal</button>
+            </div>
+            <div class="goals-grid" id="goalsContainer"></div>
+        </div>
+
+        <!-- Action Steps -->
+        <div class="action-steps-section">
+            <h2 style="margin: 0 0 1.5rem 0; font-size: 1.25rem; font-weight: 600; color: #1a202c;">Actionable Steps to 2040</h2>
+            <div class="steps-grid" id="stepsContainer"></div>
+        </div>
+
+        <!-- Vision Board -->
+        <div class="visualization-section">
+            <div class="visualization-header">
+                <h2>Your Vision Board</h2>
+                <p>Visualize your future with inspiring images and affirmations</p>
+            </div>
+            <div class="vision-board" id="visionBoardContainer"></div>
+        </div>
+
+        <!-- Progress Milestone -->
+        <div class="progress-milestone">
+            <p class="milestone-text">
+                🌟 You're building your future one day at a time. Every step forward brings you closer to becoming who you envision yourself to be in 2040.
+            </p>
+            <button class="milestone-btn" onclick="trackProgress()">Track My Progress</button>
+        </div>
+    </div>
+
+    <script src="../assets/js/mobile-menu.js"></script>
+    <script>
+        const goals = [
+            { icon: "💼", title: "Career Excellence", description: "Lead a team in my field of expertise", priority: "high", timeline: "2025-2030" },
+            { icon: "❤️", title: "Meaningful Relationships", description: "Deepen connections with family and close friends", priority: "high", timeline: "ongoing" },
+            { icon: "🏋️", title: "Optimal Health", description: "Maintain peak physical and mental wellness", priority: "medium", timeline: "ongoing" },
+            { icon: "🎓", title: "Continuous Learning", description: "Master new skills in emerging technologies", priority: "medium", timeline: "2024-2028" }
+        ];
+
+        const actionSteps = [
+            { number: 1, title: "Start Now", description: "Commit to your vision and set your baseline metrics" },
+            { number: 2, title: "Build Habits", description: "Establish daily practices that align with your goals" },
+            { number: 3, title: "Track Progress", description: "Monitor your journey with regular check-ins" },
+            { number: 4, title: "Evolve & Adapt", description: "Adjust your path as you learn and grow" }
+        ];
+
+        const visionItems = [
+            { emoji: "🌍", label: "Travel" },
+            { emoji: "📚", label: "Learn" },
+            { emoji: "🎨", label: "Create" },
+            { emoji: "🤝", label: "Connect" },
+            { emoji: "🏆", label: "Achieve" },
+            { emoji: "🌟", label: "Shine" }
+        ];
+
+        function renderGoals() {
+            const container = document.getElementById('goalsContainer');
+            container.innerHTML = goals.map((goal, index) => `
+                <div class="goal-item" style="animation-delay: ${index * 0.1}s">
+                    <div class="goal-header">
+                        <span class="goal-icon">${goal.icon}</span>
+                        <span class="goal-priority">${goal.priority}</span>
+                    </div>
+                    <div class="goal-title">${goal.title}</div>
+                    <div class="goal-description">${goal.description}</div>
+                    <div class="goal-timeline">
+                        📅 ${goal.timeline}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderSteps() {
+            const container = document.getElementById('stepsContainer');
+            container.innerHTML = actionSteps.map((step, index) => `
+                <div class="step-card" style="animation-delay: ${index * 0.1}s">
+                    <div class="step-number">${step.number}</div>
+                    <div class="step-title">${step.title}</div>
+                    <div class="step-description">${step.description}</div>
+                </div>
+            `).join('');
+        }
+
+        function renderVisionBoard() {
+            const container = document.getElementById('visionBoardContainer');
+            container.innerHTML = visionItems.map((item, index) => `
+                <div class="vision-item" style="animation-delay: ${index * 0.1}s">
+                    <div class="vision-item-content">
+                        <div style="font-size: 2rem; margin-bottom: 0.5rem;">${item.emoji}</div>
+                        ${item.label}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function addGoal() {
+            alert('Goal creation feature coming soon! 🎯');
+        }
+
+        function trackProgress() {
+            alert('Progress tracking dashboard coming soon! 📊');
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            renderGoals();
+            renderSteps();
+            renderVisionBoard();
+        });
+
+        // Navbar functionality
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const navLinks = document.getElementById('navLinks');
+
+        if (mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileMenuBtn.classList.toggle('active');
+                navLinks.classList.toggle('active');
+            });
+
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenuBtn.classList.remove('active');
+                    navLinks.classList.remove('active');
+                });
+            });
+        }
+    </script>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3><i class="fas fa-fingerprint"></i> LifePrint</h3>
+                <p>Your digital wellness companion for personal growth and transformation.</p>
+                <div class="social-links">
+                    <a href="https://www.linkedin.com/in/lifeprint"><i class="fab fa-linkedin"></i></a>
+                    <a href="https://twitter.com/lifeprint"><i class="fab fa-twitter"></i></a>
+                    <a href="https://www.instagram.com/lifeprint"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul class="footer-links">
+                    <li><a href="home.html">Home</a></li>
+                    <li><a href="dashboard-new.html">Dashboard</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Modules</h4>
+                <ul class="footer-links">
+                    <li><a href="persona-print.html">PersonaPrint</a></li>
+                    <li><a href="food-print.html">FoodPrint</a></li>
+                    <li><a href="story-weaver.html">StoryWeaver</a></li>
+                    <li><a href="time-capsule.html">Time Capsule 2040</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Legal</h4>
+                <ul class="footer-links">
+                    <li><a href="terms.html">Terms</a></li>
+                    <li><a href="#">Privacy</a></li>
+                    <li><a href="#">Security</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 LifePrint. Built with <i class="fas fa-heart" style="color: #667eea;"></i> in Rwanda</p>
+        </div>
+    </footer>

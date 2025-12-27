@@ -1,0 +1,1227 @@
+/* ============================================
+   Pages Styles - For Stories, About, News, FAQ, Contact
+   ============================================ */
+
+html {
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100vw;
+}
+
+body {
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100vw;
+    position: relative;
+}
+
+/* ============================================
+   TESTIMONIES/STORIES PAGE STYLES
+   ============================================ */
+
+.testimonies-container {
+    min-height: 100vh;
+}
+
+.testimonies-header {
+    background: linear-gradient(135deg, #2A2F50 0%, #1f2332 100%);
+    color: white;
+    padding: 4rem 0;
+    border-bottom: 2px solid #D4B896;
+}
+
+.testimonies-header .breadcrumb {
+    margin-bottom: 2rem;
+    font-size: 0.9rem;
+    color: #D4B896;
+}
+
+.testimonies-header .breadcrumb a {
+    color: #D4B896;
+    text-decoration: none;
+    transition: opacity 0.3s ease;
+}
+
+.testimonies-header .breadcrumb a:hover {
+    opacity: 0.8;
+}
+
+.testimonies-title {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, #D4B896, #e6d4b0);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.testimonies-subtitle {
+    font-size: 1.1rem;
+    color: #e0e0e0;
+    margin-bottom: 2rem;
+}
+
+.stats-bar {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-item .stat-number {
+    display: block;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #D4B896;
+    margin-bottom: 0.5rem;
+}
+
+.stat-item .stat-label {
+    display: block;
+    font-size: 0.9rem;
+    color: #b0b0b0;
+}
+
+.testimonies-content {
+    padding: 4rem 0;
+}
+
+.featured-testimony {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    margin-bottom: 4rem;
+    align-items: center;
+    background: rgba(212, 184, 150, 0.05);
+    padding: 2rem;
+    border-radius: 16px;
+    border: 1px solid rgba(212, 184, 150, 0.1);
+}
+
+.testimony-image {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    height: 400px;
+}
+
+.testimony-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.testimony-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: #D4B896;
+    color: #2A2F50;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.testimony-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.testimony-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(212, 184, 150, 0.2);
+}
+
+.person-info {
+    flex: 1;
+}
+
+.person-name {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #D4B896;
+    margin-bottom: 0.5rem;
+}
+
+.person-title {
+    font-size: 0.95rem;
+    color: #e0e0e0;
+    margin-bottom: 0.25rem;
+}
+
+.person-location {
+    font-size: 0.85rem;
+    color: #b0b0b0;
+}
+
+.testimony-date {
+    font-size: 0.85rem;
+    color: #b0b0b0;
+    text-align: right;
+}
+
+.testimony-headline {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: white;
+}
+
+.testimony-quote {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: #e0e0e0;
+    font-style: italic;
+    padding: 1.5rem;
+    background: rgba(212, 184, 150, 0.1);
+    border-left: 4px solid #D4B896;
+    border-radius: 8px;
+}
+
+.impact-metrics {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+
+.metric {
+    text-align: center;
+    background: rgba(212, 184, 150, 0.05);
+    padding: 1rem;
+    border-radius: 12px;
+    border: 1px solid rgba(212, 184, 150, 0.1);
+}
+
+.metric-value {
+    display: block;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #D4B896;
+    margin-bottom: 0.5rem;
+}
+
+.metric-label {
+    display: block;
+    font-size: 0.85rem;
+    color: #b0b0b0;
+}
+
+.testimonies-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+    margin-bottom: 4rem;
+}
+
+.testimony-card {
+    background: rgba(212, 184, 150, 0.05);
+    border: 1px solid rgba(212, 184, 150, 0.1);
+    border-radius: 16px;
+    padding: 2rem;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.testimony-card:hover {
+    border-color: #D4B896;
+    box-shadow: 0 8px 32px rgba(212, 184, 150, 0.1);
+    transform: translateY(-4px);
+}
+
+.testimony-header {
+    display: flex;
+    gap: 1rem;
+}
+
+.person-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.person-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.person-details {
+    flex: 1;
+}
+
+.person-name {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #D4B896;
+    margin-bottom: 0.25rem;
+    display: block;
+}
+
+.person-title {
+    font-size: 0.85rem;
+    color: #e0e0e0;
+    margin-bottom: 0.1rem;
+    display: block;
+}
+
+.person-location {
+    font-size: 0.8rem;
+    color: #b0b0b0;
+    margin-bottom: 0.75rem;
+    display: block;
+}
+
+.testimony-rating {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+}
+
+.stars {
+    color: #D4B896;
+    font-weight: 600;
+}
+
+.rating-text {
+    color: #b0b0b0;
+}
+
+.testimony-text {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: #e0e0e0;
+    font-style: italic;
+}
+
+.testimony-results {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.result-tag {
+    display: inline-block;
+    background: rgba(212, 184, 150, 0.15);
+    color: #D4B896;
+    padding: 0.4rem 0.8rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    border: 1px solid rgba(212, 184, 150, 0.3);
+}
+
+.testimony-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(212, 184, 150, 0.1);
+    font-size: 0.85rem;
+    color: #b0b0b0;
+}
+
+.duration {
+    color: #D4B896;
+}
+
+.verified {
+    color: #4CAF50;
+}
+
+.testimonies-cta {
+    text-align: center;
+    background: rgba(212, 184, 150, 0.1);
+    padding: 4rem;
+    border-radius: 16px;
+    border: 1px solid rgba(212, 184, 150, 0.2);
+}
+
+.testimonies-cta h2 {
+    font-size: 2rem;
+    color: #D4B896;
+    margin-bottom: 1rem;
+}
+
+.testimonies-cta p {
+    font-size: 1.05rem;
+    color: #e0e0e0;
+    margin-bottom: 2rem;
+}
+
+.cta-button {
+    display: inline-block;
+    padding: 1rem 2rem;
+    background: #D4B896;
+    color: #2A2F50;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    margin: 0 0.5rem;
+}
+
+.cta-button:hover {
+    background: #e6d4b0;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(212, 184, 150, 0.3);
+}
+
+.cta-note {
+    font-size: 0.85rem;
+    color: #b0b0b0;
+    margin-top: 1.5rem;
+}
+
+/* ============================================
+   ABOUT PAGE STYLES
+   ============================================ */
+
+.about-container {
+    min-height: 100vh;
+}
+
+.about-header {
+    background: linear-gradient(135deg, #2A2F50 0%, #1f2332 100%);
+    color: white;
+    padding: 4rem 0;
+    border-bottom: 2px solid #D4B896;
+}
+
+.about-header .breadcrumb {
+    margin-bottom: 2rem;
+    font-size: 0.9rem;
+    color: #D4B896;
+}
+
+.about-header .breadcrumb a {
+    color: #D4B896;
+    text-decoration: none;
+}
+
+.about-title {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, #D4B896, #e6d4b0);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.about-subtitle {
+    font-size: 1.1rem;
+    color: #e0e0e0;
+}
+
+.company-tagline {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(212, 184, 150, 0.2);
+}
+
+.tagline-text {
+    font-size: 1.3rem;
+    color: #D4B896;
+    font-weight: 600;
+}
+
+.tagline-year {
+    font-size: 1rem;
+    color: #b0b0b0;
+}
+
+.about-content {
+    padding: 4rem 0;
+}
+
+.company-overview {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    margin-bottom: 4rem;
+    align-items: center;
+}
+
+.overview-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.section-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #D4B896;
+    margin-bottom: 1rem;
+}
+
+.lead-paragraph {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #e0e0e0;
+}
+
+.overview-text {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: #b0b0b0;
+}
+
+.key-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.stat-box {
+    background: rgba(212, 184, 150, 0.1);
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid rgba(212, 184, 150, 0.2);
+    text-align: center;
+}
+
+.stat-number {
+    display: block;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #D4B896;
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    display: block;
+    font-size: 0.9rem;
+    color: #b0b0b0;
+}
+
+.overview-image {
+    position: relative;
+}
+
+.overview-image img {
+    width: 100%;
+    border-radius: 16px;
+    display: block;
+}
+
+.image-caption {
+    font-size: 0.9rem;
+    color: #b0b0b0;
+    margin-top: 1rem;
+    text-align: center;
+}
+
+.mission-vision-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-bottom: 4rem;
+}
+
+.mission-card, .vision-card {
+    background: rgba(212, 184, 150, 0.05);
+    border: 1px solid rgba(212, 184, 150, 0.1);
+    border-radius: 16px;
+    padding: 2rem;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.mission-card:hover, .vision-card:hover {
+    border-color: #D4B896;
+    box-shadow: 0 8px 32px rgba(212, 184, 150, 0.1);
+    transform: translateY(-4px);
+}
+
+.mission-icon, .vision-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.mission-card h3, .vision-card h3 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #D4B896;
+    margin-bottom: 1rem;
+}
+
+.mission-card p, .vision-card p {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: #e0e0e0;
+}
+
+.about-cta {
+    text-align: center;
+    background: rgba(212, 184, 150, 0.1);
+    padding: 4rem;
+    border-radius: 16px;
+    border: 1px solid rgba(212, 184, 150, 0.2);
+}
+
+.about-cta h2 {
+    font-size: 2rem;
+    color: #D4B896;
+    margin-bottom: 1rem;
+}
+
+.about-cta p {
+    font-size: 1.05rem;
+    color: #e0e0e0;
+    margin-bottom: 2rem;
+}
+
+.cta-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.cta-button.primary {
+    background: #D4B896;
+    color: #2A2F50;
+}
+
+.cta-button.primary:hover {
+    background: #e6d4b0;
+}
+
+.cta-button.secondary {
+    background: transparent;
+    color: #D4B896;
+    border: 2px solid #D4B896;
+}
+
+.cta-button.secondary:hover {
+    background: rgba(212, 184, 150, 0.1);
+}
+
+/* ============================================
+   NEWS PAGE STYLES
+   ============================================ */
+
+.news-container {
+    min-height: 100vh;
+}
+
+.news-header {
+    background: linear-gradient(135deg, #2A2F50 0%, #1f2332 100%);
+    color: white;
+    padding: 4rem 0;
+    border-bottom: 2px solid #D4B896;
+}
+
+.news-header .breadcrumb {
+    margin-bottom: 2rem;
+    font-size: 0.9rem;
+    color: #D4B896;
+}
+
+.news-header .breadcrumb a {
+    color: #D4B896;
+    text-decoration: none;
+}
+
+.news-title {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, #D4B896, #e6d4b0);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.news-subtitle {
+    font-size: 1.1rem;
+    color: #e0e0e0;
+}
+
+.news-content {
+    padding: 4rem 0;
+}
+
+.featured-article {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    margin-bottom: 4rem;
+    background: rgba(212, 184, 150, 0.05);
+    padding: 2rem;
+    border-radius: 16px;
+    border: 1px solid rgba(212, 184, 150, 0.1);
+    align-items: center;
+}
+
+.article-image {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    height: 400px;
+}
+
+.article-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.article-category {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    background: #D4B896;
+    color: #2A2F50;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.article-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.article-meta {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.9rem;
+    color: #b0b0b0;
+}
+
+.date, .author, .reading-time {
+    display: flex;
+    align-items: center;
+}
+
+.article-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #D4B896;
+}
+
+.article-excerpt {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: #e0e0e0;
+}
+
+.article-stats {
+    display: flex;
+    gap: 2rem;
+    font-size: 0.9rem;
+    color: #b0b0b0;
+}
+
+.article-stats span {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.news-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+    margin-bottom: 4rem;
+}
+
+.news-item {
+    background: rgba(212, 184, 150, 0.05);
+    border: 1px solid rgba(212, 184, 150, 0.1);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.news-item:hover {
+    border-color: #D4B896;
+    box-shadow: 0 8px 32px rgba(212, 184, 150, 0.1);
+    transform: translateY(-4px);
+}
+
+.news-image {
+    position: relative;
+    height: 250px;
+    overflow: hidden;
+}
+
+.news-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.news-category {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    background: #D4B896;
+    color: #2A2F50;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.news-content {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    flex: 1;
+}
+
+.news-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: #b0b0b0;
+}
+
+.news-date {
+    color: #D4B896;
+}
+
+.news-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: white;
+    margin: 0.5rem 0;
+}
+
+.news-excerpt {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #e0e0e0;
+    flex: 1;
+}
+
+.news-footer {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: #b0b0b0;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(212, 184, 150, 0.1);
+    margin-top: auto;
+}
+
+.load-more-section {
+    text-align: center;
+    padding: 2rem 0;
+}
+
+.load-more-btn {
+    padding: 1rem 2rem;
+    background: rgba(212, 184, 150, 0.1);
+    color: #D4B896;
+    border: 2px solid #D4B896;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+}
+
+.load-more-btn:hover {
+    background: #D4B896;
+    color: #2A2F50;
+}
+
+/* ============================================
+   FAQ PAGE STYLES
+   ============================================ */
+
+.faq-container {
+    min-height: 100vh;
+}
+
+.faq-header {
+    background: linear-gradient(135deg, #2A2F50 0%, #1f2332 100%);
+    color: white;
+    padding: 4rem 0;
+    border-bottom: 2px solid #D4B896;
+}
+
+.faq-header h1 {
+    font-size: 3rem !important;
+    margin-bottom: 3rem !important;
+    background: linear-gradient(135deg, #D4B896, #e6d4b0) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+}
+
+.faq-content {
+    padding: 4rem 0;
+}
+
+.faq-content .card {
+    margin-bottom: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.faq-content .card:hover {
+    border-color: #D4B896;
+    box-shadow: 0 8px 32px rgba(212, 184, 150, 0.1);
+}
+
+.faq-content h4 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #D4B896;
+    cursor: pointer;
+    user-select: none;
+}
+
+.faq-content p {
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: #e0e0e0;
+}
+
+/* ============================================
+   CONTACT PAGE STYLES
+   ============================================ */
+
+.contact-container {
+    min-height: 100vh;
+}
+
+.contact-header {
+    background: linear-gradient(135deg, #2A2F50 0%, #1f2332 100%);
+    color: white;
+    padding: 4rem 0;
+    border-bottom: 2px solid #D4B896;
+}
+
+.contact-header h1 {
+    font-size: 3rem !important;
+    margin-bottom: 3rem !important;
+    background: linear-gradient(135deg, #D4B896, #e6d4b0) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+}
+
+.contact-content {
+    padding: 4rem 0;
+}
+
+.contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.contact-grid h3 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #D4B896;
+    margin-bottom: 1.5rem;
+}
+
+.contact-grid .card {
+    margin-bottom: 1.5rem;
+}
+
+.contact-grid .card:last-of-type {
+    margin-bottom: 0;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #D4B896;
+    margin-bottom: 0.5rem;
+}
+
+.form-input {
+    width: 100%;
+    padding: 0.75rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(212, 184, 150, 0.2);
+    border-radius: 8px;
+    color: white;
+    font-family: inherit;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #D4B896;
+    box-shadow: 0 0 0 2px rgba(212, 184, 150, 0.1);
+}
+
+.form-input::placeholder {
+    color: #666;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+/* Desktop and Large Tablets */
+@media (max-width: 968px) {
+    .testimonies-header,
+    .about-header,
+    .news-header,
+    .contact-header {
+        padding: 3rem 0;
+    }
+    
+    .testimonies-title,
+    .about-title,
+    .news-title {
+        font-size: 2.5rem;
+    }
+    
+    .section-title {
+        font-size: 2rem;
+    }
+    
+    .stats-bar {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+    }
+    
+    .featured-testimony,
+    .company-overview,
+    .featured-article {
+        gap: 2rem;
+        padding: 1.5rem;
+    }
+}
+
+/* Tablets */
+@media (max-width: 768px) {
+    .testimonies-header,
+    .about-header,
+    .news-header,
+    .contact-header {
+        padding: 2.5rem 1rem;
+    }
+    
+    .testimonies-title,
+    .about-title,
+    .news-title {
+        font-size: 2rem;
+    }
+    
+    .section-title {
+        font-size: 1.75rem;
+    }
+
+    .featured-testimony,
+    .company-overview,
+    .featured-article,
+    .contact-grid {
+        grid-template-columns: 1fr;
+        padding: 1.5rem;
+        gap: 1.5rem;
+    }
+
+    .mission-vision-section {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .stats-bar {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .impact-metrics {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .cta-buttons {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .cta-button {
+        width: 100%;
+    }
+
+    .testimonies-grid,
+    .news-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .key-stats {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .testimony-image {
+        height: 300px;
+    }
+    
+    .person-name {
+        font-size: 1.3rem;
+    }
+    
+    .testimony-quote {
+        font-size: 1rem;
+    }
+}
+
+/* Mobile Devices */
+@media (max-width: 480px) {
+    .testimonies-header,
+    .about-header,
+    .news-header,
+    .contact-header {
+        padding: 2rem 0.5rem;
+    }
+
+    .testimonies-title,
+    .about-title,
+    .news-title {
+        font-size: 1.5rem;
+    }
+
+    .section-title {
+        font-size: 1.3rem;
+    }
+    
+    .testimonies-subtitle {
+        font-size: 0.95rem;
+    }
+
+    .mb-3 {
+        margin-bottom: 1rem;
+    }
+
+    .card {
+        padding: 1rem;
+        margin: 0.5rem;
+    }
+    
+    .featured-testimony,
+    .company-overview,
+    .featured-article,
+    .contact-grid {
+        padding: 1rem;
+        border-radius: 12px;
+        gap: 1rem;
+    }
+    
+    .testimony-image {
+        height: 250px;
+    }
+    
+    .person-name {
+        font-size: 1.2rem;
+    }
+    
+    .person-title,
+    .person-location {
+        font-size: 0.85rem;
+    }
+    
+    .testimony-quote {
+        font-size: 0.95rem;
+        line-height: 1.6;
+    }
+    
+    .stat-item .stat-number {
+        font-size: 1.5rem;
+    }
+    
+    .stat-item .stat-label {
+        font-size: 0.85rem;
+    }
+    
+    .cta-button {
+        padding: 0.8rem 1.5rem;
+        font-size: 0.9rem;
+    }
+}
+
+/* Extra Small Devices */
+@media (max-width: 360px) {
+    .testimonies-header,
+    .about-header,
+    .news-header,
+    .contact-header {
+        padding: 1.5rem 0.25rem;
+    }
+    
+    .testimonies-title,
+    .about-title,
+    .news-title {
+        font-size: 1.3rem;
+    }
+    
+    .section-title {
+        font-size: 1.2rem;
+    }
+    
+    .testimonies-subtitle {
+        font-size: 0.85rem;
+    }
+    
+    .card {
+        padding: 0.75rem;
+    }
+    
+    .testimony-image {
+        height: 200px;
+    }
+    
+    .person-name {
+        font-size: 1.1rem;
+    }
+    
+    .testimony-quote {
+        font-size: 0.9rem;
+    }
+    
+    .stat-item .stat-number {
+        font-size: 1.3rem;
+    }
+    
+    .cta-button {
+        padding: 0.7rem 1rem;
+        font-size: 0.85rem;
+    }
+}

@@ -1,0 +1,1811 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LifePrint - Your Digital Wellness Companion</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/premium-design.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        :root {
+            --primary: #667eea;
+            --secondary: #764ba2;
+            --text-dark: #1a202c;
+            --text-light: #718096;
+            --bg-white: #ffffff;
+            --transition-speed: 0.3s;
+            --transition-curve: cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: var(--text-dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            scroll-behavior: auto; /* Override for custom smooth scroll */
+        }
+
+        html {
+            scroll-behavior: auto; /* We'll use custom JS scrolling for better control */
+            scroll-padding-top: 80px; /* Account for fixed navbar */
+        }
+
+        /* Scroll Snap Container */
+        body.snap-scroll {
+            scroll-snap-type: y proximity;
+        }
+
+        .section {
+            scroll-snap-align: start;
+            scroll-snap-stop: normal;
+        }
+
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        .loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            z-index: 1000;
+            padding: 1rem 0;
+            transition: all var(--transition-speed) var(--transition-curve);
+            transform: translateY(0);
+        }
+
+        .navbar.scrolled {
+            padding: 0.75rem 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar.hidden {
+            transform: translateY(-100%);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 clamp(1rem, 5vw, 2rem);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            height: 50px;
+            width: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            transition: transform var(--transition-speed) var(--transition-curve);
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+        }
+
+        .logo:hover {
+            transform: scale(1.08) rotate(-2deg);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-links li {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Desktop navigation - always visible on larger screens */
+        @media (min-width: 769px) {
+            .mobile-menu-btn {
+                display: none !important;
+            }
+            
+            .nav-links {
+                display: flex !important;
+                position: static !important;
+                flex-direction: row !important;
+                background: transparent !important;
+                width: auto !important;
+                height: auto !important;
+                padding: 0 !important;
+                box-shadow: none !important;
+                gap: 0.5rem !important;
+                border: none !important;
+                overflow: visible !important;
+                opacity: 1 !important;
+                visibility: visible !important;
+                right: auto !important;
+            }
+
+            .nav-links li {
+                opacity: 1 !important;
+                transform: none !important;
+                transition: none !important;
+            }
+
+            .menu-overlay {
+                display: none !important;
+            }
+
+            body.menu-open {
+                overflow: auto !important;
+            }
+        }
+
+        .nav-link {
+            color: var(--text-dark);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.65rem 1.25rem;
+            border-radius: 12px;
+            transition: all var(--transition-speed) var(--transition-curve);
+            position: relative;
+            font-size: 0.95rem;
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            bottom: 8px;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transition: all var(--transition-speed) var(--transition-curve);
+            transform: translateX(-50%);
+        }
+
+        .nav-link:hover::before {
+            width: 60%;
+        }
+
+        .nav-link:hover {
+            color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .nav-link.cta {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .nav-link.cta:hover {
+            box-shadow: 0 6px 25px rgba(102, 126, 234, 0.4);
+            transform: translateY(-3px);
+        }
+
+        .nav-link.cta::before {
+            display: none;
+        }
+
+        /* Mobile menu handled by mobile-menu.js - no inline CSS needed */
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 150px clamp(1rem, 5vw, 2rem) 100px;
+            background: 
+                linear-gradient(135deg, rgba(102, 126, 234, 0.5), rgba(118, 75, 162, 0.55)),
+                url('https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=1920&q=80') center/cover no-repeat;
+            background-attachment: fixed;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before,
+        .hero::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.6;
+        }
+
+        .hero::before {
+            width: clamp(300px, 40vw, 600px);
+            height: clamp(300px, 40vw, 600px);
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.15), transparent 70%);
+            top: -15%;
+            right: -10%;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .hero::after {
+            width: clamp(250px, 35vw, 500px);
+            height: clamp(250px, 35vw, 500px);
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1), transparent 70%);
+            bottom: -12%;
+            left: -8%;
+            animation: float 10s ease-in-out infinite reverse;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 1000px;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards 0.2s;
+        }
+
+        .hero h1 {
+            font-size: clamp(2rem, 6vw, 4.5rem);
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            line-height: 1.15;
+            letter-spacing: -0.02em;
+            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .hero h1 i {
+            display: inline-block;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .hero p {
+            font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+            margin-bottom: 3rem;
+            opacity: 0.95;
+            line-height: 1.6;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1.25rem 2.75rem;
+            background: white;
+            color: var(--primary);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: clamp(1rem, 2vw, 1.15rem);
+            transition: all var(--transition-speed) var(--transition-curve);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-cta::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .hero-cta:hover::before {
+            left: 100%;
+        }
+
+        .hero-cta:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+        }
+
+        .hero-cta i {
+            transition: transform var(--transition-speed) ease;
+        }
+
+        .hero-cta:hover i {
+            transform: translateX(5px);
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        /* Section Styles */
+        .section {
+            padding: clamp(80px, 12vh, 120px) clamp(1rem, 5vw, 2rem);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            transition: transform 0.5s ease-out, opacity 0.5s ease-out;
+            will-change: transform;
+        }
+
+        .section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: inherit;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+            pointer-events: none;
+        }
+
+        .section.in-view::before {
+            opacity: 1;
+        }
+
+        .section:nth-child(even) {
+            background: linear-gradient(135deg, rgba(118, 75, 162, 0.95), rgba(102, 126, 234, 0.95));
+        }
+
+        .section:nth-child(odd) {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.95), rgba(118, 75, 162, 0.95));
+        }
+
+        /* Parallax layers */
+        .parallax-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .parallax-bg::before,
+        .parallax-bg::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1), transparent 70%);
+        }
+
+        .parallax-bg::before {
+            width: 400px;
+            height: 400px;
+            top: 10%;
+            right: 10%;
+            animation: float-slow 15s ease-in-out infinite;
+        }
+
+        .parallax-bg::after {
+            width: 300px;
+            height: 300px;
+            bottom: 15%;
+            left: 15%;
+            animation: float-slow 20s ease-in-out infinite reverse;
+        }
+
+        @keyframes float-slow {
+            0%, 100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            33% {
+                transform: translate(30px, -30px) rotate(120deg);
+            }
+            66% {
+                transform: translate(-20px, 20px) rotate(240deg);
+            }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: clamp(3rem, 8vh, 4.5rem);
+            color: white;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s var(--transition-curve);
+        }
+
+        .section-header.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 800;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+        }
+
+        .section-subtitle {
+            font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+            opacity: 0.95;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+            gap: clamp(1.5rem, 3vw, 2.5rem);
+            margin-bottom: 3rem;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 24px;
+            padding: clamp(2rem, 4vw, 2.5rem);
+            text-align: center;
+            transition: all 0.4s var(--transition-curve);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            opacity: 0;
+            transform: translateY(40px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+
+        .card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .card:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15);
+            border-color: rgba(102, 126, 234, 0.3);
+        }
+
+        .card-icon {
+            width: clamp(80px, 15vw, 100px);
+            height: clamp(80px, 15vw, 100px);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            color: white;
+            font-size: clamp(2.5rem, 5vw, 3rem);
+            transition: all var(--transition-speed) ease;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .card:hover .card-icon {
+            transform: rotate(10deg) scale(1.1);
+            box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+        }
+
+        .card h3 {
+            font-size: clamp(1.25rem, 3vw, 1.5rem);
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .card p {
+            color: var(--text-light);
+            line-height: 1.8;
+            font-size: clamp(0.95rem, 2vw, 1.05rem);
+        }
+
+        /* Testimonials */
+        .testimonial-card {
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 24px;
+            padding: clamp(2rem, 4vw, 2.5rem);
+            text-align: left;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s var(--transition-curve);
+            opacity: 0;
+            transform: translateY(40px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+
+        .testimonial-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .testimonial-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+            border-color: rgba(102, 126, 234, 0.3);
+        }
+
+        .testimonial-avatar {
+            width: clamp(70px, 12vw, 80px);
+            height: clamp(70px, 12vw, 80px);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            color: white;
+            font-size: clamp(2rem, 4vw, 2.5rem);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+            transition: transform var(--transition-speed) ease;
+        }
+
+        .testimonial-card:hover .testimonial-avatar {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .testimonial-quote {
+            color: var(--text-dark);
+            font-size: clamp(1rem, 2vw, 1.1rem);
+            line-height: 1.8;
+            font-style: italic;
+            margin-bottom: 1rem;
+        }
+
+        .testimonial-author {
+            color: var(--primary);
+            font-weight: 600;
+            font-size: clamp(0.95rem, 2vw, 1.05rem);
+        }
+
+        /* News Cards */
+        .news-card {
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 24px;
+            overflow: hidden;
+            transition: all 0.4s var(--transition-curve);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            opacity: 0;
+            transform: translateY(40px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+
+        .news-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .news-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15);
+            border-color: rgba(102, 126, 234, 0.3);
+        }
+
+        .news-image {
+            height: clamp(180px, 25vw, 220px);
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.2));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            transition: all var(--transition-speed) ease;
+        }
+
+        .news-card:hover .news-image {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.3), rgba(118, 75, 162, 0.3));
+        }
+
+        .news-image i {
+            font-size: clamp(3rem, 6vw, 4rem);
+            color: var(--primary);
+            position: relative;
+            z-index: 1;
+            transition: transform var(--transition-speed) ease;
+        }
+
+        .news-card:hover .news-image i {
+            transform: scale(1.2) rotate(5deg);
+        }
+
+        .news-content {
+            padding: clamp(1.5rem, 3vw, 2rem);
+        }
+
+        .news-content h3 {
+            font-size: clamp(1.15rem, 2.5vw, 1.35rem);
+            color: var(--text-dark);
+            margin-bottom: 0.75rem;
+            font-weight: 700;
+        }
+
+        .news-content p {
+            color: var(--text-light);
+            line-height: 1.7;
+            font-size: clamp(0.95rem, 2vw, 1.05rem);
+        }
+
+        /* FAQ Items */
+        .faq-item {
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 20px;
+            padding: clamp(1.25rem, 3vw, 1.75rem) clamp(1.5rem, 4vw, 2rem);
+            margin-bottom: 1.5rem;
+            transition: all 0.4s var(--transition-curve);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            opacity: 0;
+            transform: translateX(-30px);
+            border-left: 4px solid transparent;
+        }
+
+        .faq-item.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .faq-item:hover {
+            transform: translateX(10px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            border-left-color: var(--primary);
+        }
+
+        .faq-question {
+            font-size: clamp(1.05rem, 2.5vw, 1.25rem);
+            color: var(--primary);
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 700;
+        }
+
+        .faq-question i {
+            font-size: 1.2em;
+        }
+
+        .faq-answer {
+            color: var(--text-light);
+            line-height: 1.8;
+            font-size: clamp(0.95rem, 2vw, 1.05rem);
+        }
+
+        /* Contact Cards */
+        .contact-card {
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 24px;
+            padding: clamp(2rem, 4vw, 2.5rem);
+            text-align: center;
+            transition: all 0.4s var(--transition-curve);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            opacity: 0;
+            transform: translateY(40px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+
+        .contact-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .contact-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15);
+            border-color: rgba(102, 126, 234, 0.3);
+        }
+
+        .contact-icon {
+            font-size: clamp(2.5rem, 5vw, 3rem);
+            color: var(--primary);
+            margin-bottom: 1rem;
+            transition: all var(--transition-speed) ease;
+            display: inline-block;
+        }
+
+        .contact-card:hover .contact-icon {
+            transform: scale(1.2) rotate(-10deg);
+            color: var(--secondary);
+        }
+
+        .contact-card h3 {
+            font-size: clamp(1.15rem, 2.5vw, 1.35rem);
+            color: var(--text-dark);
+            margin-bottom: 0.75rem;
+            font-weight: 700;
+        }
+
+        .contact-card p {
+            color: var(--text-light);
+            font-size: clamp(0.95rem, 2vw, 1.05rem);
+            line-height: 1.6;
+        }
+
+        /* Section CTA */
+        .section-cta {
+            text-align: center;
+            margin-top: clamp(2.5rem, 5vh, 3.5rem);
+        }
+
+        .section-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1.1rem 2.75rem;
+            background: white;
+            color: var(--primary);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: clamp(1rem, 2vw, 1.1rem);
+            transition: all var(--transition-speed) var(--transition-curve);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .section-btn:hover::before {
+            left: 100%;
+        }
+
+        .section-btn:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.2);
+        }
+
+        .section-btn i {
+            transition: transform var(--transition-speed) ease;
+        }
+
+        .section-btn:hover i {
+            transform: translateX(5px);
+        }
+
+        /* Footer */
+        .footer {
+            background: rgba(255, 255, 255, 0.98);
+            padding: clamp(2.5rem, 5vh, 3.5rem) clamp(1rem, 5vw, 2rem) clamp(2rem, 4vh, 2.5rem);
+            color: var(--text-light);
+            backdrop-filter: blur(10px);
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+            gap: clamp(2rem, 4vw, 3rem);
+            margin-bottom: clamp(1.5rem, 3vh, 2rem);
+        }
+
+        .footer-section h3 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            font-size: clamp(1.3rem, 3vw, 1.5rem);
+            font-weight: 700;
+        }
+
+        .footer-section p {
+            line-height: 1.8;
+            margin-bottom: 1rem;
+            font-size: clamp(0.95rem, 2vw, 1.05rem);
+        }
+
+        .footer-section h4 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: clamp(1.1rem, 2.5vw, 1.25rem);
+            font-weight: 700;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.65rem;
+        }
+
+        .footer-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            transition: all var(--transition-speed) ease;
+            display: inline-block;
+            font-size: clamp(0.95rem, 2vw, 1.05rem);
+            position: relative;
+        }
+
+        .footer-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width var(--transition-speed) ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+            padding-left: 8px;
+        }
+
+        .footer-links a:hover::after {
+            width: 100%;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.25rem;
+            flex-wrap: wrap;
+        }
+
+        .social-links a {
+            width: clamp(38px, 8vw, 44px);
+            height: clamp(38px, 8vw, 44px);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: all var(--transition-speed) var(--transition-curve);
+            font-size: clamp(1rem, 2vw, 1.15rem);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.25);
+        }
+
+        .social-links a:hover {
+            transform: translateY(-8px) rotate(10deg);
+            box-shadow: 0 12px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: clamp(1.5rem, 3vh, 2rem);
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            font-size: clamp(0.9rem, 2vw, 1rem);
+        }
+
+        /* Scroll Progress Bar */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            z-index: 1001;
+            transition: width 0.1s ease;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
+        }
+
+        /* Scroll Indicator */
+        .scroll-indicator {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            animation: bounce 2s infinite;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .scroll-indicator.show {
+            opacity: 1;
+        }
+
+        .scroll-indicator i {
+            font-size: 2rem;
+            color: white;
+            filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateX(-50%) translateY(0);
+            }
+            40% {
+                transform: translateX(-50%) translateY(-20px);
+            }
+            60% {
+                transform: translateX(-50%) translateY(-10px);
+            }
+        }
+
+        /* Smooth scroll momentum */
+        body {
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch; /* iOS momentum scrolling */
+        }
+
+        /* Add subtle shadow to sections during scroll */
+        .section {
+            box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+            transition: all 0.3s ease, box-shadow 0.6s ease;
+            filter: blur(0px) brightness(1);
+        }
+
+        .section.in-view {
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            filter: blur(0px) brightness(1);
+        }
+
+        .section.out-of-view {
+            filter: blur(0px) brightness(1);
+            opacity: 1;
+        }
+
+        /* Scroll velocity indicators */
+        body[style*="--scroll-speed: fast"] .section {
+            transition: transform 0.2s ease, opacity 0.2s ease;
+        }
+
+        body[style*="--scroll-speed: medium"] .section {
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        body[style*="--scroll-speed: slow"] .section {
+            transition: transform 0.5s ease, opacity 0.5s ease;
+        }
+
+        /* Add depth perception */
+        .section:not(.in-view) {
+            transform-origin: center center;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-20px) rotate(5deg);
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .nav-links {
+                gap: 0.5rem;
+            }
+
+            .nav-link {
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .hero {
+                background-attachment: scroll; /* Better performance on tablets */
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                padding: 120px 1.5rem 80px;
+                min-height: 90vh;
+                background-attachment: scroll;
+            }
+
+            .hero h1 {
+                font-size: clamp(2rem, 8vw, 3rem);
+                margin-bottom: 1rem;
+            }
+
+            .hero p {
+                font-size: clamp(1rem, 4vw, 1.2rem);
+                margin-bottom: 2rem;
+            }
+
+            .section {
+                min-height: auto;
+                padding: 60px 1rem;
+            }
+
+            .cards-grid {
+                gap: 1.5rem;
+                grid-template-columns: 1fr;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero {
+                padding: 100px 1rem 60px;
+            }
+
+            .hero-cta {
+                padding: 0.9rem 1.8rem;
+                font-size: 0.95rem;
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .card {
+                padding: 1.5rem;
+            }
+
+            .section {
+                padding: 50px 1rem;
+            }
+        }
+
+        /* Reduced Motion Support */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Scroll Progress Bar -->
+    <div class="scroll-progress" id="scrollProgress"></div>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="menu-overlay" id="menuOverlay"></div>
+
+    <!-- Scroll Indicator -->
+    <div class="scroll-indicator show" id="scrollIndicator">
+        <i class="fas fa-chevron-down"></i>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="home.html">
+                <img src="../assets/images/logo.png" alt="LifePrint Logo" class="logo" onerror="this.style.display='none'">
+            </a>
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#home" class="nav-link">Home</a></li>
+                <li><a href="#about" class="nav-link">Features</a></li>
+                <li><a href="#stories" class="nav-link">Stories</a></li>
+                <li><a href="#news" class="nav-link">News</a></li>
+                <li><a href="#faq" class="nav-link">FAQ</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+                <li><a href="signup.html" class="nav-link cta">Get Started</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1><i class="fas fa-fingerprint"></i> Your Digital Wellness Companion</h1>
+            <p>Track your personality, nutrition, goals, and personal growth all in one comprehensive platform</p>
+            <a href="signup.html" class="hero-cta"><i class="fas fa-rocket"></i> Get Started Free</a>
+        </div>
+    </section>
+
+    <!-- About/Features Section -->
+    <section id="about" class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Powerful Features</h2>
+                <p class="section-subtitle">Everything you need for holistic wellness in one platform</p>
+            </div>
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3>PersonaPrint</h3>
+                    <p>Discover and understand your unique personality traits through our comprehensive assessment</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-utensils"></i>
+                    </div>
+                    <h3>FoodPrint</h3>
+                    <p>Track your nutrition and build healthy eating habits with personalized meal insights</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-bullseye"></i>
+                    </div>
+                    <h3>Goal Tracking</h3>
+                    <p>Set and achieve your personal wellness objectives with smart progress monitoring</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Analytics</h3>
+                    <p>Visualize your progress with detailed insights and comprehensive wellness reports</p>
+                </div>
+            </div>
+            <div class="section-cta">
+                <a href="about.html" class="section-btn"><i class="fas fa-info-circle"></i> Learn More</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stories Section -->
+    <section id="stories" class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Success Stories</h2>
+                <p class="section-subtitle">Real experiences from our community members sharing their wellness journey</p>
+            </div>
+            <div class="cards-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <p class="testimonial-quote">"LifePrint helped me understand my personality better and make healthier choices every day. The insights are truly life-changing!"</p>
+                    <p class="testimonial-author">- Sarah K., Kigali</p>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-avatar">
+                        <i class="fas fa-user-tie"></i>
+                    </div>
+                    <p class="testimonial-quote">"Tracking my wellness journey has never been easier. The personalized recommendations helped me achieve my health goals faster."</p>
+                    <p class="testimonial-author">- Michael T., Huye</p>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-avatar">
+                        <i class="fas fa-user-graduate"></i>
+                    </div>
+                    <p class="testimonial-quote">"A comprehensive platform that keeps me motivated towards my wellness goals. The community support is amazing!"</p>
+                    <p class="testimonial-author">- Emily R., Musanze</p>
+                </div>
+            </div>
+            <div class="section-cta">
+                <a href="stories.html" class="section-btn"><i class="fas fa-heart"></i> Read More Stories</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- News Section -->
+    <section id="news" class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Latest Updates</h2>
+                <p class="section-subtitle">Stay informed with the latest features, tips, and wellness insights</p>
+            </div>
+            <div class="cards-grid">
+                <div class="news-card">
+                    <div class="news-image">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <div class="news-content">
+                        <h3>New Features Released</h3>
+                        <p>Check out our latest updates including enhanced analytics and goal tracking capabilities.</p>
+                    </div>
+                </div>
+                <div class="news-card">
+                    <div class="news-image">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <div class="news-content">
+                        <h3>Wellness Tips</h3>
+                        <p>Expert advice on maintaining a healthy lifestyle and achieving your wellness goals.</p>
+                    </div>
+                </div>
+                <div class="news-card">
+                    <div class="news-image">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="news-content">
+                        <h3>Community Updates</h3>
+                        <p>Join our growing community and share your wellness journey with others.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="section-cta">
+                <a href="news.html" class="section-btn"><i class="fas fa-newspaper"></i> View All News</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Frequently Asked Questions</h2>
+                <p class="section-subtitle">Find answers to common questions about using LifePrint</p>
+            </div>
+            <div style="max-width: 900px; margin: 0 auto;">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <i class="fas fa-question-circle"></i> What is LifePrint?
+                    </div>
+                    <div class="faq-answer">
+                        LifePrint is a comprehensive digital wellness companion that helps you track your personality, nutrition, goals, and overall well-being.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <i class="fas fa-question-circle"></i> How do I get started?
+                    </div>
+                    <div class="faq-answer">
+                        Simply sign up for a free account and start exploring our features. Complete your personality assessment to get personalized insights.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <i class="fas fa-question-circle"></i> Is my data secure?
+                    </div>
+                    <div class="faq-answer">
+                        Yes! We use industry-standard encryption and security measures to protect your personal information and wellness data.
+                    </div>
+                </div>
+            </div>
+            <div class="section-cta">
+                <a href="faq.html" class="section-btn"><i class="fas fa-question"></i> View All FAQs</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Get In Touch</h2>
+                <p class="section-subtitle">Have questions or feedback? We'd love to hear from you</p>
+            </div>
+            <div class="cards-grid">
+                <div class="contact-card">
+                    <i class="fas fa-envelope contact-icon"></i>
+                    <h3>Email Us</h3>
+                    <p>support@lifeprint.com</p>
+                </div>
+                <div class="contact-card">
+                    <i class="fas fa-phone contact-icon"></i>
+                    <h3>Call Us</h3>
+                    <p>+250 788 123 456</p>
+                </div>
+                <div class="contact-card">
+                    <i class="fas fa-map-marker-alt contact-icon"></i>
+                    <h3>Visit Us</h3>
+                    <p>Kigali, Rwanda<br>KG 123 Street</p>
+                </div>
+            </div>
+            <div class="section-cta">
+                <a href="contact.html" class="section-btn"><i class="fas fa-paper-plane"></i> Contact Us</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3><i class="fas fa-fingerprint"></i> LifePrint</h3>
+                <p>Your digital wellness companion for holistic self-improvement and personal growth.</p>
+                <div class="social-links">
+                    <a href="https://www.linkedin.com/in/lifeprint"><i class="fab fa-linkedin"></i></a>
+                    <a href="https://twitter.com/lifeprint"><i class="fab fa-twitter"></i></a>
+                    <a href="https://www.instagram.com/lifeprint"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.facebook.com/lifeprint"><i class="fab fa-facebook"></i></a>
+                    <a href="https://www.youtube.com/lifeprint"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul class="footer-links">
+                    <li><a href="home.html">Home</a></li>
+                    <li><a href="stories.html">Success Stories</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="news.html">News & Updates</a></li>
+                    <li><a href="faq.html">FAQ</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Get Started</h4>
+                <ul class="footer-links">
+                    <li><a href="signup.html">Sign Up</a></li>
+                    <li><a href="login.html">Log In</a></li>
+                    <li><a href="about.html">Learn More</a></li>
+                    <li><a href="contact.html">Get Support</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Legal</h4>
+                <ul class="footer-links">
+                    <li><a href="terms.html">Terms of Service</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Cookie Policy</a></li>
+                    <li><a href="#">Data Security</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 LifePrint. All rights reserved. Built with <i class="fas fa-heart" style="color: #667eea;"></i> in Rwanda</p>
+        </div>
+    </footer>
+
+    <script>
+        // Get DOM elements first
+        const navbar = document.getElementById('navbar');
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const navLinks = document.getElementById('navLinks');
+        const scrollIndicator = document.getElementById('scrollIndicator');
+        const menuOverlay = document.getElementById('menuOverlay');
+
+        // Loading Screen
+        window.addEventListener('load', () => {
+            const loadingScreen = document.getElementById('loadingScreen');
+            setTimeout(() => {
+                loadingScreen.classList.add('hidden');
+            }, 500);
+        });
+
+        // Scroll Progress Bar and Indicator
+        
+        function updateScrollProgress() {
+            const scrollProgress = document.getElementById('scrollProgress');
+            const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrolled = (window.scrollY / scrollHeight) * 100;
+            scrollProgress.style.width = scrolled + '%';
+            
+            // Hide scroll indicator after scrolling
+            if (window.scrollY > 200) {
+                scrollIndicator.classList.remove('show');
+            } else {
+                scrollIndicator.classList.add('show');
+            }
+        }
+
+        window.addEventListener('scroll', updateScrollProgress);
+
+        // Click scroll indicator to scroll to next section
+        scrollIndicator.addEventListener('click', () => {
+            const firstSection = document.querySelector('.section');
+            if (firstSection) {
+                const targetPosition = firstSection.getBoundingClientRect().top + window.scrollY - navbar.offsetHeight;
+                smoothScrollTo(targetPosition, 1500);
+            }
+        });
+        scrollIndicator.style.cursor = 'pointer';
+        scrollIndicator.style.pointerEvents = 'all';
+
+        // Mobile menu now handled by mobile-menu.js
+
+        // Enhanced Navbar Scroll Effect with velocity detection
+        let lastScrollY = window.scrollY;
+        let scrollVelocity = 0;
+        let lastScrollTime = Date.now();
+
+        window.addEventListener('scroll', () => {
+            const currentScrollY = window.scrollY;
+            const currentTime = Date.now();
+            const timeDelta = currentTime - lastScrollTime;
+            
+            // Calculate scroll velocity
+            if (timeDelta > 0) {
+                scrollVelocity = Math.abs(currentScrollY - lastScrollY) / timeDelta;
+            }
+            
+            // Add scrolled class with smooth transition
+            if (currentScrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+
+            // Hide/show navbar based on direction and velocity
+            if (currentScrollY > lastScrollY && currentScrollY > 200 && scrollVelocity > 0.5) {
+                navbar.classList.add('hidden');
+            } else if (currentScrollY < lastScrollY || scrollVelocity > 1) {
+                navbar.classList.remove('hidden');
+            }
+            
+            // Add visual feedback based on scroll speed
+            if (scrollVelocity > 2) {
+                document.body.style.setProperty('--scroll-speed', 'fast');
+            } else if (scrollVelocity > 1) {
+                document.body.style.setProperty('--scroll-speed', 'medium');
+            } else {
+                document.body.style.setProperty('--scroll-speed', 'slow');
+            }
+            
+            lastScrollY = currentScrollY;
+            lastScrollTime = currentTime;
+        });
+
+        // Custom Smooth Scroll Function with easing
+        function smoothScrollTo(targetPosition, duration = 1200) {
+            const startPosition = window.scrollY;
+            const distance = targetPosition - startPosition;
+            let startTime = null;
+
+            // Easing function for smooth deceleration
+            function easeInOutCubic(t) {
+                return t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1;
+            }
+
+            function animation(currentTime) {
+                if (startTime === null) startTime = currentTime;
+                const timeElapsed = currentTime - startTime;
+                const progress = Math.min(timeElapsed / duration, 1);
+                const ease = easeInOutCubic(progress);
+                
+                window.scrollTo(0, startPosition + (distance * ease));
+                
+                if (timeElapsed < duration) {
+                    requestAnimationFrame(animation);
+                }
+            }
+
+            requestAnimationFrame(animation);
+        }
+
+        // Enhanced smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    const navbarHeight = navbar.offsetHeight;
+                    const targetPosition = target.getBoundingClientRect().top + window.scrollY - navbarHeight;
+                    smoothScrollTo(targetPosition, 1500);
+                }
+            });
+        });
+
+        // Intersection Observer for Scroll Animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all cards and section headers
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.card').forEach((card, index) => {
+                card.style.transitionDelay = `${index * 0.1}s`;
+                observer.observe(card);
+            });
+
+            document.querySelectorAll('.section-header').forEach(header => {
+                observer.observe(header);
+            });
+
+            document.querySelectorAll('.testimonial-card').forEach((card, index) => {
+                card.style.transitionDelay = `${index * 0.1}s`;
+                observer.observe(card);
+            });
+
+            document.querySelectorAll('.news-card').forEach((card, index) => {
+                card.style.transitionDelay = `${index * 0.1}s`;
+                observer.observe(card);
+            });
+
+            document.querySelectorAll('.faq-item').forEach((item, index) => {
+                item.style.transitionDelay = `${index * 0.05}s`;
+                observer.observe(item);
+            });
+
+            document.querySelectorAll('.contact-card').forEach((card, index) => {
+                card.style.transitionDelay = `${index * 0.1}s`;
+                observer.observe(card);
+            });
+        });
+
+        // Enhanced Parallax Effect with Multiple Layers
+        let ticking = false;
+        
+        function updateParallax() {
+            const scrolled = window.scrollY;
+            const windowHeight = window.innerHeight;
+            
+            // Hero parallax
+            const hero = document.querySelector('.hero');
+            if (hero && scrolled < windowHeight) {
+                const parallaxSpeed = scrolled * 0.5;
+                hero.style.transform = `translateY(${parallaxSpeed}px)`;
+                hero.style.opacity = 1 - (scrolled / windowHeight) * 0.5;
+            }
+
+            // Section parallax and scale effects
+            document.querySelectorAll('.section').forEach((section, index) => {
+                const rect = section.getBoundingClientRect();
+                const sectionTop = rect.top;
+                const sectionHeight = rect.height;
+                const sectionMiddle = sectionTop + sectionHeight / 2;
+                const windowMiddle = windowHeight / 2;
+                const distanceFromCenter = Math.abs(sectionMiddle - windowMiddle);
+                const maxDistance = windowHeight;
+                
+                // Scale and translate based on scroll position
+                if (sectionTop < windowHeight && sectionTop > -sectionHeight) {
+                    const progress = 1 - (distanceFromCenter / maxDistance);
+                    const scale = 0.95 + (progress * 0.05);
+                    const translateY = (distanceFromCenter / maxDistance) * 20;
+                    
+                    section.style.transform = `scale(${scale}) translateY(${translateY}px)`;
+                    section.style.opacity = 0.8 + (progress * 0.2);
+                    
+                    if (progress > 0.5) {
+                        section.classList.add('in-view');
+                    }
+                }
+            });
+
+            // Card parallax on scroll
+            document.querySelectorAll('.card, .testimonial-card, .news-card, .contact-card').forEach(card => {
+                const rect = card.getBoundingClientRect();
+                if (rect.top < windowHeight && rect.bottom > 0) {
+                    const scrollPercent = (windowHeight - rect.top) / windowHeight;
+                    const translateY = (1 - scrollPercent) * 50;
+                    if (card.classList.contains('visible')) {
+                        card.style.transform = `translateY(${translateY}px)`;
+                    }
+                }
+            });
+
+            ticking = false;
+        }
+
+        function requestParallaxUpdate() {
+            if (!ticking) {
+                requestAnimationFrame(updateParallax);
+                ticking = true;
+            }
+        }
+
+        window.addEventListener('scroll', requestParallaxUpdate);
+        window.addEventListener('resize', requestParallaxUpdate);
+        
+        // Initial call
+        updateParallax();
+
+        // Add smooth entrance animations to footer links
+        const footerLinks = document.querySelectorAll('.footer-links a');
+        footerLinks.forEach((link, index) => {
+            link.style.opacity = '0';
+            link.style.transform = 'translateX(-20px)';
+            link.style.transition = 'all 0.3s ease';
+            link.style.transitionDelay = `${index * 0.02}s`;
+            
+            setTimeout(() => {
+                link.style.opacity = '1';
+                link.style.transform = 'translateX(0)';
+            }, 100);
+        });
+
+        // Enhanced Mouse Wheel Control for Smoother Scrolling
+        let isScrolling = false;
+        let scrollTimeout;
+
+        window.addEventListener('wheel', (e) => {
+            // Add visual feedback on scroll
+            if (!isScrolling) {
+                document.body.style.transition = 'filter 0.3s ease';
+                isScrolling = true;
+            }
+
+            clearTimeout(scrollTimeout);
+            
+            scrollTimeout = setTimeout(() => {
+                isScrolling = false;
+            }, 150);
+        }, { passive: true });
+
+        // Add keyboard navigation for smoother experience
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' ') {
+                e.preventDefault();
+                const currentScroll = window.scrollY;
+                const viewportHeight = window.innerHeight;
+                smoothScrollTo(currentScroll + viewportHeight, 1200);
+            } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
+                e.preventDefault();
+                const currentScroll = window.scrollY;
+                const viewportHeight = window.innerHeight;
+                smoothScrollTo(Math.max(0, currentScroll - viewportHeight), 1200);
+            } else if (e.key === 'Home') {
+                e.preventDefault();
+                smoothScrollTo(0, 1500);
+            } else if (e.key === 'End') {
+                e.preventDefault();
+                smoothScrollTo(document.documentElement.scrollHeight, 1500);
+            }
+        });
+
+        // Add touch gesture support for mobile
+        let touchStartY = 0;
+        let touchEndY = 0;
+
+        document.addEventListener('touchstart', (e) => {
+            touchStartY = e.changedTouches[0].screenY;
+        }, { passive: true });
+
+        document.addEventListener('touchend', (e) => {
+            touchEndY = e.changedTouches[0].screenY;
+            handleSwipe();
+        }, { passive: true });
+
+        function handleSwipe() {
+            const swipeDistance = touchStartY - touchEndY;
+            if (Math.abs(swipeDistance) > 50) {
+                // Add haptic feedback feel through animation
+                document.body.style.transition = 'transform 0.1s ease';
+                document.body.style.transform = `translateY(${-swipeDistance * 0.02}px)`;
+                setTimeout(() => {
+                    document.body.style.transform = 'translateY(0)';
+                }, 100);
+            }
+        }
+
+        // Section snap behavior (optional - uncomment to enable)
+        // let snapTimeout;
+        // window.addEventListener('scroll', () => {
+        //     clearTimeout(snapTimeout);
+        //     snapTimeout = setTimeout(() => {
+        //         const sections = document.querySelectorAll('.section');
+        //         const scrollPosition = window.scrollY + window.innerHeight / 2;
+        //         
+        //         sections.forEach(section => {
+        //             const sectionTop = section.offsetTop;
+        //             const sectionHeight = section.offsetHeight;
+        //             
+        //             if (scrollPosition >= sectionTop && scrollPosition <= sectionTop + sectionHeight) {
+        //                 smoothScrollTo(sectionTop - navbar.offsetHeight, 800);
+        //             }
+        //         });
+        //     }, 150);
+        // });
+    </script>
+
+    <!-- Notifications and Smooth Scroll Libraries -->
+    <script src="../assets/js/notifications.js"></script>
+    <script src="../assets/js/smooth-scroll.js"></script>
+    <script src="../assets/js/mobile-menu.js"></script>
+
+    <!-- Test Script - Remove after testing -->
+    <script>
+        // Wait for mobile-menu.js to initialize
+        setTimeout(() => {
+            const btn = document.getElementById('mobileMenuBtn');
+            const nav = document.getElementById('navLinks');
+            const overlay = document.getElementById('menuOverlay');
+            
+            console.log('🔍 TEST: Elements found:', {
+                button: !!btn,
+                nav: !!nav,
+                overlay: !!overlay
+            });
+            
+            if (btn) {
+                console.log('🔍 TEST: Button click listeners:', btn.onclick);
+                
+                // Test manual toggle
+                window.testMenuToggle = function() {
+                    console.log('🧪 MANUAL TEST: Toggling menu...');
+                    nav.classList.toggle('active');
+                    overlay.classList.toggle('active');
+                    btn.classList.toggle('active');
+                    document.body.classList.toggle('menu-open');
+                    console.log('🧪 Classes after toggle:', {
+                        nav: nav.className,
+                        overlay: overlay.className,
+                        button: btn.className
+                    });
+                };
+                
+                console.log('💡 Run testMenuToggle() in console to manually test menu');
+            }
+        }, 1000);
+    </script>
+</body>
+</html>
