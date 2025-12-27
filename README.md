@@ -2,6 +2,10 @@
 
 A comprehensive personal wellness and self-discovery platform that helps users understand themselves better through personality assessments, nutrition tracking, story journaling, and future goal planning.
 
+## 🌐 Live Demo
+
+**[View Live Application](http://169.239.251.102:341/~athanase.abayo/LifePrint/public/pages/home.html)**
+
 ##  Features
 
 ### Core Modules
